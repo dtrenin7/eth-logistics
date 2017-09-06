@@ -2,6 +2,7 @@ pragma solidity ^0.4.11;
 
 import "./Owned.sol";
 import "./ObozCarrier.sol";
+import "./Partner.sol";
 import "./Consigner.sol";
 
 /// @title Platform
@@ -56,6 +57,8 @@ contract Platform is Owned {
     /// web3.eth.defaultAccount = web3.eth.accounts[0];var x;app.addOboz();app.getOboz(0).then(function(i){x = web3.eth.contract(ObozCarrier.abi).at(i)})
     /// x.donate({from:acc[3], to:x.address, value: web3.toWei(4, "ether")})
     /// x.pay(web3.toWei(1, "ether"))
+    /// web3.eth.defaultAccount = web3.eth.accounts[0];var x;app.addConsigner('xxx', acc[7]);app.getConsigner(1).then(function(i){x = web3.eth.contract(Consigner.abi).at(i)})
+    /// x.catchCoins({from:acc[3], to:x.address, value: web3.toWei(4, "ether")})
     /// @dev Рейс (Перевозка)
     struct Consignement {
       uint ID;
@@ -124,8 +127,9 @@ contract Platform is Owned {
 
     function addConsigner(string _name, address _account) returns (uint ID) {
       ID = numConsigners++;
-      consigners[ID] = new Consigner(ID, _name);
-      consigners[ID].setOwner(_account);
+      Consigner consigner = new Consigner(ID, _name);
+      consigner.setOwner(_account);
+      consigners[ID] = consigner;
     }
 
     function getConsigner(uint ID) constant returns (Consigner consigner) {
@@ -301,11 +305,12 @@ contract Platform is Owned {
         desc = "Состояние рейса: Неизвестно";
     }
 
-    function explainOrder(uint ID) constant returns (string consignerDesc,
+    function explainOrder(uint ID) returns (string consignerDesc,
       string consigneeDesc, string cargoDesc, string stateDesc) {
       assert(ID < numOrders);
 
-      consignerDesc = consigners[orders[ID].ConsignerID].name;
+      //Consigner consigner = getConsigner(orders[ID].ConsignerID);
+      // consignerDesc = consigner.name; // YOU CAN'T GET VARIABLE SIZE DATA FROM ANOTHER CONTRACT (!!!)
       consigneeDesc = consignees[orders[ID].consigneeID].name;
       cargoDesc = getCargo(orders[ID].cargoID);
       stateDesc = explainOrderState(orders[ID].state);

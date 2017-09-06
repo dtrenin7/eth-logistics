@@ -10,4 +10,8 @@ contract Consigner is Partner {
   function Consigner(uint _ID, string _name) Partner(_ID) {
     name = _name;
   }
+
+  function getName() public constant returns (string _name) {
+    _name = name;
+  }
 }

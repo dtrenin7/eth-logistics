@@ -8,11 +8,11 @@ var Consigner = artifacts.require("./Consigner.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(ConvertLib);
-  deployer.deploy(Owned);
   deployer.link(ConvertLib, CargoCoin);
+  deployer.deploy(Owned);
   deployer.deploy(CargoCoin);
-  deployer.deploy(Platform);
   deployer.deploy(ObozCarrier);
   deployer.deploy(Partner);
   deployer.deploy(Consigner);
+  deployer.deploy(Platform);
 };
