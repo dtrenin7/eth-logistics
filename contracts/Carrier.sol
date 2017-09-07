@@ -2,12 +2,12 @@ pragma solidity ^0.4.11;
 
 import "./Partner.sol";
 
-/// @title Грузоотправитель
+/// @title Грузоперевозчик
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
-contract Consigner is Partner {
+contract Carrier is Partner {
   string name;
 
-  function Consigner(uint _ID, string _name) Partner(_ID) {
+  function Carrier(uint _ID, string _name) Partner(_ID) {
     name = _name;
   }
 

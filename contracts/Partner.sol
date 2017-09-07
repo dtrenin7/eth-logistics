@@ -4,7 +4,7 @@ import "./Owned.sol";
 
 /// @dev контрагент
 contract Partner is Owned {
-  uint public ID;
+  uint ID;
   mapping (string => string) attributes;
 
   function Partner(uint _ID) Owned() {
