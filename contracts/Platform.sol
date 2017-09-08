@@ -1,20 +1,18 @@
 pragma solidity ^0.4.11;
 
 import "./Owned.sol";
-import "./ObozCarrier.sol";
-import "./Partner.sol";
-import "./Consigner.sol";
-import "./Consignee.sol";
-import "./Consignement.sol";
-import "./Carrier.sol";
-import "./Cargo.sol";
+//import "./Partner.sol";
+//import "./Consigner.sol";
+//import "./Consignee.sol";
+//import "./Consignement.sol";
+//import "./Carrier.sol";
+//import "./Cargo.sol";
 import "./Order.sol";
-import "./Detail.sol";
+//import "./Detail.sol";
 
 /// @title Platform
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
 contract Platform is Owned {
-    /// var app; var acc = web3.eth.accounts; Platform.deployed().then(function(i){app=i; return app.init(acc[0], acc[1], acc[2], acc[3], acc[4]);});web3.eth.defaultAccount = web3.eth.accounts[0];
     /// var car;ObozCarrier.deployed().then(function(i){car=i})
     /// web3.fromWei(web3.eth.getBalance(acc[0]), 'ether').toNumber()
     /// var bal; car.getBalance().then(function(i){bal=i}); web3.fromWei(bal, 'ether').toNumber()
@@ -28,119 +26,77 @@ contract Platform is Owned {
     /// x.catchCoins({from:acc[3], to:x.address, value: web3.toWei(4, "ether")})
     /// @dev Рейс (Перевозка)
 
-    mapping (uint => address) carriers;
-    mapping (uint => address) consigners;
-    mapping (uint => address) consignees;
-    mapping (uint => address) consignements;
-    mapping (uint => address) details;
-    mapping (uint => address) orders;
-    mapping (uint => address) cargos;
-    mapping (uint => ObozCarrier) obozs;
-    uint public numConsigners;
-    uint public numCarriers;
-    uint public numConsignees;
-    uint public numDetails;
-    uint public numConsignements;
+/*    struct Cargo {
+      uint ID;
+      string name;
+      bytes32 attributes; // характеристики груза
+    }
+
+    struct Partner {
+      uint ID;
+      address account;
+      mapping (string => string) attributes;
+    }
+
+    mapping (uint => Partner) partners;
+//    mapping (uint => address) consignements;
+//    mapping (uint => address) details;
+    mapping (uint => Cargo) cargos;
+    uint public numPartners;
+    //uint public numConsigners;
+    //uint public numCarriers;
+    //uint public numConsignees;
+    //uint public numDetails;
+    //uint public numConsignements;
+    uint public numCargos; */
     uint public numOrders;
-    uint public numCargos;
-    uint public numObozs;
+    mapping (uint => address) orders;
 
     function Platform() Owned() {
 
     }
 
-    function addOboz() returns (uint ID) {
-      ID = numObozs++;
-      obozs[ID] = new ObozCarrier();
-      obozs[ID].setOwner(owner);
+/*    function addPartner(address acc) returns (uint ID) {
+      ID = numPartners++;
+      partners[ID] = Partner(ID, acc);
     }
 
-    function getOboz(uint ID) constant returns (ObozCarrier oboz) {
-      assert(ID < numObozs);
-      oboz = obozs[ID];
+    function setPartnerAttribute(uint ID, string key, string value) {
+      assert(ID < numPartners);
+      partners[ID].attributes[key] = value;
     }
 
-    function addConsigner(string _name, address _account) returns (uint ID) {
-      ID = numConsigners++;
-      Consigner consigner = new Consigner(ID, _name);
-      consigner.setOwner(_account);
-      consigners[ID] = consigner;
+    function getPartnerAccount(uint ID) constant returns (address _account) {
+      assert(ID < numPartners);
+      _account = partners[ID].account;
     }
 
-    function getConsigner(uint ID) constant returns (address consigner) {
-      assert(ID < numConsigners);
-      consigner = consigners[ID];
+    function getPartnerAttribute(uint ID, string key) constant returns (string value) {
+      assert(ID < numPartners);
+      value = partners[ID].attributes[key];
     }
 
-    function addConsignee(string _name, address _account) returns (uint ID) {
-      ID = numConsignees++;
-      Consignee consignee = new Consignee(ID, _name);
-      consignee.setOwner(_account);
-      consignees[ID] = consignee;
-    }
-
-    function getConsignee(uint ID) constant returns (address consignee) {
-      assert(ID < numConsignees);
-      consignee = consignees[ID];
-    }
-
-    function addCarrier(string _name, address _account) returns (uint ID) {
-      ID = numCarriers++;
-      Carrier carrier = new Carrier(ID, _name);
-      carrier.setOwner(_account);
-      carriers[ID] = carrier;
-    }
-
-    function getCarrier(uint ID) constant returns (address carrier) {
-      assert(ID < numCarriers);
-      carrier = carriers[ID];
-    }
-
-    function addCargo(string _name) returns (uint ID) {
+    function addCargo(string _name, bytes32 attributes) returns (uint ID) {
       ID = numCargos++;
-      Cargo cargo = new Cargo(ID, _name);
-      cargo.setOwner(owner);
-      cargos[ID] = cargo;
+      cargos[ID] = Cargo(ID, _name, attributes);
     }
 
-    function getCargo(uint ID) constant returns (address cargo) {
+    function getCargo(uint ID) constant returns (string name, bytes32 attributes) {
       assert(ID < numCargos);
-      cargo = cargos[ID];
-    }
-
-    function addDetail(uint _carrierID) returns (uint ID) {
-      assert(_carrierID < numCarriers);
-      ID = numDetails++;
-      Detail detail = new Detail(ID, _carrierID);
-      detail.setOwner(owner);
-      details[ID] = detail;
-    }
-
-    function getDetail(uint ID) constant returns (address detail) {
-      assert(ID < numDetails);
-      detail = details[ID];
-    }
-
-    function addConsignement() returns (uint ID) {
-      ID = numConsignements++;
-      Consignement consignement = new Consignement(ID);
-      consignements[ID] = consignement;
-    }
-
-    function getConsignement(uint ID) constant returns (address consignement) {
-      assert(ID < numConsignements);
-      consignement = consignements[ID];
-    }
-
-/*    function addConsignementDetail(uint ConsignementID, uint detailID) {
-      assert(ConsignementID < numConsignements);
-      uint ID = Consignements[ConsignementID].numDetailIDs++;
-      Consignements[ConsignementID].detailIDs[ID] = detailID;
+      name = cargos[ID].name;
+      attributes = cargos[ID].attributes;
     } */
 
-    function addOrder(uint _consignerID, uint _consigneeID, uint _cargoID) returns (uint ID) {
+    function addOrder(  address _consigner,
+                        address _consignee,
+                        uint _price,
+                        bytes32[] _trackHashes,
+                        address[] _trackAddresses,
+                        uint[] _trackPrices,
+                        bytes32 _description ) returns (uint ID) {
       ID = numOrders++;
-      Order order = new Order(ID, _consignerID, _consigneeID, _cargoID);
+      Order order = new Order(ID, _consigner, _consignee, _price, _trackHashes,
+        _trackAddresses, _trackPrices, _description);
       order.setOwner(owner);
       orders[ID] = order;
     }
@@ -149,37 +105,6 @@ contract Platform is Owned {
       assert(ID < numOrders);
       order = orders[ID];
     }
-
-/*    function addOrderConsignementDetail(uint _ConsignerID, uint _consigneeID, uint _cargoID, uint _carrierID)
-      returns (uint ID, uint ConsignementID, uint detailID) {
-        assert(_ConsignerID < numConsigners);
-        assert(_consigneeID < numConsignees);
-        assert(_cargoID < numCargos);
-        assert(_carrierID < numCarriers);
-        ID = addOrder(_ConsignerID, _consigneeID, _cargoID);
-        ConsignementID = addConsignement();
-        //addOrderConsignement(ID, ConsignementID);
-        detailID = addDetail(_carrierID);
-        addConsignementDetail(ConsignementID, detailID);
-      }
-
-      function addOrderConsignementDetails(uint _ConsignerID, uint _consigneeID, uint _cargoID, uint[] _carrierIDs)
-        returns (uint ID, uint ConsignementID, uint[] detailIDs) {
-          assert(_ConsignerID < numConsigners);
-          assert(_consigneeID < numConsignees);
-          assert(_cargoID < numCargos);
-          ID = addOrder(_ConsignerID, _consigneeID, _cargoID);
-          ConsignementID = addConsignement();
-          //addOrderConsignement(ID, ConsignementID);
-          uint i = 0;
-          while (i < _carrierIDs.length) {
-            assert(_carrierIDs[i] < numCarriers);
-            detailIDs[i] = addDetail(_carrierIDs[i]);
-            addConsignementDetail(ConsignementID, detailIDs[i]);
-            i++;
-          }
-        } */
-
 
 
 /*    function explainConsignementState(ConsignementState state) constant returns (string desc) {
@@ -201,7 +126,7 @@ contract Platform is Owned {
         desc = "Состояние рейса: Неизвестно";
     } */
 
-    function explainOrder(uint ID) returns (string consignerDesc,
+    /* function explainOrder(uint ID) returns (string consignerDesc,
       string consigneeDesc, string cargoDesc, string stateDesc) {
       assert(ID < numOrders);
 
@@ -210,13 +135,60 @@ contract Platform is Owned {
       //consigneeDesc = consignees[orders[ID].consigneeID].name;
       //cargoDesc = getCargo(orders[ID].cargoID);
     //  stateDesc = explainOrderState(orders[ID].state);
-    }
+    } */
 
     function init(address acc1, address acc2, address acc3, address acc4, address acc5) {
-      uint cargo = addCargo('Груз1: Стратегические термоядерные боеголовки');
+      bytes32 hash;
+      /*uint cargo = addCargo('Груз1: Стратегические термоядерные боеголовки', hash);
 
-      uint Consigner = addConsigner('Грузоотправитель1: ОАО Рога и копыта', acc5);
+      uint consigner = addPartner(acc1);
+      setPartnerAttribute(consigner, 'name', 'Грузоотправитель1: ОАО Рога и копыта');
+      setPartnerAttribute(consigner, 'address', 'Красная площадь, дом 23');
 
+      uint consignee = addPartner(acc2);
+      setPartnerAttribute(consignee, 'name', 'Грузополучатель1: Иванов Иван Иванович');
+
+      uint carrier = addPartner(acc3);
+      setPartnerAttribute(carrier, 'name', 'Грузоперевозчик1: Деловые линии'); */
+
+      bytes32[] memory trackHashes = new bytes32[](12);
+      trackHashes[0] = hash; // [0] pickup.location
+      trackHashes[1] = hash; // [0] pickup.date
+      trackHashes[2] = hash; // [0] dropdown.location
+      trackHashes[3] = hash; // [0] dropdown.date
+      trackHashes[4] = hash; // [0] assignment.date
+      trackHashes[5] = hash; // [0] assignment.proof
+      trackHashes[6] = hash; // [1] pickup.location
+      trackHashes[7] = hash; // [1] pickup.date
+      trackHashes[8] = hash; // [1] dropdown.location
+      trackHashes[9] = hash; // [1] dropdown.date
+      trackHashes[10] = hash; // [1] assignment.date
+      trackHashes[11] = hash; // [1] assignment.proof
+      address[] memory trackAddress = new address[](6);
+      trackAddress[0] = acc2; // [0] carrier
+      trackAddress[1] = acc2; // [0] loader
+      trackAddress[2] = acc2; // [0] unloader
+      trackAddress[3] = acc3; // [1] carrier
+      trackAddress[4] = acc3; // [1] loader
+      trackAddress[5] = acc3; // [1] unloader
+      uint[] memory trackPrices = new uint[](2);
+      trackPrices[0] = 250; // [0] price
+      trackPrices[1] = 180; // [1] price
+
+      address consigner = acc1;
+      address consignee = acc4;
+      bytes32 description = hash;
+      uint price = trackPrices[0] + trackPrices[1];
+      uint orderID = addOrder(consigner, consignee, price, trackHashes, trackAddress,
+        trackPrices, description);
+  //    Order order = Order(orders[orderID]);
+//      order.addPosition(hash, hash);
+//      order.addAssignment(acc4, acc5, hash, hash);
+
+      /// var app; var acc = web3.eth.accounts; Platform.deployed().then(function(i){app=i; return app.init(acc[0], acc[1], acc[2], acc[3], acc[4]);});web3.eth.defaultAccount = web3.eth.accounts[0];
+      /// var x;app.getOrder(0).then(function(i){x = web3.eth.contract(Order.abi).at(i)})
+
+/*
       uint cons1 = addConsignee('Грузополучатель1: Иванов Иван Иванович', acc1);
 //      uint cons2 = addConsignee('Грузополучатель2: Петров Петр Петрович', acc2);
 
@@ -226,13 +198,12 @@ contract Platform is Owned {
       uint order = addOrder(Consigner, cons1, cargo);
       uint ship1 = addConsignement();
       //addOrderConsignement(order, ship1);
-
+*/
 //      uint det1 = addDetail(car1);
 //      uint det2 = addDetail(car2);
 //      addConsignementDetail(ship1, det1);
 //      addConsignementDetail(ship1, det2);
 
-//      ObozCarrier c = new ObozCarrier();
 //      transfer(c.getAccount(), 50);
 
     }
