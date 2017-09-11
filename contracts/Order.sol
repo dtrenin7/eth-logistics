@@ -35,7 +35,8 @@ contract Order is Owned {
     OrderAlreadyProcessing,
     UnknownCompletion,
     OrderAlreadyPaid,
-    PriceIsWrong
+    PriceIsWrong,
+    CannotDismiss
   }
 
   struct Track {
@@ -141,7 +142,7 @@ contract Order is Owned {
       // загрузчик выполнил работу
     }
 
-    else if( msg.sender == consignee ) {
+    else if( numTracks > 0 && msg.sender == consignee ) {
       tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price);
       state = State.Done;
       return Error.OK;
@@ -150,12 +151,18 @@ contract Order is Owned {
     return Error.UnknownCompletion;
   }
 
-  function dismiss() restricted returns (Error) {
-    if( state != State.New )
-      return Error.OrderAlreadyProcessing;   // заказ уже выполняется, отменить невозможно
-    owner.transfer(this.balance);
-    state = State.Cancelled;
-    return Error.OK;
+  function dismiss() returns (Error) {
+    if( msg.sender == consigner ) {
+      if( state != State.New )
+        return Error.OrderAlreadyProcessing;
+      // заказ уже выполняется, отменить невозможно
+
+      //consigner.transfer(this.balance);
+      state = State.Cancelled;
+      return Error.OK;
+      // отмена заказа
+    }
+    return Error.CannotDismiss;
   }
 
   function getTrack(uint trackID) constant returns (  TrackState _state,
