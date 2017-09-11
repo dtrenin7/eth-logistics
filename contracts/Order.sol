@@ -8,10 +8,6 @@ contract Order is Owned {
   enum State {
     New,
     Signed,
-    Loaded,
-    Unloaded,
-    Delay,
-    Processing,
     Done,
     Cancelled
   }
@@ -26,7 +22,24 @@ contract Order is Owned {
     bytes32 proof;
   }
 
+  enum TrackState {
+    New,
+    Loaded,
+    Unloaded,
+    Delay
+  }
+
+  enum Error {
+    OK,
+    OrderIsNotPaid,
+    OrderAlreadyProcessing,
+    UnknownCompletion,
+    OrderAlreadyPaid,
+    PriceIsWrong
+  }
+
   struct Track {
+    TrackState trackState;
     Position pickup;
     Position dropdown;
     address carrier;
@@ -42,15 +55,14 @@ contract Order is Owned {
   address public consignee;
   uint public price;   // общая стоимость заказа
   uint public numTracks;
-  mapping (uint => address) trackIndex;
-  mapping (address => Track) tracks;
+  uint public activeTrackID;
+  mapping (uint => Track) tracks;
   bytes32 public description;  // хеш на описание перевозки (в т.ч.груза)
 
 
   function Order( uint _ID,
                   address _consigner,
                   address _consignee,
-                  uint _price,
                   bytes32[] _trackHashes,
                   address[] _trackAddresses,
                   uint[] _trackPrices,
@@ -59,23 +71,24 @@ contract Order is Owned {
     state = State.New;
     consigner = _consigner;
     consignee = _consignee;
-    price = _price;
     description = _description;
 
     uint i = 0;
     uint j = 0;
+    uint _price = 0;
     while(i < _trackHashes.length) {
       Position memory _pickup = Position(_trackHashes[i], _trackHashes[i+1]);
       Position memory _dropdown = Position(_trackHashes[i+2], _trackHashes[i+3]);
       Assignment memory _assignment = Assignment(_trackHashes[i+4], _trackHashes[i+5]);
-      trackIndex[numTracks] = _trackAddresses[j];
-      tracks[trackIndex[numTracks]] = Track(_pickup, _dropdown,
+      tracks[numTracks] = Track(TrackState.New, _pickup, _dropdown,
         _trackAddresses[j], _trackAddresses[j+1], _trackAddresses[j+2],
         _assignment, _trackPrices[numTracks]);
+      _price += _trackPrices[numTracks];
       numTracks++;
       i += 6;
       j += 3;
     }
+    price = _price;
 
     //stateDescs[uint(State.Signed)] = 'Состояние заказа: Подписан';
     //stateDescs[uint(State.Processing)] = 'Состояние заказа: Выполнение';
@@ -86,31 +99,75 @@ contract Order is Owned {
 
   }
 
-  function begin() payable {
+  function begin() payable returns (Error) {
     if( msg.sender == consigner ) {
+      if( state != State.New ) {
+        msg.sender.transfer(msg.value);
+        return Error.OrderAlreadyPaid;
+      }
       if( msg.value != price ) {
-        msg.sender.transfer(msg.value); // возврат, если отправитель перевел недостаточно
+          msg.sender.transfer(msg.value);
+          return Error.PriceIsWrong;
       }
-      else {
-        state = State.Signed;
-      }
+      // возврат, если условия не соблюдены
+      state = State.Signed;
     }
+    return Error.OK;
   }
 
-  function complete() {
-    if( msg.sender == consignee ) {
-      // платим по всем трекам
-      for(uint i = 0; i < numTracks; i++) {
-        tracks[trackIndex[i]].carrier.transfer(tracks[trackIndex[i]].price);
+  function complete() returns (Error) {
+    if( state != State.Signed  )
+      return Error.OrderIsNotPaid;
+    // если отправитель не оплатил, обрабатывать нечего
+
+    if( activeTrackID < numTracks ) {
+      if( tracks[activeTrackID].trackState == TrackState.Loaded &&
+        msg.sender == tracks[activeTrackID].unloader ) {
+        tracks[activeTrackID].trackState = TrackState.Unloaded;
+        activeTrackID++;
+        return Error.OK;
       }
+      // разгрузчик выполнил работу, активизируем следующий трек
+
+      if( tracks[activeTrackID].trackState == TrackState.New &&
+        msg.sender == tracks[activeTrackID].loader ) {
+        tracks[activeTrackID].trackState = TrackState.Loaded;
+        if( activeTrackID > 0 ) {
+          tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price);
+        }
+        // предидущие участники трека выполнили свою работу, платим им
+        return Error.OK;
+      }
+      // загрузчик выполнил работу
+    }
+
+    else if( msg.sender == consignee ) {
+      tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price);
       state = State.Done;
+      return Error.OK;
     }
-
+    // получатель получил груз, платим последнему треку
+    return Error.UnknownCompletion;
   }
 
-  function dismiss() restricted {
+  function dismiss() restricted returns (Error) {
+    if( state != State.New )
+      return Error.OrderAlreadyProcessing;   // заказ уже выполняется, отменить невозможно
     owner.transfer(this.balance);
     state = State.Cancelled;
+    return Error.OK;
   }
 
+  function getTrack(uint trackID) constant returns (  TrackState _state,
+                                                      address _carrier,
+                                                      address _loader,
+                                                      address _unloader,
+                                                      uint _price ) {
+    assert(trackID < numTracks);
+    _state = tracks[trackID].trackState;
+    _carrier = tracks[trackID].carrier;
+    _loader = tracks[trackID].loader;
+    _unloader = tracks[trackID].unloader;
+    _price = tracks[trackID].price;
+  }
 }

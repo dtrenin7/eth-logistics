@@ -89,13 +89,12 @@ contract Platform is Owned {
 
     function addOrder(  address _consigner,
                         address _consignee,
-                        uint _price,
                         bytes32[] _trackHashes,
                         address[] _trackAddresses,
                         uint[] _trackPrices,
                         bytes32 _description ) returns (uint ID) {
       ID = numOrders++;
-      Order order = new Order(ID, _consigner, _consignee, _price, _trackHashes,
+      Order order = new Order(ID, _consigner, _consignee, _trackHashes,
         _trackAddresses, _trackPrices, _description);
       order.setOwner(owner);
       orders[ID] = order;
@@ -172,14 +171,13 @@ contract Platform is Owned {
       trackAddress[4] = acc3; // [1] loader
       trackAddress[5] = acc3; // [1] unloader
       uint[] memory trackPrices = new uint[](2);
-      trackPrices[0] = 250; // [0] price
-      trackPrices[1] = 180; // [1] price
+      trackPrices[0] = 2000000000000000000; // [0] price in wei
+      trackPrices[1] = 1000000000000000000; // [1] price in wei
 
       address consigner = acc1;
       address consignee = acc4;
       bytes32 description = hash;
-      uint price = trackPrices[0] + trackPrices[1];
-      uint orderID = addOrder(consigner, consignee, price, trackHashes, trackAddress,
+      uint orderID = addOrder(consigner, consignee, trackHashes, trackAddress,
         trackPrices, description);
   //    Order order = Order(orders[orderID]);
 //      order.addPosition(hash, hash);
@@ -187,7 +185,17 @@ contract Platform is Owned {
 
       /// var app; var acc = web3.eth.accounts; Platform.deployed().then(function(i){app=i; return app.init(acc[0], acc[1], acc[2], acc[3], acc[4]);});web3.eth.defaultAccount = web3.eth.accounts[0];
       /// var x;app.getOrder(0).then(function(i){x = web3.eth.contract(Order.abi).at(i)})
-
+      /// x.begin({from:acc[0], to:x.address, value: web3.toWei(3, "ether")}) // acc[0] => 3 ETH => Order
+      /// web3.fromWei(web3.eth.getBalance(x.address), 'ether').toNumber() // get Order balance
+      /// web3.fromWei(web3.eth.getBalance(acc[1]), 'ether').toNumber() // get carrier [0] balance
+      /// x.complete({from: acc[1]})  // loader [0]  done, New => Loaded
+      /// x.complete({from: acc[1]})  // unloader [0] done, Loaded => Unloaded
+      /// x.complete({from: acc[2]})  // loader [1]  done, New => Loaded
+      /// web3.fromWei(web3.eth.getBalance(acc[1]), 'ether').toNumber() // get carrier [0] balance, must grow for 2 ETH
+      /// web3.fromWei(web3.eth.getBalance(acc[2]), 'ether').toNumber() // get carrier [1] balance
+      /// x.complete({from: acc[2]})  // unloader [1] done, Loaded => Unloaded
+      /// x.complete({from: acc[3]})  // consigner done
+      /// web3.fromWei(web3.eth.getBalance(acc[2]), 'ether').toNumber() // get carrier [1] balance, must grow for 1 ETH
 /*
       uint cons1 = addConsignee('Грузополучатель1: Иванов Иван Иванович', acc1);
 //      uint cons2 = addConsignee('Грузополучатель2: Петров Петр Петрович', acc2);
