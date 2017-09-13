@@ -1,0 +1,103 @@
+<!--div ng-include="'components/navbar/navbar.html'"></div-->
+
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Logistics Platform</h1>
+    <p class="lead">Try to deliver your products with us!</p>
+  </div>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="bower_components/web3/dist/web3.min.js"></script>
+</header>
+
+<!-- For simple styling and transitions, include "angular-accordion.css". You can edit styles to meed your look and feel -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h2 class="page-header">Заказ</h2>
+      <!--ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
+        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
+      </ul-->
+
+
+      <div class="mycontainer">
+          <div class="left-nav">
+            <uib-accordion close-others="false" style="color:#5f5f5f"><!-- isopen -->
+                  <div uib-accordion-group  is-open="true"
+                        ng-repeat="req in reqs" style="background-color:#e0efef">
+                      <uib-accordion-heading>
+                        {{req.desc}}
+                          <i class="pull-right glyphicon"
+                                ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                      </uib-accordion-heading>
+                      <div>
+                        <label for="account">Номер счета:   </label>
+                        <a href="#" id="account" editable-text="req.account">{{req.account||'Пусто'}}"</a>
+                      </div>
+                      <div>
+                        <label for="name" style="color:#7f7f7f">Название:   </label>
+                        <label id="name">{{req.name}}</label>
+                      </div>
+                      <div>
+                        <label for="inn" style="color:#7f7f7f">ИНН:   </label>
+                        <label id="inn">{{req.INN}}</label>
+                      </div>
+                      <div>
+                        <label for="ogrn" style="color:#7f7f7f">ОГРН:   </label>
+                        <label id="ogrn">{{req.OGRN}}</label>
+                      </div>
+                  </div>
+              </uib-accordion>
+              <uib-accordion close-others="false"  style="color:#5f5f5f"><!-- isopen -->
+                    <div uib-accordion-group  is-open="true"
+                          ng-repeat="item in items" style="background-color:#efefef">
+                        <uib-accordion-heading>
+                          {{item.desc}}
+                            <i class="pull-right glyphicon"
+                                  ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </uib-accordion-heading>
+
+                        <!--div ng-repeat="subitem in item.subitems">{{subitem.desc}}</div-->
+                        <div>
+                          <label for="pickup{{$index}}">Загрузка:   </label>
+                          <a href="#" id="pickup{{$index}}" editable-text="item.pickup">{{item.pickup||'Пусто'}}</a>
+                        </div>
+                        <div>
+                          <label for="dropdown{{$index}}">Выгрузка:   </label>
+                          <a href="#" id="dropdown{{$index}}" editable-text="item.dropdown">{{item.dropdown||'Пусто'}}</a>
+                        </div>
+                        <div>
+                          <label for="carrier{{$index}}">Грузоперевозчик:   </label>
+                          <a href="#" id="carrier{{$index}}" editable-text="item.carrier.account">{{item.carrier.account||'Пусто'}}</a>
+                        </div>
+                        <div>
+                          <label for="price{{$index}}">Стоимость:   </label>
+                          <a href="#" id="price{{$index}}" editable-text="item.price">{{item.price||'Пусто'}}</a>
+                        </div>
+                        <div>
+                          <label for="date{{$index}}">Дата:   </label>
+                          <input type="date" id="date{{$index}}" name="input" ng-model="item.date" placeholder="yyyy-MM-dd" min="2017-01-01" max="2025-12-31" required />
+                        </div>
+                        <button class="btn btn-danger pull-right" ng-class="{disabled: false}" ng-click="deleteTrack(item.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить</button>
+                    </div>
+                </uib-accordion>
+                <button class="btn btn-primary pull-left" ng-click="addTrack()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить</button>
+          </div><br><br>
+          <div>
+            <h4 class="page-header">Общая стоимость</h4>
+            <label>{{price}}</label><br><br>
+            <button class="btn btn-success pull-left" ng-class="{disabled: false}" ng-click="transfer()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Оплатить</button>
+            <button class="btn btn-info pull-right" ng-class="{disabled: false}" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Отмена</button>
+          </div>
+          <div class="content">
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<footer class="footer">
+  <div class="container">
+      <p><img class="halfsize" src="assets/images/ethereum.png"/></p>
+  </div>
+</footer>
