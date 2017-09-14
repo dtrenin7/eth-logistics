@@ -37,3 +37,6 @@
     color: #000;
     padding: 0.2em 0;
 }
+
+.selectdemoBasicUsage md-input-container {
+  margin-right: 10px; }

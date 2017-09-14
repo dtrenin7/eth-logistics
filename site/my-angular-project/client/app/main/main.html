@@ -15,40 +15,98 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <h2 class="page-header">Заказ</h2>
-      <!--ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
-        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
-      </ul-->
+      <div ng-controller="MainCtrl as ctrl" class="md-padding" ng-cloak layout="column">
 
+        <!-- ОТПРАВИТЕЛЬ -->
+        <md-card>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Отправитель</span>
+            </md-card-title-text>
+          </md-card-title>
+
+          <md-card-content>
+            <div layout="row">
+              <md-input-container>
+                <label>Название</label>
+                <input ng-model="sender.name">
+              </md-input-container>
+
+              <md-input-container>
+                <label>ИНН</label>
+                <input ng-model="sender.INN">
+              </md-input-container>
+
+              <md-input-container>
+                <label>ОГРН</label>
+                <input ng-model="sender.OGRN">
+              </md-input-container>
+
+              <md-input-container>
+                <label>Номер счета</label>
+                <md-select ng-model="sender.account">
+                  <!--md-option><em>None</em></md-option-->
+                  <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                    {{acc}}
+                  </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+          </md-card-content>
+        </md-card>
+
+        <!-- ПОЛУЧАТЕЛЬ -->
+        <md-card>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Получатель</span>
+            </md-card-title-text>
+          </md-card-title>
+
+          <md-card-content>
+            <div layout="row">
+              <md-input-container>
+                <label>Название</label>
+                <input ng-model="receiver.name">
+              </md-input-container>
+
+              <md-input-container>
+                <label>ИНН</label>
+                <input ng-model="receiver.INN">
+              </md-input-container>
+
+              <md-input-container>
+                <label>ОГРН</label>
+                <input ng-model="receiver.OGRN">
+              </md-input-container>
+
+              <md-input-container>
+                <label>Номер счета</label>
+                <md-select ng-model="receiver.account">
+                  <!--md-option><em>None</em></md-option-->
+                  <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                    {{acc}}
+                  </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+          </md-card-content>
+        </md-card>
+
+
+      <!--h2 class="page-header">Заказ</h2-->
+
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Заказ</span>
+          </md-card-title-text>
+        </md-card-title>
+
+        <md-card-content>
 
       <div class="mycontainer">
           <div class="left-nav">
-            <uib-accordion close-others="false" style="color:#5f5f5f"><!-- isopen -->
-                  <div uib-accordion-group  is-open="true"
-                        ng-repeat="req in reqs" style="background-color:#e0efef">
-                      <uib-accordion-heading>
-                        {{req.desc}}
-                          <i class="pull-right glyphicon"
-                                ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                      </uib-accordion-heading>
-                      <div>
-                        <label for="account">Номер счета:   </label>
-                        <a href="#" id="account" editable-text="req.account">{{req.account||'Пусто'}}"</a>
-                      </div>
-                      <div>
-                        <label for="name" style="color:#7f7f7f">Название:   </label>
-                        <label id="name">{{req.name}}</label>
-                      </div>
-                      <div>
-                        <label for="inn" style="color:#7f7f7f">ИНН:   </label>
-                        <label id="inn">{{req.INN}}</label>
-                      </div>
-                      <div>
-                        <label for="ogrn" style="color:#7f7f7f">ОГРН:   </label>
-                        <label id="ogrn">{{req.OGRN}}</label>
-                      </div>
-                  </div>
-              </uib-accordion>
               <uib-accordion close-others="false"  style="color:#5f5f5f"><!-- isopen -->
                     <div uib-accordion-group  is-open="true"
                           ng-repeat="item in items" style="background-color:#efefef">
@@ -93,6 +151,12 @@
           <div class="content">
           </div>
       </div>
+
+    </md-card-content>
+  </md-card>
+</div>
+
+
   </div>
 </div>
 
