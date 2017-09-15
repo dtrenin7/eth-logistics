@@ -62,6 +62,9 @@ var app = angular.module('dashboardApp', [
         this.accs = $scope.web3.eth.accounts;
         console.log(this.accs);
 
+        $scope.web3.eth.defaultAccount = $scope.web3.eth.accounts[0];
+        // FUCKING BLACK MAGIC (VOODOO!)
+
         $scope.platform = $scope.web3.eth.contract($scope.platformProto.abi).at('0xa4b0ec9065626f21084a08192fe3ce4c3d9bf46e');
         console.log(JSON.stringify($scope.platform));
         // get platform contract
@@ -80,15 +83,68 @@ var app = angular.module('dashboardApp', [
                             unloader: track[3],
                             price: track[4].toNumber() };
           console.log(JSON.stringify(trackDesc));
-        }
+        };
         // enumerate all order's tracks
+
+        $scope.explainOrderState = function(order) {
+          var descs = ["Новый", "Оплачен", "Выполнен", "Отменен"];
+          if(order.state < descs.length) {
+            return descs[order.state];
+          }
+          return "Не известно";
+        }
+
+        $scope.explainTrackState = function(track) {
+          var descs = ["Новое", "Загрузка завершена", "Разгрузка завершена", "Задержка доставки"];
+          if(track.state < descs.length) {
+            return descs[track.state];
+          }
+          return "Не известно";
+        }
+
+        $scope.orderIndex = 0; // order index to display tracks
+        $scope.selectOrder = function(index) {
+          console.log('ORDER INDEX: ' + index);
+          $scope.orderIndex = index;
+        };
+
+        $scope.orders = [];
+        $scope.readOrders = function () {
+          $scope.orders = [];
+          var numOrders = $scope.platform.numOrders().toNumber();
+          for(var i = 0; i < numOrders; i++) {
+            var _address = $scope.platform.getOrder(i);
+            var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
+            var order = {
+              index: i,
+              state: contract.state().toNumber(),
+              address: _address,
+              tracks: [],
+              activeTrack: contract.activeTrackID().toNumber()
+            };
+
+            var numTracks = contract.numTracks().toNumber();
+            for(var j = 0; j < numTracks; j++) {
+              var contractTrack = contract.getTrack(j);
+              var track = {
+                index: j,
+                state: contractTrack[0].toNumber(),
+                carrier: contractTrack[1],
+                loader: contractTrack[2],
+                unloader: contractTrack[3],
+                price: $scope.web3.fromWei(contractTrack[4].toNumber(), 'ether')
+              };
+              order.tracks[j] = track;
+            };
+            console.log('TRACKS: ' + numTracks);
+
+            $scope.orders[i] = order;
+          };
+        };
 
         console.log($scope.web3.sha3('some shit'));
 
         $scope.showError = function(text) {
-          // Appending dialog to document.body to cover sidenav in docs app
-          // Modal dialogs should fully cover application
-          // to prevent interaction outside of dialog
           $mdDialog.show(
             $mdDialog.alert()
               .parent(angular.element(document.querySelector('#popupContainer')))
@@ -97,7 +153,6 @@ var app = angular.module('dashboardApp', [
               .textContent(text)
               .ariaLabel('Alert Dialog Demo')
               .ok('OK')
-              //.targetEvent(ev)
           );
         };
         function DialogController($scope, $mdDialog) {
@@ -134,8 +189,8 @@ var app = angular.module('dashboardApp', [
         $scope.addContragent($scope.web3.eth.accounts[1], "'ООО Сельхозпродукция'", "7710152213", "1027700805346");
         $scope.addContragent($scope.web3.eth.accounts[3], "'ЗАО ПЭК'", "7710134532", "102770088293");
         $scope.addContragent($scope.web3.eth.accounts[4], "'ЗАО Деловые линии'", "7710197534", "102770092347");
-        $scope.sender = 0;
-        $scope.receiver = 1;
+        $scope.sender = 0; // new order consigner index in contragents[]
+        $scope.receiver = 1;// new order consignee index in contragents[]
         $scope.newContragent = {
           account: $scope.web3.eth.accounts[0],
           name: "'ООО НефтеХимСтройПромАвтоматика'",
@@ -143,21 +198,7 @@ var app = angular.module('dashboardApp', [
           OGRN: 1027700505348
         };
 
-         /*{
-          account: $scope.web3.eth.accounts[0],
-          name: "'ООО ТехноПарк'",
-          INN: "7710152113",
-          OGRN: "1027700505348"
-        };
-
-        $scope.receiver = {
-          account: $scope.web3.eth.accounts[1],
-          name: "'ООО Сельхозпродукция'",
-          INN: "7710152213",
-          OGRN: "1027700805346"
-        }; */
-
-        $scope.price = 3;
+        $scope.price = 3; // overall price of new order
         $scope.items = [
                             {
                                 id: 0,
@@ -198,6 +239,18 @@ var app = angular.module('dashboardApp', [
           $scope.price = price;
         }
 
+
+        $scope.account = $scope.web3.eth.accounts[0];
+        $scope.balance = 0;
+        $scope.getBalance = function() {
+            $scope.balance = $scope.web3.fromWei($scope.web3.eth.getBalance($scope.account), 'ether');
+            console.log('BALANCE: ' + $scope.balance);
+        };
+
+        $scope.tabOrder = function() {
+            $scope.getBalance();
+        };
+
         $scope.addTrack = function() {
           var newItem =  {
               id: $scope.items.length,
@@ -224,79 +277,78 @@ var app = angular.module('dashboardApp', [
           for (var i = 0; i < $scope.items.length; i++) {
             $scope.items[i].id = i;
             $scope.items[i].name = "item" + (i + 1);
-            $scope.items[i].desc = "Наряд " + (i + 1);
+            $scope.items[i].desc = "Задание " + (i + 1);
           }
           $scope.calcPrice();
         }
 
+        $scope.getHash = function(value) {
+          var hash = $scope.web3.sha3(value);
+          return hash;
+        };
+
         $scope.transfer = function() {
+          var trackHashes = [];
+          var trackAddress = [];
+          var trackPrices = [];
+          for(var i = 0; i < $scope.items.length; i++) {
+            var item = $scope.items[i];
+            console.log(JSON.stringify(item));
+            trackHashes.push($scope.getHash(item.pickup));  // pickup.location
+            trackHashes.push($scope.getHash(item.date.toString()));  // pickup.date
+            trackHashes.push($scope.getHash(item.dropdown));  // pickup.dropdown
+            trackHashes.push($scope.getHash(item.date.toString()));  // dropdown.date (BUG - must be another date)
+            trackHashes.push($scope.getHash(item.date.toString()));  // assignment.date (BUG - must be another date)
+            trackHashes.push($scope.getHash('shit'));  // assignment.proof (BUG - implemented in future)
+            trackAddress.push($scope.contragents[item.carrier].account); // carrier
+            trackAddress.push($scope.contragents[item.carrier].account); // loader (FIXME)
+            trackAddress.push($scope.contragents[item.carrier].account); // unloader (FIXME)
+            trackPrices.push($scope.web3.toWei(item.price, 'ether').toString()); // price in wei
+          }
+          var orderID = $scope.platform.addOrder(
+               $scope.contragents[$scope.sender].account,
+               $scope.contragents[$scope.receiver].account,
+               trackHashes, trackAddress, trackPrices,
+               $scope.getHash('some description'),
+            {gas: 3500000 });
+          console.log('NEW ORDER: ' + orderID);
+          /*
+          bytes32[] memory trackHashes = new bytes32[](12);
+          trackHashes[0] = hash; // [0] pickup.location
+          trackHashes[1] = hash; // [0] pickup.date
+          trackHashes[2] = hash; // [0] dropdown.location
+          trackHashes[3] = hash; // [0] dropdown.date
+          trackHashes[4] = hash; // [0] assignment.date
+          trackHashes[5] = hash; // [0] assignment.proof
+          trackHashes[6] = hash; // [1] pickup.location
+          trackHashes[7] = hash; // [1] pickup.date
+          trackHashes[8] = hash; // [1] dropdown.location
+          trackHashes[9] = hash; // [1] dropdown.date
+          trackHashes[10] = hash; // [1] assignment.date
+          trackHashes[11] = hash; // [1] assignment.proof
+          address[] memory trackAddress = new address[](6);
+          trackAddress[0] = acc2; // [0] carrier
+          trackAddress[1] = acc2; // [0] loader
+          trackAddress[2] = acc2; // [0] unloader
+          trackAddress[3] = acc3; // [1] carrier
+          trackAddress[4] = acc3; // [1] loader
+          trackAddress[5] = acc3; // [1] unloader
+          uint[] memory trackPrices = new uint[](2);
+          trackPrices[0] = 2000000000000000000; // [0] price in wei
+          trackPrices[1] = 1000000000000000000; // [1] price in wei
+
+          address consigner = acc1;
+          address consignee = acc4;
+          bytes32 description = hash;
+          uint orderID = addOrder(consigner, consignee, trackHashes, trackAddress,
+            trackPrices, description);
+          */
         }
 
         $scope.cancel = function() {
         }
 
         $scope.default = $scope.items[2];
-
-
-
-  /*
-        $scope.logger = [];
-      $scope.clearlogs = function(){
-        $scope.logger = [];
-      };
-
-      $scope.status = {
-        open: false
-      };
-      $scope.groups = [
-        {
-          title: "Accordion Group 1",
-          content: "Accordion group 1 content.",
-          open: true
-        },
-        {
-          title: "Accordion Group 2",
-          content: "Accordion group 2 content.",
-          open: false
-        }
-      ];
-
-      $scope.$watch('status.open', function(newval, oldval){
-          if(oldval !== newval) {
-              var state = newval ? 'opened' : 'closed';
-              $scope.logger.push('Static accordion was '+state);
-          }
-      });
-
-      $scope.toggleaccordion = function() {
-        $scope.status.open = !$scope.status.open;
-      };
-
-      $scope.$watch('groups', function(groups){
-        angular.forEach(groups, function(group, idx){
-          if (group.open) {
-            $scope.logger.push(group.title +' was opened at '+new Date());
-          }
-        })
-      }, true);
-
-      $scope.$watch('groups', function(groups){
-        angular.forEach(groups, function(newval, oldval){
-          if (oldval.open !==  newval.open && newval.open === true) {
-            //console.log("Opened group with idx: "+idx);
-            $scope.logger.push(newval.title +' was opened at '+new Date());
-          }
-        })
-      }, true);
-
-      $scope.$watch('groups', function(newval, oldval){
-        for (var i = 0; i < $scope.groups.length; i++) {
-          if(oldval[i].open !==  newval[i].open && newval[i].open === true) {
-            $scope.logger.push(newval[i].title +' was opened at '+new Date());
-          }
-        }
-      }, true); */
-
     }
 //  ]  // INJECT! scope
 );
