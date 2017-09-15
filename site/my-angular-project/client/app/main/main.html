@@ -2,8 +2,8 @@
 
 <header class="hero-unit" id="banner">
   <div class="container">
-    <h1>Logistics Platform</h1>
-    <p class="lead">Try to deliver your products with us!</p>
+    <h3>Logistics Platform</h3>
+    <!--p class="lead">Try to deliver your products with us!</p-->
   </div>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
   <script src="bower_components/web3/dist/web3.min.js"></script>
@@ -11,158 +11,254 @@
 </header>
 
 <!-- For simple styling and transitions, include "angular-accordion.css". You can edit styles to meed your look and feel -->
+<div ng-controller="MainCtrl as ctrl">
+<md-tabs md-dynamic-height md-border-bottom >
+   <md-tab label="Регистрация">
+     <md-content class="md-padding">
+       <div class="container">
+         <div class="row">
+           <div class="col-lg-12">
+             <div class="md-padding" ng-cloak layout="column">
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <div ng-controller="MainCtrl as ctrl" class="md-padding" ng-cloak layout="column">
+               <!-- КОНТРАГЕНТ -->
+               <md-card>
+                 <md-card-content>
+                   <div layout="row">
+                     <md-input-container>
+                       <label>Название</label>
+                       <input ng-model="newContragent.name" size="100">
+                     </md-input-container>
 
-        <!-- ОТПРАВИТЕЛЬ -->
-        <md-card>
-          <md-card-title>
-            <md-card-title-text>
-              <span class="md-headline">Отправитель</span>
-            </md-card-title-text>
-          </md-card-title>
+                     <md-input-container>
+                       <label>ИНН</label>
+                       <input ng-model="newContragent.INN">
+                     </md-input-container>
 
-          <md-card-content>
-            <div layout="row">
-              <md-input-container>
-                <label>Название</label>
-                <input ng-model="sender.name">
-              </md-input-container>
+                     <md-input-container>
+                       <label>ОГРН</label>
+                       <input ng-model="newContragent.OGRN">
+                     </md-input-container>
 
-              <md-input-container>
-                <label>ИНН</label>
-                <input ng-model="sender.INN">
-              </md-input-container>
+                     <md-input-container>
+                       <label>Номер счета</label>
+                       <md-select ng-model="newContragent.account">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                           {{acc}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+                     <br>
+                   </div>
+                   <md-button class="md-raised md-primary" ng-click="addContragent(newContragent.account, newContragent.name, newContragent.INN, newContragent.OGRN)">Добавить контрагента</md-button>
+                 </md-card-content>
+               </md-card>
 
-              <md-input-container>
-                <label>ОГРН</label>
-                <input ng-model="sender.OGRN">
-              </md-input-container>
-
-              <md-input-container>
-                <label>Номер счета</label>
-                <md-select ng-model="sender.account">
-                  <!--md-option><em>None</em></md-option-->
-                  <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
-                    {{acc}}
-                  </md-option>
-                </md-select>
-              </md-input-container>
-            </div>
-          </md-card-content>
-        </md-card>
-
-        <!-- ПОЛУЧАТЕЛЬ -->
-        <md-card>
-          <md-card-title>
-            <md-card-title-text>
-              <span class="md-headline">Получатель</span>
-            </md-card-title-text>
-          </md-card-title>
-
-          <md-card-content>
-            <div layout="row">
-              <md-input-container>
-                <label>Название</label>
-                <input ng-model="receiver.name">
-              </md-input-container>
-
-              <md-input-container>
-                <label>ИНН</label>
-                <input ng-model="receiver.INN">
-              </md-input-container>
-
-              <md-input-container>
-                <label>ОГРН</label>
-                <input ng-model="receiver.OGRN">
-              </md-input-container>
-
-              <md-input-container>
-                <label>Номер счета</label>
-                <md-select ng-model="receiver.account">
-                  <!--md-option><em>None</em></md-option-->
-                  <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
-                    {{acc}}
-                  </md-option>
-                </md-select>
-              </md-input-container>
-            </div>
-          </md-card-content>
-        </md-card>
-
-
-      <!--h2 class="page-header">Заказ</h2-->
-
-      <md-card>
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Заказ</span>
-          </md-card-title-text>
-        </md-card-title>
-
-        <md-card-content>
-
-      <div class="mycontainer">
-          <div class="left-nav">
-              <uib-accordion close-others="false"  style="color:#5f5f5f"><!-- isopen -->
-                    <div uib-accordion-group  is-open="true"
-                          ng-repeat="item in items" style="background-color:#efefef">
-                        <uib-accordion-heading>
-                          {{item.desc}}
-                            <i class="pull-right glyphicon"
-                                  ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                        </uib-accordion-heading>
-
-                        <!--div ng-repeat="subitem in item.subitems">{{subitem.desc}}</div-->
-                        <div>
-                          <label for="pickup{{$index}}">Загрузка:   </label>
-                          <a href="#" id="pickup{{$index}}" editable-text="item.pickup">{{item.pickup||'Пусто'}}</a>
-                        </div>
-                        <div>
-                          <label for="dropdown{{$index}}">Выгрузка:   </label>
-                          <a href="#" id="dropdown{{$index}}" editable-text="item.dropdown">{{item.dropdown||'Пусто'}}</a>
-                        </div>
-                        <div>
-                          <label for="carrier{{$index}}">Грузоперевозчик:   </label>
-                          <a href="#" id="carrier{{$index}}" editable-text="item.carrier.account">{{item.carrier.account||'Пусто'}}</a>
-                        </div>
-                        <div>
-                          <label for="price{{$index}}">Стоимость:   </label>
-                          <a href="#" id="price{{$index}}" editable-text="item.price">{{item.price||'Пусто'}}</a>
-                        </div>
-                        <div>
-                          <label for="date{{$index}}">Дата:   </label>
-                          <input type="date" id="date{{$index}}" name="input" ng-model="item.date" placeholder="yyyy-MM-dd" min="2017-01-01" max="2025-12-31" required />
-                        </div>
-                        <button class="btn btn-danger pull-right" ng-class="{disabled: false}" ng-click="deleteTrack(item.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить</button>
-                    </div>
-                </uib-accordion>
-                <button class="btn btn-primary pull-left" ng-click="addTrack()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить</button>
-          </div><br><br>
-          <div>
-            <h4 class="page-header">Общая стоимость</h4>
-            <label>{{price}}</label><br><br>
-            <button class="btn btn-success pull-left" ng-class="{disabled: false}" ng-click="transfer()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Оплатить</button>
-            <button class="btn btn-info pull-right" ng-class="{disabled: false}" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Отмена</button>
+               <!-- АКТИВНЫЕ КОНТРАГЕНТЫ  -->
+               <md-card>
+                 <md-card-content>
+                 <md-list flex>
+                   <md-subheader class="md-no-sticky">Активные контрагенты</md-subheader>
+                   <md-list-item class="md-3-line" ng-repeat="item in contragents" ng-click="null">
+                     <div class="md-list-item-text" layout="column">
+                       <h3>{{ item.name }}</h3>
+                       <p>ИНН: {{ item.INN }}     ОГРН: {{ item.OGRN }}      {{ item.account }}</p>
+                     </div>
+                   </md-list-item>
+                   <md-divider ></md-divider>
+                 </md-list>
+               </md-card-content>
+              </md-card>
+             </md-content>
           </div>
-          <div class="content">
-          </div>
+        </div>
       </div>
+    </div>
+   </md-tab>
 
-    </md-card-content>
-  </md-card>
-</div>
+   <!-- ФОРМИРОВАНИЕ ЗАКАЗА -->
+   <md-tab label="Формирование заказа">
+     <md-content class="md-padding">
+       <div class="container">
+         <div class="row">
+           <div class="col-lg-12">
+             <div class="md-padding" ng-cloak layout="column">
 
+               <!-- ОТПРАВИТЕЛЬ -->
+               <md-card>
+                 <md-card-title>
+                   <md-card-title-text>
+                     <span class="md-headline">Отправитель</span>
+                   </md-card-title-text>
+                 </md-card-title>
 
-  </div>
-</div>
+                 <md-card-content>
+                   <div layout="row">
+                     <md-input-container>
+                       <label>Название</label>
+                       <md-select ng-model="sender">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                           {{contrag.name}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
 
+                     <md-input-container>
+                       <label>ИНН</label>
+                       <input ng-model="contragents[sender].INN" ng-disabled="true">
+                     </md-input-container>
 
-<footer class="footer">
-  <div class="container">
-      <p><img class="halfsize" src="assets/images/ethereum.png"/></p>
-  </div>
-</footer>
+                     <md-input-container>
+                       <label>ОГРН</label>
+                       <input ng-model="contragents[sender].OGRN" ng-disabled="true">
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>Номер счета</label>
+                       <md-select ng-model="contragents[sender].account" ng-disabled="true">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                           {{acc}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+                   </div>
+                 </md-card-content>
+               </md-card>
+
+               <!-- ПОЛУЧАТЕЛЬ -->
+               <md-card>
+                 <md-card-title>
+                   <md-card-title-text>
+                     <span class="md-headline">Получатель</span>
+                   </md-card-title-text>
+                 </md-card-title>
+
+                 <md-card-content>
+                   <div layout="row">
+                     <md-input-container>
+                       <label>Название</label>
+                       <md-select ng-model="receiver">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                           {{contrag.name}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>ИНН</label>
+                       <input ng-model="contragents[receiver].INN" ng-disabled="true">
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>ОГРН</label>
+                       <input ng-model="contragents[receiver].OGRN" ng-disabled="true">
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>Номер счета</label>
+                       <md-select ng-model="contragents[receiver].account" ng-disabled="true">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                           {{acc}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+                   </div>
+                 </md-card-content>
+               </md-card>
+
+               <!-- ЗАКАЗ -->
+             <md-card>
+               <md-card-title>
+                 <md-card-title-text>
+                   <span class="md-headline">Маршрут</span>
+                 </md-card-title-text>
+               </md-card-title>
+
+               <md-card-content>
+             <div class="mycontainer">
+                 <div class="left-nav">
+                     <uib-accordion close-others="true"  style="color:#5f5f5f"><!-- isopen -->
+                           <div uib-accordion-group  is-open="true"
+                                 ng-repeat="item in items" style="background-color:#efefef">
+                               <uib-accordion-heading>
+                                 {{item.desc}}
+                                   <i class="pull-right glyphicon"
+                                         ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                               </uib-accordion-heading>
+
+                               <!--div ng-repeat="subitem in item.subitems">{{subitem.desc}}</div-->
+                               <div layout="row">
+                                 <md-input-container>
+                                   <label>Точка загрузки</label>
+                                   <input ng-model="item.pickup" size="100">
+                                 </md-input-container>
+                                 <md-input-container>
+                                   <label>Точка выгрузки</label>
+                                   <input ng-model="item.dropdown" size="100">
+                                 </md-input-container>
+                               </div>
+                               <div layout="row">
+
+                                 <md-input-container>
+                                   <label>Грузоперевозчик</label>
+                                   <md-select ng-model="item.carrier">
+                                     <!--md-option><em>None</em></md-option-->
+                                     <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                                       {{contrag.name}}
+                                     </md-option>
+                                   </md-select>
+                                 </md-input-container>
+
+                                 <md-input-container>
+                                   <label>Номер счета грузоперевозчика</label>
+                                   <md-select ng-model="contragents[item.carrier].account" ng-disabled="true">
+                                     <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                                       {{acc}}
+                                     </md-option>
+                                   </md-select>
+                                 </md-input-container>
+                                 <md-input-container>
+                                   <label>Стоимость (ETH)</label>
+                                   <input type="number" ng-model="item.price" ng-change="calcPrice()">
+                                 </md-input-container>
+                               </div>
+                               <md-datepicker ng-model="item.date" md-placeholder="Введите дату"></md-datepicker>
+                               <md-button class="md-warn pull-right" ng-click="deleteTrack(item.id)">Удалить</md-button>
+                           </div>
+                       </uib-accordion>
+                       <md-button class="md-raised md-primary pull-left" ng-click="addTrack()">Добавить задание</md-button>
+                 </div><br><br>
+             </div>
+           </md-card-content>
+
+           </md-card>
+           <md-card>
+             <md-card-title>
+               <md-card-title-text>
+                 <span class="md-headline">Общая стоимость: {{price}} ETH</span>
+               </md-card-title-text>
+             </md-card-title>
+           <md-card-content>
+             <div>
+               <md-button class="md-raised md-primary pull-left" ng-click="transfer()">Оплатить заказ</md-button>
+               <!--md-button class="pull-right" ng-click="cancel()">Отмена</md-button-->
+             </div>
+           </md-card-content>
+         </md-card>
+
+          </div>
+         </div>
+       </div>
+     </md-content>
+   </md-tab>
+
+   <!-- АКТИВНЫЕ ЗАКАЗЫ -->
+   <md-tab label="Активные заказы">
+   </md-tab>
+
+ </md-tabs>
+ </div>
