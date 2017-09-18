@@ -288,7 +288,12 @@
                        <md-subheader class="md-no-sticky">Заказы (всего {{ orders.length }})</md-subheader>
                        <md-list-item class="md-3-line" ng-repeat="item in orders track by item.index" ng-click="selectOrder(item.index);">
                          <div class="md-list-item-text" layout="column">
-                           <h3>[{{ item.index }}] {{ item.address }}</h3>
+                           <div>
+                             <h3>[{{ item.index }}] {{ item.address }}</h3>
+                             <md-button class="md-raised md-primary pull-right"
+                               ng-if="item.state == 1 && item.activeTrack == item.tracks.length"
+                               ng-click="approve(item, item.tracks[item.tracks.length-1])">Подтвердить получение</md-button>
+                           </div>
                            <p>статус: {{ explainOrderState(item) }}</p>
                            <p>текущее задание: {{ item.activeTrack }}</p>
                          </div>
@@ -299,7 +304,12 @@
                        <md-subheader class="md-no-sticky">Задания (всего {{ orders[orderIndex].tracks.length }} для {{ orders[orderIndex].address }})</md-subheader>
                        <md-list-item class="md-3-line" ng-repeat="item in orders[orderIndex].tracks track by item.index" ng-click="null">
                          <div class="md-list-item-text" layout="column">
-                           <h3>[{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                           <div>
+                             <h3>[{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                              <md-button class="md-raised md-primary pull-right"
+                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].activeTrack == item.index"
+                                ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
+                           </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
                            <p color="red">стоимость: {{ item.price }} ETH</p>
                          </div>
