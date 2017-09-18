@@ -329,6 +329,16 @@ var app = angular.module('dashboardApp', [
           $scope.calcPrice();
         }
 
+        $scope.getTrackIcon = function(state) {
+          var icons = ['file_download','file_upload','done','access_time']
+          return icons[state];
+        };
+
+        $scope.getOrderIcon = function(state) {
+          var icons = ['list','credit_card','done_all','not_interested']
+          return icons[state];
+        };
+
         $scope.getHash = function(value) {
           var hash = $scope.web3.sha3(value);
           return hash;

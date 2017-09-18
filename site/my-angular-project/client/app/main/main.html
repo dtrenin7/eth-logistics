@@ -6,6 +6,7 @@
     <!--p class="lead">Try to deliver your products with us!</p-->
   </div>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="bower_components/web3/dist/web3.min.js"></script>
   <script src="bower_components/truffle-contract/dist/truffle-contract.min.js"></script>
 </header>
@@ -289,7 +290,8 @@
                        <md-list-item class="md-3-line" ng-repeat="item in orders track by item.index" ng-click="selectOrder(item.index);">
                          <div class="md-list-item-text" layout="column">
                            <div>
-                             <h3>[{{ item.index }}] {{ item.address }}</h3>
+                             <i class="material-icons md-48 pull-left">{{ getOrderIcon(item.state) }}</i>
+                             <h3>  [{{ item.index }}] {{ item.address }}</h3>
                              <md-button class="md-raised md-primary pull-right"
                                ng-if="item.state == 1 && item.activeTrack == item.tracks.length"
                                ng-click="approve(item, item.tracks[item.tracks.length-1])">Подтвердить получение</md-button>
@@ -305,7 +307,8 @@
                        <md-list-item class="md-3-line" ng-repeat="item in orders[orderIndex].tracks track by item.index" ng-click="null">
                          <div class="md-list-item-text" layout="column">
                            <div>
-                             <h3>[{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                             <i class="material-icons md-48 pull-left">{{ getTrackIcon(item.state) }}</i>
+                             <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
                               <md-button class="md-raised md-primary pull-right"
                                 ng-if="orders[orderIndex].state != 0 && orders[orderIndex].activeTrack == item.index"
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
