@@ -246,7 +246,7 @@
              <div layout="row">
                <md-input-container>
                  <label>Текущий счет</label>
-                 <md-select ng-model="account" ng-change="getBalance()">
+                 <md-select ng-model="contragents[sender].account" ng-change="getBalance()" ng-disabled="true">
                    <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
                      {{acc}}
                    </md-option>
