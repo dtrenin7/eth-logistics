@@ -191,12 +191,12 @@ var app = angular.module('dashboardApp', [
           track.state = contractTrack[0].toNumber();
         };
 
-        $scope.showError = function(text) {
+        $scope.showConfirmation = function(title, text) {
           $mdDialog.show(
             $mdDialog.alert()
               .parent(angular.element(document.querySelector('#popupContainer')))
               .clickOutsideToClose(true)
-              .title('Ошибка')
+              .title(title)
               .textContent(text)
               .ariaLabel('Alert Dialog Demo')
               .ok('OK')
@@ -220,7 +220,7 @@ var app = angular.module('dashboardApp', [
         $scope.addContragent = function(_account, _name, _inn, _ogrn) {
           for(var i = 0; i < $scope.contragents.length; i++) {
             if( $scope.contragents[i].name == _name ) {
-              $scope.showError("Контрагент с таким названием уже зарегистрирован");
+              $scope.showConfirmation("Ошибка", "Контрагент с таким названием уже зарегистрирован");
               return;
             }
           };
@@ -367,6 +367,9 @@ var app = angular.module('dashboardApp', [
           // pay for job
 
           $scope.getBalance();
+          $scope.showConfirmation("Информация", "Заказ " + order.address +
+            " на сумму " + $scope.web3.fromWei(order.price().toNumber(), "ether")
+            + " ETH оплачен успешно");
 
         }
 
