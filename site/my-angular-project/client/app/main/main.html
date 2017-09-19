@@ -9,6 +9,19 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="bower_components/web3/dist/web3.min.js"></script>
   <script src="bower_components/truffle-contract/dist/truffle-contract.min.js"></script>
+  <style>
+  table, th , td  {
+    border: 1px solid grey;
+    border-collapse: collapse;
+    padding: 5px;
+  }
+  table tr:nth-child(odd) {
+    background-color: #f1f1f1;
+  }
+  table tr:nth-child(even) {
+    background-color: #ffffff;
+  }
+  </style>
 </header>
 
 <!-- For simple styling and transitions, include "angular-accordion.css". You can edit styles to meed your look and feel -->
@@ -97,7 +110,7 @@
                    <div layout="row">
                      <md-input-container>
                        <label>Название</label>
-                       <md-select ng-model="sender">
+                       <md-select ng-model="sender" ng-change="getBalance()">
                          <!--md-option><em>None</em></md-option-->
                          <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
                            {{contrag.name}}
@@ -275,6 +288,64 @@
      </md-content>
    </md-tab>
 
+   <!-- СТАТУС ЗАКАЗА -->
+   <md-tab label="Статус заказа" md-on-select="readOrders()">
+     <md-content class="md-padding">
+       <div class="container">
+         <div class="row">
+           <div class="col-lg-12">
+             <div class="md-padding" ng-cloak layout="column">
+               <md-card>
+                 <md-card-content>
+                   <div layout="row">
+                     <md-input-container>
+                       <label>Номер заказа</label>
+                       <md-select ng-model="orderIndex">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                           {{item.address}}
+                         </md-option>
+                       </md-select>
+                       <div>
+                     </md-input-container>
+                     <md-button class="md-raised md-primary pull-right"
+                       ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
+                       ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
+                     </div>
+                   </div>
+                 </md-card-content>
+                </md-card>
+
+               <md-card>
+                 <md-card-content>
+                   <div layout="row">
+                     <md-list flex>
+                       <md-subheader class="md-no-sticky">Задания (всего {{ orders[orderIndex].tracks.length }} для {{ orders[orderIndex].address }})</md-subheader>
+                       <md-list-item class="md-3-line" ng-repeat="item in orders[orderIndex].tracks track by item.index" ng-click="null">
+                         <div class="md-list-item-text" layout="column">
+                           <div>
+                             <i class="material-icons md-48 pull-left">{{ getTrackIcon(item.state) }}</i>
+                             <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                              <md-button class="md-raised md-primary pull-right"
+                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].activeTrack == item.index"
+                                ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
+                           </div>
+                           <p>статус: {{ explainTrackState(item) }}</p>
+                           <p color="red">стоимость: {{ item.price }} ETH</p>
+                         </div>
+                       </md-list-item>
+                       <md-divider ></md-divider>
+                     </md-list>
+                 </div>
+               </md-card-content>
+              </md-card>
+             </md-content>
+          </div>
+        </div>
+      </div>
+    </div>
+   </md-tab>
+
    <!-- АКТИВНЫЕ ЗАКАЗЫ -->
    <md-tab label="Активные заказы" md-on-select="readOrders()">
      <md-content class="md-padding">
@@ -322,6 +393,36 @@
                  </div>
                </md-card-content>
               </md-card>
+             </md-content>
+          </div>
+        </div>
+      </div>
+    </div>
+   </md-tab>
+
+   <!-- ИСТОРИЯ ОПЕРАЦИЙ -->
+   <md-tab label="История операций">
+     <md-content class="md-padding">
+       <div class="container">
+         <div class="row">
+           <div class="col-lg-12">
+             <div class="md-padding" ng-cloak layout="column">
+               <md-card>
+                 <md-card-content>
+                   <table>
+                     <tr ng-repeat="x in operations">
+                       <td>{{ $index + 1 }}</td>
+                       <td>{{ x.date }}</td>
+                       <td>{{ x.order }}</td>
+                       <td>{{ getOpDescr(x.type) }}</td>
+                       <td>{{ getHashValue(x.from) }}</td>
+                       <td>{{ getHashValue(x.to) }}</td>
+                       <td>{{ x.who }}</td>
+                       <td>{{ x.amount }}</td>
+                     </tr>
+                   </table>
+                 </md-card-content>
+               </md-card>
              </md-content>
           </div>
         </div>

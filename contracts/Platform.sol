@@ -89,10 +89,10 @@ contract Platform is Owned {
 
     function addOrder(  address _consigner,
                         address _consignee,
-                        bytes32[] _trackHashes,
+                        uint32[] _trackHashes,
                         address[] _trackAddresses,
                         uint[] _trackPrices,
-                        bytes32 _description ) returns (uint ID) {
+                        uint32 _description ) returns (uint ID) {
       ID = numOrders++;
       Order order = new Order(ID, _consigner, _consignee, _trackHashes,
         _trackAddresses, _trackPrices, _description);
@@ -137,7 +137,7 @@ contract Platform is Owned {
     } */
 
     function init(address acc1, address acc2, address acc3, address acc4, address acc5) {
-      bytes32 hash;
+      uint32 hash = 829398489;
       /*uint cargo = addCargo('Груз1: Стратегические термоядерные боеголовки', hash);
 
       uint consigner = addPartner(acc1);
@@ -150,7 +150,7 @@ contract Platform is Owned {
       uint carrier = addPartner(acc3);
       setPartnerAttribute(carrier, 'name', 'Грузоперевозчик1: Деловые линии'); */
 
-      bytes32[] memory trackHashes = new bytes32[](12);
+      uint32[] memory trackHashes = new uint32[](12);
       trackHashes[0] = hash; // [0] pickup.location
       trackHashes[1] = hash; // [0] pickup.date
       trackHashes[2] = hash; // [0] dropdown.location
@@ -176,7 +176,7 @@ contract Platform is Owned {
 
       address consigner = acc1;
       address consignee = acc4;
-      bytes32 description = hash;
+      uint32 description = hash;
       uint orderID = addOrder(consigner, consignee, trackHashes, trackAddress,
         trackPrices, description);
   //    Order order = Order(orders[orderID]);
