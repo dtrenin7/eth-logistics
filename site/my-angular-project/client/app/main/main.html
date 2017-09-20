@@ -312,20 +312,34 @@
        <div class="container">
          <div class="row">
            <div class="col-lg-12">
-             <div class="md-padding" ng-cloak layout="column">
+             <div class="md-padding" ng-cloak>
                <md-card>
                  <md-card-content>
-                   <div layout="row">
-                     <md-input-container>
-                       <label>Номер заказа</label>
-                       <md-select ng-model="orderIndex">
-                         <!--md-option><em>None</em></md-option-->
-                         <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
-                           {{item.address}}
-                         </md-option>
-                       </md-select>
-                       <div>
-                     </md-input-container>
+                   <div class="mycontainer">
+                       <div class="left-nav">
+                          <div layout="row">
+
+                           <md-input-container>
+                             <label>Номер</label>
+                             <md-select ng-model="orderIndex">
+                               <!--md-option><em>None</em></md-option-->
+                               <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                                 {{item.address}}
+                               </md-option>
+                             </md-select>
+                           </md-input-container>
+
+                           <md-input-container>
+                             <label>Стоимость (ETH)</label>
+                             <input ng-model="web3.fromWei(orders[orderIndex].price, 'ether')" ng-disabled="true">
+                           </md-input-container>
+
+                           <md-input-container>
+                             <label>Статус</label>
+                             <input ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true">
+                           </md-input-container>
+                       </div>
+
                      <md-button class="md-raised md-primary pull-right"
                        ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
                        ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
