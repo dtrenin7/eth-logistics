@@ -18,7 +18,7 @@ var app = angular.module('dashboardApp', [
       .otherwise('/');
 
     $locationProvider.html5Mode(true);
-  });
+  }); //*/
 
   app.run(function(editableOptions) {
     editableOptions.theme = 'bs3';
@@ -536,5 +536,6 @@ var app = angular.module('dashboardApp', [
 
         $scope.default = $scope.items[2];
     }
+
 //  ]  // INJECT! scope
 );

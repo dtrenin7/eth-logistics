@@ -40,6 +40,31 @@
                <!-- КОНТРАГЕНТ -->
                <md-card>
                  <md-card-content>
+                   <md-input-container>
+                     <label>Номер счета</label>
+                     <md-autocomplete class = "pull-left"
+                         ng-disabled="false"
+                         md-no-cache="true"
+                         md-selected-item="acc"
+                         md-items="acc in ctrl.accs"
+                         md-search-text="newContragent.account"
+                         md-item-text="newContragent.account"
+                         md-min-length="0"
+                         md-clear-button="false"
+                         md-require-match="false"
+                         style="width: 27em;"
+                         placeholder="Введите или выберите номер счета">
+                       <md-item-template>
+                         <span md-highlight-flags="^i">{{acc}}</span>
+                       </md-item-template>
+                     </md-autocomplete>
+                      <!--md-select ng-model="newContragent.account">
+                       <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
+                         {{acc}}
+                       </md-option>
+                     </md-select-->
+                   </md-input-container>
+
                    <div layout="row">
                      <md-input-container>
                        <label>Название</label>
@@ -55,34 +80,8 @@
                        <label>ОГРН</label>
                        <input ng-model="newContragent.OGRN">
                      </md-input-container>
-                     <br>
-                     <br>
-                     <md-input-container>
-                       <label>Номер счета</label>
-                       <md-autocomplete
-                           ng-disabled="false"
-                           md-no-cache="true"
-                           md-selected-item="acc"
-                           md-items="acc in ctrl.accs"
-                           md-search-text="newContragent.account"
-                           md-item-text="newContragent.account"
-                           md-min-length="0"
-                           md-clear-button="false"
-                           md-require-match="false"
-                           style="width: 27em;"
-                           placeholder="Введите или выберите номер счета">
-                         <md-item-template>
-                           <span md-highlight-flags="^i">{{acc}}</span>
-                         </md-item-template>
-                       </md-autocomplete>
-                        <!--md-select ng-model="newContragent.account">
-                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
-                           {{acc}}
-                         </md-option>
-                       </md-select-->
-                     </md-input-container>
-                     <br>
                    </div>
+
                    <md-button class="md-raised md-primary" ng-click="addContragent(newContragent.account, newContragent.name, newContragent.INN, newContragent.OGRN)">Добавить контрагента</md-button>
                  </md-card-content>
                </md-card>
@@ -102,6 +101,7 @@
                  </md-list>
                </md-card-content>
               </md-card>
+
              </md-content>
           </div>
         </div>
@@ -315,37 +315,38 @@
        <div class="container">
          <div class="row">
            <div class="col-lg-12">
-             <div class="md-padding" ng-cloak>
+             <div class="md-padding" ng-cloak layout="column">
+
                <md-card>
                  <md-card-content>
-                   <div class="mycontainer">
-                       <div class="left-nav">
-                          <div layout="row">
+                   <div class="container left-nav" layout="row">
+                     <div class="left-nav">
+                       <div layout="row">
 
-                           <md-input-container>
-                             <label>Номер</label>
-                             <md-select ng-model="orderIndex" ng-change="getOrderBalance(orders[orderIndex])">
-                               <!--md-option><em>None</em></md-option-->
-                               <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
-                                 {{item.address}}
-                               </md-option>
-                             </md-select>
-                           </md-input-container>
+                         <md-input-container>
+                           <label>Номер</label>
+                           <md-select ng-model="orderIndex" ng-change="getOrderBalance(orders[orderIndex])">
+                             <!--md-option><em>None</em></md-option-->
+                             <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                               {{item.address}}
+                             </md-option>
+                           </md-select>
+                         </md-input-container>
 
-                           <md-input-container>
-                             <label>Стоимость (ETH)</label>
-                             <input ng-if="orders.length != 0" ng-model="web3.fromWei(orders[orderIndex].price, 'ether')" ng-disabled="true"/>
-                           </md-input-container>
+                         <md-input-container>
+                           <label>Стоимость (ETH)</label>
+                           <input ng-if="orders.length != 0" ng-model="web3.fromWei(orders[orderIndex].price, 'ether')" ng-disabled="true"/>
+                         </md-input-container>
 
-                           <md-input-container>
-                             <label>Баланс (ETH)</label>
-                             <input ng-if="orders.length != 0" ng-model="orderBalance" ng-disabled="true"/>
-                           </md-input-container>
+                         <md-input-container>
+                           <label>Баланс (ETH)</label>
+                           <input ng-if="orders.length != 0" ng-model="orderBalance" ng-disabled="true"/>
+                         </md-input-container>
 
-                           <md-input-container>
-                             <label>Статус</label>
-                             <input ng-if="orders.length != 0" ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
-                           </md-input-container>
+                         <md-input-container>
+                           <label>Статус</label>
+                           <input ng-if="orders.length != 0" ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
+                         </md-input-container>
                        </div>
 
                        <md-button class="md-warn pull-right"
@@ -355,10 +356,9 @@
                        <md-button class="md-raised md-primary pull-right"
                          ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
                          ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
-                       </div>
-                   </div>
-                 </md-card-content>
-                </md-card>
+                     </div>
+               </md-card-content>
+              </md-card>
 
                <md-card>
                  <md-card-content>
@@ -383,6 +383,7 @@
                  </div>
                </md-card-content>
               </md-card>
+
              </md-content>
           </div>
         </div>
