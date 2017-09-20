@@ -319,7 +319,7 @@
 
                <md-card>
                  <md-card-content>
-                   <div class="container left-nav" layout="row">
+                   <div class="mycontainer">
                      <div class="left-nav">
                        <div layout="row">
 
@@ -348,15 +348,14 @@
                            <input ng-if="orders.length != 0" ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
                          </md-input-container>
                        </div>
-
-                       <md-button class="md-warn pull-right"
-                         ng-if="orders[orderIndex].state == 0"
-                         ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
-                       </div>
-                       <md-button class="md-raised md-primary pull-right"
-                         ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
-                         ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
                      </div>
+                     <md-button class="md-warn pull-right"
+                       ng-if="orders[orderIndex].state == 0"
+                       ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
+                   </div>
+                   <md-button class="md-raised md-primary pull-right"
+                     ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
+                     ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
                </md-card-content>
               </md-card>
 
