@@ -178,7 +178,7 @@ contract Platform is Owned {
       address consignee = acc4;
       uint32 description = hash;
       uint orderID = addOrder(consigner, consignee, trackHashes, trackAddress,
-        trackPrices, description);
+        trackPrices, description); // */
   //    Order order = Order(orders[orderID]);
 //      order.addPosition(hash, hash);
 //      order.addAssignment(acc4, acc5, hash, hash);

@@ -21,6 +21,9 @@
   table tr:nth-child(even) {
     background-color: #ffffff;
   }
+  table tr:first-child {
+    background-color: #C0C0C0;
+  }
   </style>
 </header>
 
@@ -52,15 +55,30 @@
                        <label>ОГРН</label>
                        <input ng-model="newContragent.OGRN">
                      </md-input-container>
-
+                     <br>
+                     <br>
                      <md-input-container>
                        <label>Номер счета</label>
-                       <md-select ng-model="newContragent.account">
-                         <!--md-option><em>None</em></md-option-->
-                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                       <md-autocomplete
+                           ng-disabled="false"
+                           md-no-cache="true"
+                           md-selected-item="newContragent.account"
+                           md-items="acc in ctrl.accs"
+                           md-item-text="acc"
+                           md-min-length="0"
+                           md-clear-button="false"
+                           md-require-match="false"
+                           style="width: 27em;"
+                           placeholder="Введите или выберите номер счета">
+                         <md-item-template>
+                           <span md-highlight-flags="^i">{{acc}}</span>
+                         </md-item-template>
+                       </md-autocomplete>
+                        <!--md-select ng-model="newContragent.account">
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
                            {{acc}}
                          </md-option>
-                       </md-select>
+                       </md-select-->
                      </md-input-container>
                      <br>
                    </div>
@@ -331,7 +349,7 @@
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
-                           <p color="red">стоимость: {{ item.price }} ETH</p>
+                           <p>стоимость: {{ web3.fromWei(item.price, "ether") }} ETH</p>
                          </div>
                        </md-list-item>
                        <md-divider ></md-divider>
@@ -385,7 +403,7 @@
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
-                           <p color="red">стоимость: {{ item.price }} ETH</p>
+                           <p>стоимость: {{ web3.fromWei(item.price, "ether") }} ETH</p>
                          </div>
                        </md-list-item>
                        <md-divider ></md-divider>
@@ -410,6 +428,16 @@
                <md-card>
                  <md-card-content>
                    <table>
+                     <tr ng-if="operations.length != 0">
+                       <td>№</td>
+                       <td>Дата</td>
+                       <td>Номер заказа</td>
+                       <td>Операция</td>
+                       <td>Откуда</td>
+                       <td>Куда</td>
+                       <td>Кошелек</td>
+                       <td>Сумма</td>
+                     </tr>
                      <tr ng-repeat="x in operations">
                        <td>{{ $index + 1 }}</td>
                        <td>{{ x.date }}</td>

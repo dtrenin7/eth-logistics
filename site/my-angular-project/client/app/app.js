@@ -74,7 +74,7 @@ var app = angular.module('dashboardApp', [
         console.log(JSON.stringify($scope.order));
         // get first registered order
 
-        var numTracks = $scope.order.numTracks().toNumber();
+/*        var numTracks = $scope.order.numTracks().toNumber();
         console.log(numTracks);
         for( var i = 0; i < numTracks; i++) {
           var track = $scope.order.getTrack(i);
@@ -85,7 +85,7 @@ var app = angular.module('dashboardApp', [
                             price: track[4].toNumber() };
           console.log(JSON.stringify(trackDesc));
         };
-        // enumerate all order's tracks
+        // enumerate all order's tracks */
 
         $scope.explainOrderState = function(order) {
           var descs = ["Новый", "Оплачен", "Выполнен", "Отменен"];
@@ -109,6 +109,23 @@ var app = angular.module('dashboardApp', [
           $scope.orderIndex = index;
         };
 
+
+        $scope.getTrack = function(contract, trackIndex) {
+          var contractTrack = contract.getTrack(trackIndex);
+          var track = {
+            index: trackIndex,
+            state: contractTrack[0].toNumber(),
+            carrier: contractTrack[1],
+            loader: contractTrack[2],
+            unloader: contractTrack[3],
+            price: contractTrack[4].toNumber(),
+//            price: $scope.web3.fromWei(contractTrack[4].toNumber(), 'ether'),
+            pickup: contractTrack[5],
+            dropdown: contractTrack[6]
+          };
+          return track;
+        }
+
         $scope.orders = [];
         $scope.readOrders = function () {
           $scope.orders = [];
@@ -128,18 +145,7 @@ var app = angular.module('dashboardApp', [
 
             var numTracks = contract.numTracks().toNumber();
             for(var j = 0; j < numTracks; j++) {
-              var contractTrack = contract.getTrack(j);
-              var track = {
-                index: j,
-                state: contractTrack[0].toNumber(),
-                carrier: contractTrack[1],
-                loader: contractTrack[2],
-                unloader: contractTrack[3],
-                price: $scope.web3.fromWei(contractTrack[4].toNumber(), 'ether'),
-                pickup: contractTrack[5],
-                dropdown: contractTrack[6]
-              };
-              order.tracks[j] = track;
+              order.tracks[j] = $scope.getTrack(contract, j);
             };
             console.log('TRACKS: ' + numTracks);
 
@@ -183,28 +189,34 @@ var app = angular.module('dashboardApp', [
           };
 
         $scope.approve = function(order, track) {
-          /*console.log("APPROVE ORDER:");
-          console.log(order);
-          console.log("APPROVE TRACK:");
-          console.log(track); */
           var contract = $scope.web3.eth.contract($scope.orderProto.abi).at($scope.platform.getOrder(order.index));
           var approver = $scope.getTrackApprover(order, track);
-          contract.complete({from: approver, gas:3500000});
+          var error = contract.complete({from: approver, gas:3500000});
+          console.log("ERROR: " + error);
+          // change contract and track state
 
+          var trackChanged = false;
+          var lastActiveTrack = order.activeTrack;
           order.activeTrack = contract.activeTrackID().toNumber();
-          if( order.activeTrack > 0 ) {
-            order.state = contract.state().toNumber();
-            var contractTrack = contract.getTrack(track.index);
-            track.state = contractTrack[0].toNumber();
+          if( lastActiveTrack != order.activeTrack ) {
+            trackChanged = true;
+          }
+          order.state = contract.state().toNumber();
+          // update order state in UI
 
-            if( track.state == 1 )  { // разгрузка завершена
-              $scope.addOperation(1, order.address, contractTrack[5], contractTrack[6], contractTrack[1], contractTrack[4]);
-            }
+          var contractTrack = $scope.getTrack(contract, track.index);
+          track.state = contractTrack.state;
+          // update track state in UI
 
-            if( order.state == 2 && order.activeTrack == order.tracks.length ) {
-              $scope.addOperation(1, order.address, contractTrack[5], contractTrack[6], contractTrack[1], contractTrack[4]);
-              $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, 'Группа контрагентов', order.price);
-            }
+          console.log("APPROVE TRACK[" +track.index+ "]=" + track.state + " changed=" + trackChanged);
+          if( order.activeTrack > 0 && trackChanged == false && track.state == 1) {
+            var lastTrack = $scope.getTrack(contract, track.index-1);
+            $scope.addOperation(1, order.address, lastTrack.pickup, lastTrack.dropdown, lastTrack.carrier, lastTrack.price);
+          }
+
+          else if( order.state == 2 && trackChanged == false && order.activeTrack == order.tracks.length ) {
+            $scope.addOperation(1, order.address, track.pickup, track.dropdown, track.carrier, track.price);
+            $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, 'Группа контрагентов', order.price);
           }
         };
 
