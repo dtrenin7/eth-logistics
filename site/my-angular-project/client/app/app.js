@@ -87,7 +87,12 @@ var app = angular.module('dashboardApp', [
         };
         // enumerate all order's tracks */
 
+        $scope.selectedAccount = ''; // register order tab
+
         $scope.explainOrderState = function(order) {
+          if( order == undefined ) {
+            return "Не известно";
+          }
           var descs = ["Новый", "Оплачен", "Выполнен", "Отменен"];
           if(order.state < descs.length) {
             return descs[order.state];
@@ -138,6 +143,7 @@ var app = angular.module('dashboardApp', [
               state: contract.state().toNumber(),
               address: _address,
               consignee: contract.consignee(),
+              consigner: contract.consigner(),
               tracks: [],
               price: contract.price().toNumber(),
               activeTrack: contract.activeTrackID().toNumber()
@@ -191,8 +197,13 @@ var app = angular.module('dashboardApp', [
         $scope.approve = function(order, track) {
           var contract = $scope.web3.eth.contract($scope.orderProto.abi).at($scope.platform.getOrder(order.index));
           var approver = $scope.getTrackApprover(order, track);
-          var error = contract.complete({from: approver, gas:3500000});
-          console.log("ERROR: " + error);
+          try {
+            contract.complete({from: approver, gas:3500000});
+          }
+          catch (e) {
+             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + approver);
+             return;
+          }
           // change contract and track state
 
           var trackChanged = false;
@@ -218,6 +229,8 @@ var app = angular.module('dashboardApp', [
             $scope.addOperation(1, order.address, track.pickup, track.dropdown, track.carrier, track.price);
             $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, 'Группа контрагентов', order.price);
           }
+
+          $scope.getOrderBalance(order);
         };
 
         $scope.operations = [];
@@ -342,6 +355,11 @@ var app = angular.module('dashboardApp', [
             console.log('BALANCE: ' + $scope.balance);
         };
 
+        $scope.orderBalance = 0;
+        $scope.getOrderBalance = function(order) {
+            $scope.orderBalance = $scope.web3.fromWei($scope.web3.eth.getBalance(order.address), 'ether');
+            console.log('ORDER BALANCE: ' + $scope.orderBalance);
+        };
         $scope.tabOrder = function() {
             $scope.getBalance();
         };
@@ -437,6 +455,31 @@ var app = angular.module('dashboardApp', [
           return hash;
         };
 
+        $scope.explainException = function(exception) {
+          var text = exception.toString();
+          if( text.indexOf('could not unlock signer account') >= 0 ||
+            text.indexOf('invalid address') >= 0 ) {
+            return "Нет доступа к счету";
+          }
+          return text;
+        }
+
+        $scope.dismiss = function(order) {
+          var _address = $scope.platform.getOrder(order.index);
+          var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
+          try {
+            contract.dismiss({from: order.consigner, gas: 3000000});
+          }
+          catch(e) {
+            $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
+            return;
+          }
+          order.state = contract.state();
+          $scope.showConfirmation("Информация", "Заказ " + order.address +
+            "успешно отменен. " + $scope.web3.fromWei(order.price, "ether") +
+            " ETH возвращены на счет " + $scope.contragents[$scope.receiver].account);
+        }
+
         $scope.transfer = function() {
           var trackHashes = [];
           var trackAddress = [];
@@ -468,7 +511,13 @@ var app = angular.module('dashboardApp', [
           var lastID = $scope.platform.numOrders().toNumber() - 1;
           var order = $scope.web3.eth.contract($scope.orderProto.abi).at($scope.platform.getOrder(lastID));
           var sender = $scope.contragents[$scope.sender].account;
-          order.begin({from:sender, to:order.address, value: order.price().toNumber(), gas: 3000000})
+          try {
+            order.begin({from:sender, to:order.address, value: order.price().toNumber(), gas: 3000000})
+          }
+          catch (e) {
+             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
+             return;
+          }
           // pay for job
 
           $scope.getBalance();

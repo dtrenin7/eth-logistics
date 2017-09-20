@@ -62,9 +62,10 @@
                        <md-autocomplete
                            ng-disabled="false"
                            md-no-cache="true"
-                           md-selected-item="newContragent.account"
+                           md-selected-item="acc"
                            md-items="acc in ctrl.accs"
-                           md-item-text="acc"
+                           md-search-text="newContragent.account"
+                           md-item-text="newContragent.account"
                            md-min-length="0"
                            md-clear-button="false"
                            md-require-match="false"
@@ -138,22 +139,22 @@
 
                      <md-input-container>
                        <label>ИНН</label>
-                       <input ng-model="contragents[sender].INN" ng-disabled="true">
+                       <input ng-model="contragents[sender].INN" ng-disabled="true"/>
                      </md-input-container>
 
                      <md-input-container>
                        <label>ОГРН</label>
-                       <input ng-model="contragents[sender].OGRN" ng-disabled="true">
+                       <input ng-model="contragents[sender].OGRN" ng-disabled="true"/>
                      </md-input-container>
 
                      <md-input-container>
                        <label>Номер счета</label>
-                       <md-select ng-model="contragents[sender].account" ng-disabled="true">
-                         <!--md-option><em>None</em></md-option-->
-                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                       <input ng-model="contragents[sender].account" ng-disabled="true" size="80"/>
+                       <!--md-select ng-model="contragents[sender].account" ng-disabled="true">
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
                            {{acc}}
                          </md-option>
-                       </md-select>
+                       </md-select-->
                      </md-input-container>
                    </div>
                  </md-card-content>
@@ -191,12 +192,12 @@
 
                      <md-input-container>
                        <label>Номер счета</label>
-                       <md-select ng-model="contragents[receiver].account" ng-disabled="true">
-                         <!--md-option><em>None</em></md-option-->
-                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                       <input ng-model="contragents[receiver].account" ng-disabled="true" size="80"/>
+                       <!--md-select ng-model="contragents[receiver].account" ng-disabled="true">
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
                            {{acc}}
                          </md-option>
-                       </md-select>
+                       </md-select-->
                      </md-input-container>
                    </div>
                  </md-card-content>
@@ -226,11 +227,11 @@
                                <div layout="row">
                                  <md-input-container>
                                    <label>Точка загрузки</label>
-                                   <input ng-model="item.pickup" size="100">
+                                   <input ng-model="item.pickup" size="100"/>
                                  </md-input-container>
                                  <md-input-container>
                                    <label>Точка выгрузки</label>
-                                   <input ng-model="item.dropdown" size="100">
+                                   <input ng-model="item.dropdown" size="100"/>
                                  </md-input-container>
                                </div>
                                <div layout="row">
@@ -247,11 +248,12 @@
 
                                  <md-input-container>
                                    <label>Номер счета грузоперевозчика</label>
-                                   <md-select ng-model="contragents[item.carrier].account" ng-disabled="true">
-                                     <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                                   <input ng-model="contragents[item.carrier].account" ng-disabled="true" size="80"/>
+                                   <!--md-select ng-model="contragents[item.carrier].account" ng-disabled="true">
+                                     <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
                                        {{acc}}
                                      </md-option>
-                                   </md-select>
+                                   </md-select-->
                                  </md-input-container>
                                  <md-input-container>
                                    <label>Стоимость (ETH)</label>
@@ -278,11 +280,12 @@
              <div layout="row">
                <md-input-container>
                  <label>Текущий счет</label>
-                 <md-select ng-model="contragents[sender].account" ng-change="getBalance()" ng-disabled="true">
-                   <md-option ng-repeat="acc in ctrl.accs" ng-value="acc"> <!--  ng-disabled="$index === 1" -->
+                 <input ng-model="contragents[sender].account" ng-disabled="true" size="80"/>
+                 <!--md-select ng-model="contragents[sender].account" ng-change="getBalance()" ng-disabled="true">
+                   <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
                      {{acc}}
                    </md-option>
-                 </md-select>
+                 </md-select-->
                </md-input-container>
                <md-input-container>
                  <label>Стоимость (ETH)</label>
@@ -321,7 +324,7 @@
 
                            <md-input-container>
                              <label>Номер</label>
-                             <md-select ng-model="orderIndex">
+                             <md-select ng-model="orderIndex" ng-change="getOrderBalance(orders[orderIndex])">
                                <!--md-option><em>None</em></md-option-->
                                <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
                                  {{item.address}}
@@ -331,19 +334,28 @@
 
                            <md-input-container>
                              <label>Стоимость (ETH)</label>
-                             <input ng-model="web3.fromWei(orders[orderIndex].price, 'ether')" ng-disabled="true">
+                             <input ng-if="orders.length != 0" ng-model="web3.fromWei(orders[orderIndex].price, 'ether')" ng-disabled="true"/>
+                           </md-input-container>
+
+                           <md-input-container>
+                             <label>Баланс (ETH)</label>
+                             <input ng-if="orders.length != 0" ng-model="orderBalance" ng-disabled="true"/>
                            </md-input-container>
 
                            <md-input-container>
                              <label>Статус</label>
-                             <input ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true">
+                             <input ng-if="orders.length != 0" ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
                            </md-input-container>
                        </div>
 
-                     <md-button class="md-raised md-primary pull-right"
-                       ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
-                       ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
-                     </div>
+                       <md-button class="md-warn pull-right"
+                         ng-if="orders[orderIndex].state == 0"
+                         ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
+                       </div>
+                       <md-button class="md-raised md-primary pull-right"
+                         ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
+                         ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
+                       </div>
                    </div>
                  </md-card-content>
                 </md-card>
@@ -359,7 +371,7 @@
                              <i class="material-icons md-48 pull-left">{{ getTrackIcon(item.state) }}</i>
                              <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
                               <md-button class="md-raised md-primary pull-right"
-                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].activeTrack == item.index"
+                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
@@ -395,6 +407,10 @@
                            <div>
                              <i class="material-icons md-48 pull-left">{{ getOrderIcon(item.state) }}</i>
                              <h3>  [{{ item.index }}] {{ item.address }}</h3>
+                             <md-button class="md-warn pull-right"
+                               ng-if="item.state == 0"
+                               ng-click="dismiss(item)">Отменить
+                             </md-button>
                              <md-button class="md-raised md-primary pull-right"
                                ng-if="item.state == 1 && item.activeTrack == item.tracks.length"
                                ng-click="approve(item, item.tracks[item.tracks.length-1])">Подтвердить получение</md-button>
@@ -413,7 +429,7 @@
                              <i class="material-icons md-48 pull-left">{{ getTrackIcon(item.state) }}</i>
                              <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
                               <md-button class="md-raised md-primary pull-right"
-                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].activeTrack == item.index"
+                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>

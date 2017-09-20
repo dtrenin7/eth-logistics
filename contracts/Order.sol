@@ -169,7 +169,9 @@ contract Order is Owned {
         return Error.OrderAlreadyProcessing;
       // заказ уже выполняется, отменить невозможно
 
-      //consigner.transfer(this.balance);
+      if( this.balance != 0 ) {
+        consigner.transfer(this.balance);
+      }
       state = State.Cancelled;
       return Error.OK;
       // отмена заказа
