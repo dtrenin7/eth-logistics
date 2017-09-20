@@ -60,7 +60,6 @@ contract Order is Owned {
   mapping (uint => Track) tracks;
   uint32 public description;  // хеш на описание перевозки (в т.ч.груза)
 
-
   function Order( uint _ID,
                   address _consigner,
                   address _consignee,
@@ -163,15 +162,24 @@ contract Order is Owned {
     return Error.UnknownCompletion;
   }
 
-  function dismiss() returns (Error) {
+  function getBalance() constant returns (uint) {
+    return this.balance;
+  }
+
+  function complete2() returns (Error) {
     if( msg.sender == consigner ) {
-      if( state != State.New )
+      if( numTracks > 0 && tracks[0].trackState != TrackState.New ) {
         return Error.OrderAlreadyProcessing;
+      }
       // заказ уже выполняется, отменить невозможно
 
-      if( this.balance != 0 ) {
-        consigner.transfer(this.balance);
+      // нельзя запрашивать баланс и производить оплату в одном методе (!!!)
+      // вызывает Invalid Opcode - походу BUG solidity
+      uint bal = this.getBalance();
+      if( bal > 0 ) {
+        consigner.transfer(bal);
       }
+
       state = State.Cancelled;
       return Error.OK;
       // отмена заказа

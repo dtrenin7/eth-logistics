@@ -96,7 +96,7 @@ contract Platform is Owned {
       ID = numOrders++;
       Order order = new Order(ID, _consigner, _consignee, _trackHashes,
         _trackAddresses, _trackPrices, _description);
-      order.setOwner(owner);
+      order.setOwner(_consigner);
       orders[ID] = order;
     }
 

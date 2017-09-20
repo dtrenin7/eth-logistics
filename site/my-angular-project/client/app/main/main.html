@@ -350,7 +350,7 @@
                        </div>
                      </div>
                      <md-button class="md-warn pull-right"
-                       ng-if="orders[orderIndex].state == 0"
+                       ng-if="canDismiss(orders[orderIndex])"
                        ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
                    </div>
                    <md-button class="md-raised md-primary pull-right"
@@ -408,7 +408,7 @@
                              <i class="material-icons md-48 pull-left">{{ getOrderIcon(item.state) }}</i>
                              <h3>  [{{ item.index }}] {{ item.address }}</h3>
                              <md-button class="md-warn pull-right"
-                               ng-if="item.state == 0"
+                               ng-if="canDismiss(item)"
                                ng-click="dismiss(item)">Отменить
                              </md-button>
                              <md-button class="md-raised md-primary pull-right"
