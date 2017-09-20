@@ -227,7 +227,7 @@ var app = angular.module('dashboardApp', [
 
           else if( order.state == 2 && trackChanged == false && order.activeTrack == order.tracks.length ) {
             $scope.addOperation(1, order.address, track.pickup, track.dropdown, track.carrier, track.price);
-            $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, 'Группа контрагентов', order.price);
+            $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, order.consignee, 0);
           }
 
           $scope.getOrderBalance(order);
