@@ -351,7 +351,12 @@ var app = angular.module('dashboardApp', [
         $scope.account = $scope.web3.eth.accounts[0];
         $scope.balance = 0;
         $scope.getBalance = function() {
-            $scope.balance = $scope.web3.fromWei($scope.web3.eth.getBalance($scope.contragents[$scope.sender].account), 'ether');
+            try {
+              $scope.balance = $scope.web3.fromWei($scope.web3.eth.getBalance($scope.contragents[$scope.sender].account), 'ether');
+            }
+            catch(e) {
+              $scope.balance = "НЕТ ДОСТУПА";
+            }
             console.log('BALANCE: ' + $scope.balance);
         };
 
