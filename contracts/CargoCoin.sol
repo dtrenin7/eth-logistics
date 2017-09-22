@@ -8,11 +8,14 @@ import "./ECR20.sol";
 contract CargoCoin is Owned, ERC20 {
 	string public constant symbol = "CC";
 	string public constant name = "Cargo Coins";
-	uint8 public constant decimals = 18;
+
+	// minimum CC amount is one microCC
+	uint8 public constant decimals = 6;
 
  	// conversion ratio 1 ETH for 1000 CC
-	uint wei2cc = 1000000000000000;
+	uint wei2cc = 1000000000;
 
+	// emitted amount of microCC
 	uint256 _totalSupply;
 
 	// Balances for each account
@@ -27,8 +30,9 @@ contract CargoCoin is Owned, ERC20 {
 	// Triggered whenever approve(address _spender, uint256 _value) is called.
 	event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 
+	// Initial emission (in microCC) = 1000000 CC
 	function CargoCoin() Owned() {
-		_totalSupply = 1000000;	// initial emission 1000 ETH
+		_totalSupply = 1000000000000;
 		balances[owner] = _totalSupply;
 	}
 
@@ -94,6 +98,8 @@ contract CargoCoin is Owned, ERC20 {
 	    return allowed[_owner][_spender];
 	}
 
+//////////////////////// END OF ERC20 SPECIFIC //////////////////////////////
+
 	function setConversionRatio(uint ratio) restricted {
 		wei2cc = ratio;
 	}
@@ -102,53 +108,36 @@ contract CargoCoin is Owned, ERC20 {
 		ratio = wei2cc;
 	}
 
-	function sendCoin(address receiver, uint256 amount) returns(bool sufficient) {
-		if (balances[msg.sender] < amount)
-			return false;
-		balances[msg.sender] -= amount;
-		balances[receiver] += amount;
-		Transfer(msg.sender, receiver, amount);
-		return true;
-	}
-
 	function getBalanceInWei(address addr) constant returns(uint256){
-		return getBalanceInCC(addr) * wei2cc;
-	}
-
-	function getBalanceInCC(address addr) constant returns(uint256) {
-		return balances[addr];
-	}
-
-	function getBalance() constant returns (uint256 balance) {
-		balance = this.balance;
+		return balanceOf(addr) * wei2cc;
 	}
 
 	function canBuy(uint256 cargoCoins) constant returns (bool can) {
 		can = balances[owner] >= cargoCoins;
 	}
 
-	/// ETH (wei) => CC
-	function buy() payable {
+	/// ETH (wei) => CC (microCC)
+	function ether2cc() payable {
 		// If no Ether has been sent we have nothing to do.
     if( msg.value < wei2cc || owner == msg.sender )
 			revert();
-		uint cargoCoins = msg.value / wei2cc;
-		if( balances[owner] < cargoCoins )
+		uint256 microCC = msg.value / wei2cc;
+		if( balances[owner] < microCC )
 			revert();
-		balances[owner] -= cargoCoins;
-		balances[msg.sender] += cargoCoins;
-		Transfer(owner, msg.sender, cargoCoins);
+		balances[owner] -= microCC;
+		balances[msg.sender] += microCC;
+		Transfer(owner, msg.sender, microCC);
 //		owner.transfer(msg.value);  /// do not hold ETH on contract, let buyer pays transfer gas
 	}
 
-	///  CC => ETH (wei)
-	function sell(uint cargoCoins) {
-		if( cargoCoins == 0 || balances[msg.sender] < cargoCoins || msg.sender == owner )
+	///  CC (microCC) => ETH (wei)
+	function cc2ether(uint256 microCC) {
+		if( microCC == 0 || balances[msg.sender] < microCC || msg.sender == owner )
 			revert();
-		uint weis = cargoCoins * wei2cc;
-		balances[msg.sender] -= cargoCoins;
-		balances[owner] += cargoCoins;
-		Transfer(msg.sender, owner, cargoCoins);
+		uint256 weis = microCC * wei2cc;
+		balances[msg.sender] -= microCC;
+		balances[owner] += microCC;
+		Transfer(msg.sender, owner, microCC);
 		msg.sender.transfer(weis);
 	}
 }
