@@ -494,7 +494,45 @@ var app = angular.module('dashboardApp', [
 
         }
 
+        $scope.addressValid = function(address) {
+          try {
+            $scope.platform.numOrders({from:address});
+          }
+          catch (e) {
+             return {valid:false, exception:e};
+          }
+          return {valid:true, exception:0};
+        }
+
+        $scope.pay = function(order) {
+          var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(order.address);
+          try {
+            contract.begin({from:order.consigner, to:order.address, value: order.price, gas: 3000000})
+          }
+          catch (e) {
+             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
+             return;
+          }
+          // pay for job
+
+          $scope.getBalance();
+          order.state = contract.state().toNumber();
+          $scope.showConfirmation("Информация", "Заказ " + order.address +
+            " на сумму " + $scope.web3.fromWei(order.price, "ether")
+            + " ETH оплачен успешно");
+          // show confirmation
+        }
+
         $scope.transfer = function() {
+          var address = $scope.addressValid($scope.contragents[$scope.sender].account);
+          if( address.valid == false ) {
+            console.log("ORDER REJECTED");
+            $scope.showConfirmation("Ошибка", $scope.explainException(address.exception)
+              + " " + $scope.contragents[$scope.sender].account);
+            return;
+          }
+          // мы не должны создавать заказ, который не сможем оплатить
+
           var trackHashes = [];
           var trackAddress = [];
           var trackPrices = [];

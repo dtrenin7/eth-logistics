@@ -349,6 +349,8 @@
                          </md-input-container>
                        </div>
                      </div>
+                     <md-button class="md-raised md-primary pull-right"
+                       ng-if="orders[orderIndex].state == 0" ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
                      <md-button class="md-warn pull-right"
                        ng-if="canDismiss(orders[orderIndex])"
                        ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
@@ -409,8 +411,9 @@
                              <h3>  [{{ item.index }}] {{ item.address }}</h3>
                              <md-button class="md-warn pull-right"
                                ng-if="canDismiss(item)"
-                               ng-click="dismiss(item)">Отменить
-                             </md-button>
+                               ng-click="dismiss(item)">Отменить</md-button>
+                             <md-button class="md-raised md-primary pull-right"
+                               ng-if="item.state == 0" ng-click="pay(item)">Оплатить</md-button>
                              <md-button class="md-raised md-primary pull-right"
                                ng-if="item.state == 1 && item.activeTrack == item.tracks.length"
                                ng-click="approve(item, item.tracks[item.tracks.length-1])">Подтвердить получение</md-button>
