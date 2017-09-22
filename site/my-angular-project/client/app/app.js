@@ -521,6 +521,7 @@ var app = angular.module('dashboardApp', [
           // pay for job
 
           $scope.getBalance();
+          $scope.getOrderBalance(order);
           order.state = contract.state().toNumber();
           $scope.showConfirmation("Информация", "Заказ " + order.address +
             " на сумму " + $scope.web3.fromWei(order.price, "ether")

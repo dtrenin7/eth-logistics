@@ -185,6 +185,7 @@ contract Platform is Owned {
 
       /// var app; var acc = web3.eth.accounts; Platform.deployed().then(function(i){app=i; return app.init(acc[0], acc[1], acc[2], acc[3], acc[4]);});web3.eth.defaultAccount = web3.eth.accounts[0];
       /// var x;app.getOrder(0).then(function(i){x = web3.eth.contract(Order.abi).at(i)})
+      /// var cc; CargoCoin.deployed().then(function(i){cc=i;})
       /// x.begin({from:acc[0], to:x.address, value: web3.toWei(3, "ether")}) // acc[0] => 3 ETH => Order
       /// web3.fromWei(web3.eth.getBalance(x.address), 'ether').toNumber() // get Order balance
       /// web3.fromWei(web3.eth.getBalance(acc[1]), 'ether').toNumber() // get carrier [0] balance
