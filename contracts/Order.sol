@@ -1,6 +1,7 @@
 pragma solidity ^0.4.11;
 
 import "./Owned.sol";
+import "./CargoCoin.sol";
 
 /// @title Заказ на перевозку
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
@@ -59,6 +60,8 @@ contract Order is Owned {
   uint public activeTrackID;
   mapping (uint => Track) tracks;
   uint32 public description;  // хеш на описание перевозки (в т.ч.груза)
+  CargoCoin cc;
+  address _address;
 
   function Order( uint _ID,
                   address _consigner,
@@ -68,6 +71,8 @@ contract Order is Owned {
                   address[] _trackAddresses,
                   uint[] _trackPrices,
                   uint32 _description) Owned() {
+    cc = CargoCoin(0x1dfc8f39f23b207f1894476627ff531d5492929d);
+    _address = this;
     ID = _ID;
     state = State.New;
     consigner = _consigner;
@@ -113,13 +118,18 @@ contract Order is Owned {
 
   function begin() payable returns (Error) {
     if( msg.sender == consigner ) {
+      uint256 balanceCC = cc.balanceOf(_address);
       if( state != State.New ) {
-        msg.sender.transfer(msg.value);
+        //msg.sender.transfer(msg.value); // wei
         return Error.OrderAlreadyPaid;
       }
-      if( msg.value != price ) {
-          msg.sender.transfer(msg.value);
-          return Error.PriceIsWrong;
+      if( balanceCC != price ) {  // microCC
+        if( balanceCC != 0 ) {
+          cc.transfer(msg.sender, balanceCC);
+        }
+      //if( msg.value != price ) {  // wei
+          //msg.sender.transfer(msg.value);
+        return Error.PriceIsWrong;
       }
       // возврат, если условия не соблюдены
       state = State.Signed;
@@ -145,7 +155,8 @@ contract Order is Owned {
         msg.sender == tracks[activeTrackID].loader ) {
         tracks[activeTrackID].trackState = TrackState.Loaded;
         if( activeTrackID > 0 ) {
-          tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price);
+        //  tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price); // wei
+          cc.transfer(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
         }
         // предидущие участники трека выполнили свою работу, платим им
         return Error.OK;
@@ -154,7 +165,8 @@ contract Order is Owned {
     }
 
     else if( numTracks > 0 && msg.sender == consignee ) {
-      tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price);
+      // tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price); // wei
+      cc.transfer(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
       state = State.Done;
       return Error.OK;
     }
@@ -163,10 +175,11 @@ contract Order is Owned {
   }
 
   function getBalance() constant returns (uint) {
-    return this.balance;
+    // return this.balance; // wei
+    return cc.balanceOf(_address); // microCC
   }
 
-  function complete2() returns (Error) {
+  function complete2() returns (Error) { // Cancel(), but solidity name conflicts
     if( msg.sender == consigner ) {
       if( numTracks > 0 && tracks[0].trackState != TrackState.New ) {
         return Error.OrderAlreadyProcessing;
@@ -177,7 +190,8 @@ contract Order is Owned {
       // вызывает Invalid Opcode - походу BUG solidity
       uint bal = this.getBalance();
       if( bal > 0 ) {
-        consigner.transfer(bal);
+        // consigner.transfer(bal); // wei
+        cc.transfer(consigner, bal); // microCC
       }
 
       state = State.Cancelled;
