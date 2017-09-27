@@ -179,7 +179,7 @@ contract Order is Owned {
     return cc.balanceOf(_address); // microCC
   }
 
-  function complete2() returns (Error) { // Cancel(), but solidity name conflicts
+  function complete2() returns (Error) { 
     if( msg.sender == consigner ) {
       if( numTracks > 0 && tracks[0].trackState != TrackState.New ) {
         return Error.OrderAlreadyProcessing;

@@ -130,9 +130,6 @@ var app = angular.module('dashboardApp', [
         console.log(JSON.stringify($scope.cc));
         // get cargo coins contract
 
-        $scope.order = $scope.web3.eth.contract($scope.orderProto.abi).at($scope.platform.getOrder(0));
-        console.log(JSON.stringify($scope.order));
-        // get first registered order
 
 /*        var numTracks = $scope.order.numTracks().toNumber();
         console.log(numTracks);
