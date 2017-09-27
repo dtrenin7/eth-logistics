@@ -118,19 +118,23 @@ contract Order is Owned {
 
   function begin() payable returns (Error) {
     if( msg.sender == consigner ) {
-      uint256 balanceCC = cc.balanceOf(_address);
+      //uint balanceCC = cc.balanceOf(_address);
       if( state != State.New ) {
         //msg.sender.transfer(msg.value); // wei
         return Error.OrderAlreadyPaid;
       }
-      if( balanceCC != price ) {  // microCC
+      if( cc.transferFrom(msg.sender, _address, price) != true ) {
+        return Error.PriceIsWrong;
+      }
+
+      /*if( balanceCC != price ) {  // microCC
         if( balanceCC != 0 ) {
           cc.transfer(msg.sender, balanceCC);
         }
       //if( msg.value != price ) {  // wei
           //msg.sender.transfer(msg.value);
         return Error.PriceIsWrong;
-      }
+      } */
       // возврат, если условия не соблюдены
       state = State.Signed;
     }
@@ -179,7 +183,7 @@ contract Order is Owned {
     return cc.balanceOf(_address); // microCC
   }
 
-  function complete2() returns (Error) { 
+  function complete2() returns (Error) {
     if( msg.sender == consigner ) {
       if( numTracks > 0 && tracks[0].trackState != TrackState.New ) {
         return Error.OrderAlreadyProcessing;

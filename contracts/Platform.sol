@@ -183,6 +183,7 @@ contract Platform is Owned {
 //      order.addPosition(hash, hash);
 //      order.addAssignment(acc4, acc5, hash, hash);
 
+      /// var app; var acc = web3.eth.accounts; Platform.deployed().then(function(i){app=i;});web3.eth.defaultAccount = web3.eth.accounts[0];var cc; CargoCoin.deployed().then(function(i){cc=i;})
       /// var app; var acc = web3.eth.accounts; Platform.deployed().then(function(i){app=i; return app.init(acc[0], acc[1], acc[2], acc[3], acc[4]);});web3.eth.defaultAccount = web3.eth.accounts[0];
       /// var x;app.getOrder(0).then(function(i){x = web3.eth.contract(Order.abi).at(i)})
       /// var cc; CargoCoin.deployed().then(function(i){cc=i;})

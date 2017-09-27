@@ -299,7 +299,7 @@ var app = angular.module('dashboardApp', [
               to: _to,
               who: _who,
               what: 'Груз',
-              amount: $scope.web3.fromWei(_amount, "ether") + " ETH",
+              amount: $scope.fromMicroCC(_amount) + " CC",
               date: new Date(Date.now()).toString()
           });
         }
@@ -502,9 +502,12 @@ var app = angular.module('dashboardApp', [
         };
 
         $scope.orderBalance = 0;
+        $scope.orderBalanceCC = 0;
         $scope.getOrderBalance = function(order) {
             $scope.orderBalance = $scope.web3.fromWei($scope.web3.eth.getBalance(order.address), 'ether');
             console.log('ORDER BALANCE: ' + $scope.orderBalance);
+            $scope.orderBalanceCC = $scope.fromMicroCC($scope.cc.balanceOf(order.address));
+            console.log('ORDER BALANCE CC: ' + $scope.orderBalanceCC);
         };
         $scope.tabOrder = function() {
             $scope.getBalanceCC();
@@ -625,7 +628,7 @@ var app = angular.module('dashboardApp', [
           var _address = $scope.platform.getOrder(order.index);
           var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
           $scope.getOrderBalance(order);
-          var before = $scope.orderBalance;
+          var before = $scope.orderBalanceCC;
           try {
             console.log("TRYING TO DISMISS " + order.consigner);
             contract.complete2({from:order.consigner, gas:3500000});
@@ -636,9 +639,9 @@ var app = angular.module('dashboardApp', [
           }
           order.state = contract.state();
           $scope.getOrderBalance(order);
-          var feedback = before - $scope.orderBalance;
+          var feedback = before - $scope.orderBalanceCC;
           $scope.showConfirmation("Информация", "Заказ " + order.address +
-            " успешно отменен. " + feedback + " ETH возвращены на счет "
+            " успешно отменен. " + feedback + " CC возвращены на счет "
             + order.consigner);
 
         }
@@ -656,7 +659,8 @@ var app = angular.module('dashboardApp', [
         $scope.pay = function(order) {
           var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(order.address);
           try {
-            contract.begin({from:order.consigner, to:order.address, value: order.price, gas: 3000000})
+            $scope.cc.approve(order.address, order.price, {from:order.consigner, gas: 70000});
+            contract.begin({from:order.consigner, to:order.address, gas: 70000});
           }
           catch (e) {
              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
@@ -668,8 +672,7 @@ var app = angular.module('dashboardApp', [
           $scope.getOrderBalance(order);
           order.state = contract.state().toNumber();
           $scope.showConfirmation("Информация", "Заказ " + order.address +
-            " на сумму " + $scope.web3.fromWei(order.price, "ether")
-            + " ETH оплачен успешно");
+            " на сумму " + $scope.fromMicroCC(order.price) + " CC оплачен успешно");
           // show confirmation
         }
 
@@ -702,13 +705,21 @@ var app = angular.module('dashboardApp', [
             trackPrices.push($scope.toMicroCC(item.price).toString()); // price in microCC
             console.log(trackHashes);
           }
-          var orderID = $scope.platform.addOrder(
+
+          try {
+            $scope.platform.addOrder(
                $scope.contragents[$scope.sender].account,
                $scope.contragents[$scope.receiver].account,
                trackHashes, trackAddress, trackPrices,
                $scope.getHash('some description'),
-            {gas: 3500000 });
-          console.log('NEW ORDER: ' + orderID);
+               {gas: 2000000 });
+               //console.log('NEW ORDER: ' + orderID);\
+           }
+           catch(e) {
+             $scope.showConfirmation("Ошибка", $scope.explainException(e)
+               + " " + $scope.contragents[$scope.sender].account);
+             return;
+           }
           // deploy new order
 
           var lastID = $scope.platform.numOrders().toNumber() - 1;
@@ -717,14 +728,13 @@ var app = angular.module('dashboardApp', [
           var orderPrice = order.price().toNumber();
           try {
           //  order.begin({from:sender, to:order.address, value: order.price().toNumber(), gas: 3000000});  // wei
-            var tx = $scope.cc.transfer(order.address, orderPrice, {from:sender, gas:3000000});
+//            $scope.cc.transfer(order.address, orderPrice, {from:sender, gas:70000});
+            $scope.cc.approve(order.address, orderPrice, {from:sender, gas:70000});
+            // позволим контракту списать стоимость со счета отправителя
 
-           console.log($scope.web3.eth.getTransaction(tx));
-            if(tx == false) {
-              throw "sender doesn't have enough funds to send tx";
-            }
               // send microCC to order
-            order.begin({from:sender, to:order.address, gas: 3000000}); // microCC
+            order.begin({from:sender, to:order.address, gas: 70000}); // microCC
+            console.log("BEGIN FROM: " + sender);
           }
           catch (e) {
              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
