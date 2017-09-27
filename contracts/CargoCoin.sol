@@ -59,7 +59,6 @@ contract CargoCoin is Owned, ERC20 {
 					 Transfer(msg.sender, _to, _amount);
            return true;
        } else {
-				 	 revert();
            return false;
        }
    }
@@ -131,12 +130,11 @@ contract CargoCoin is Owned, ERC20 {
 		balances[_address] -= microCC;
 		balances[msg.sender] += microCC;
 		Transfer(_address, msg.sender, microCC);
-//		owner.transfer(msg.value);  /// do not hold ETH on contract, let buyer pays transfer gas
 	}
 
 	///  CC (microCC) => ETH (wei)
 	function cc2ether(uint256 microCC) {
-		if( microCC == 0 || balances[msg.sender] < microCC || msg.sender == owner )
+		if( microCC == 0 || balances[msg.sender] < microCC )
 			revert();
 		uint256 weis = microCC * wei2cc;
 		balances[msg.sender] -= microCC;

@@ -172,7 +172,11 @@
                       </md-input-container>
                     </div>
 
-                    <md-button class="md-raised md-primary" ng-if="exchange.eth != 0" ng-click="eth2cc()">Обменять на CC</md-button>
+                    <md-button class="md-raised md-primary" ng-if="exchange.eth != 0" ng-click="eth2cc()" ng-disabled="exchange.eth < 0 || exchange.eth > balance">
+                      <span>Обменять на CC
+                        <md-tooltip md-direction="top" ng-if="exchange.eth < 0 || exchange.eth > balance">Указанное количество превышает текущий баланс ({{ balance }}) или является не валидным</md-tooltip>
+                      </span>
+                    </md-button>
                   </md-card-content>
                </md-card>
 
@@ -190,7 +194,11 @@
                      </md-input-container>
                    </div>
 
-                   <md-button class="md-raised md-primary" ng-if="exchange.cc != 0" ng-click="cc2eth()">Обменять на ETH</md-button>
+                   <md-button class="md-raised md-primary" ng-if="exchange.cc != 0" ng-click="cc2eth()" ng-disabled="exchange.cc < 0 || exchange.cc > balanceCC">
+                     <span>Обменять на ETH
+                       <md-tooltip md-direction="top" ng-if="exchange.cc < 0 || exchange.cc > balanceCC">Указанное количество превышает текущий баланс ({{ balanceCC }}) или является не валидным</md-tooltip>
+                     </span>
+                   </md-button>
                  </md-card-content>
               </md-card>
 
