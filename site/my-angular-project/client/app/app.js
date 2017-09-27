@@ -397,8 +397,16 @@ var app = angular.module('dashboardApp', [
 
         $scope.eth2cc = function(wei) {
           var account = $scope.contragents[$scope.exchange.index].account;
+          $scope.getBalance(account);
           try {
-            $scope.cc.ether2cc({from:account, to:$scope.cc.address, value:$scope.exchange.wei, gas:3000000});
+            var maxGas = 150000; // должно хватить в два конца, средняя цена 55000
+            var amount = $scope.exchange.wei;
+            if( amount.toString() == $scope.balanceWei.toString() ) {
+              amount -= maxGas;
+              // мы должны зарезервировать плату за транзакцию, если хотим сконвертировать все
+            }
+            maxGas /= 2;
+            $scope.cc.ether2cc({from:account, to:$scope.cc.address, value:amount, gas:maxGas});
           }
           catch (e) {
              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + account);
@@ -410,7 +418,7 @@ var app = angular.module('dashboardApp', [
         $scope.cc2eth = function(microCC) {
           var account = $scope.contragents[$scope.exchange.index].account;
           try {
-            $scope.cc.cc2ether($scope.exchange.microCC.toString(), {from:account, to:$scope.cc.address, gas:3000000});
+            $scope.cc.cc2ether($scope.exchange.microCC.toString(), {from:account, to:$scope.cc.address, gas:70000});
           }
           catch (e) {
              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + account);
