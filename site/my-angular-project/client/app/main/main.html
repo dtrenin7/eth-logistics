@@ -29,7 +29,7 @@
 
 <!-- For simple styling and transitions, include "angular-accordion.css". You can edit styles to meed your look and feel -->
 <div ng-controller="MainCtrl as ctrl">
-<md-tabs md-dynamic-height md-border-bottom >
+<md-tabs md-dynamic-height md-border-bottom>
    <md-tab label="Регистрация">
      <md-content class="md-padding">
        <div class="container">
@@ -38,7 +38,7 @@
              <div class="md-padding" ng-cloak layout="column">
 
                <!-- КОНТРАГЕНТ -->
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                    <md-input-container>
                      <label>Номер счета</label>
@@ -87,7 +87,7 @@
                </md-card>
 
                <!-- АКТИВНЫЕ КОНТРАГЕНТЫ  -->
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                  <md-list flex>
                    <md-subheader class="md-no-sticky">Активные контрагенты</md-subheader>
@@ -117,7 +117,7 @@
             <div class="col-lg-12">
               <div class="md-padding" ng-cloak layout="column">
 
-                <md-card>
+                <md-card md-whiteframe="12">
                   <md-card-content>
                     <div layout="row">
 
@@ -159,7 +159,7 @@
                 </md-card>
 
                 <!-- ETHEREUM  -->
-                <md-card>
+                <md-card md-whiteframe="12">
                   <md-card-content>
                     <div layout="row">
                       <md-input-container>
@@ -181,7 +181,7 @@
                </md-card>
 
                <!-- CARGO COINS  -->
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                    <div layout="row">
                      <md-input-container>
@@ -218,7 +218,7 @@
              <div class="md-padding" ng-cloak layout="column">
 
                <!-- ОТПРАВИТЕЛЬ -->
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-title>
                    <md-card-title-text>
                      <span class="md-headline">Отправитель</span>
@@ -261,7 +261,7 @@
                </md-card>
 
                <!-- ПОЛУЧАТЕЛЬ -->
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-title>
                    <md-card-title-text>
                      <span class="md-headline">Получатель</span>
@@ -304,7 +304,7 @@
                </md-card>
 
                <!-- ЗАКАЗ -->
-             <md-card>
+             <md-card md-whiteframe="12">
                <md-card-title>
                  <md-card-title-text>
                    <span class="md-headline">Маршрут</span>
@@ -372,7 +372,7 @@
            </md-card-content>
 
            </md-card>
-           <md-card>
+           <md-card md-whiteframe="12">
              <md-card-title>
                <md-card-title-text>
                  <span class="md-headline">Оплата</span>
@@ -421,7 +421,7 @@
            <div class="col-lg-12">
              <div class="md-padding" ng-cloak layout="column">
 
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                    <div class="mycontainer">
                      <div class="left-nav">
@@ -465,7 +465,7 @@
                </md-card-content>
               </md-card>
 
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                    <div layout="row">
                      <md-list flex>
@@ -503,7 +503,7 @@
          <div class="row">
            <div class="col-lg-12">
              <div class="md-padding" ng-cloak layout="column">
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                    <div layout="row">
                      <md-list flex>
@@ -562,7 +562,7 @@
          <div class="row">
            <div class="col-lg-12">
              <div class="md-padding" ng-cloak layout="column">
-               <md-card>
+               <md-card md-whiteframe="12">
                  <md-card-content>
                    <table>
                      <tr ng-if="operations.length != 0">

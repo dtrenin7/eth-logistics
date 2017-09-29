@@ -60,6 +60,7 @@ contract Order is Owned {
   uint public activeTrackID;
   mapping (uint => Track) tracks;
   uint32 public description;  // хеш на описание перевозки (в т.ч.груза)
+  address ccAddress;
   CargoCoin cc;
   address _address;
 
@@ -71,7 +72,8 @@ contract Order is Owned {
                   address[] _trackAddresses,
                   uint[] _trackPrices,
                   uint32 _description) Owned() {
-    cc = CargoCoin(0x1dfc8f39f23b207f1894476627ff531d5492929d);
+    ccAddress = address(0x1dfc8f39f23b207f1894476627ff531d5492929d);
+    cc = CargoCoin(ccAddress);
     _address = this;
     ID = _ID;
     state = State.New;
@@ -141,6 +143,15 @@ contract Order is Owned {
     return Error.OK;
   }
 
+  function payZ(address account, uint amount) internal {
+    uint fee = amount / 100;
+    uint xamount = amount - fee;
+    //cc.transfer(ccAddress, fee);
+    // берем комиссию 1%
+    cc.transferFrom(_address, ccAddress, fee);
+    cc.transfer(account, xamount); // microCC
+  }
+
   function complete() returns (Error) {
     if( state != State.Signed  )
       return Error.OrderIsNotPaid;
@@ -160,7 +171,9 @@ contract Order is Owned {
         tracks[activeTrackID].trackState = TrackState.Loaded;
         if( activeTrackID > 0 ) {
         //  tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price); // wei
-          cc.transfer(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
+        uint fee = 1;
+        cc.transferWithFee(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price, fee); // microCC
+//          payZ(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
         }
         // предидущие участники трека выполнили свою работу, платим им
         return Error.OK;
@@ -170,7 +183,10 @@ contract Order is Owned {
 
     else if( numTracks > 0 && msg.sender == consignee ) {
       // tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price); // wei
-      cc.transfer(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
+
+      cc.transferWithFee(tracks[activeTrackID-1].carrier,tracks[activeTrackID-1].price, 1); // microCC
+
+      //payZ(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
       state = State.Done;
       return Error.OK;
     }

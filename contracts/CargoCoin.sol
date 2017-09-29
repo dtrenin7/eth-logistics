@@ -103,6 +103,20 @@ contract CargoCoin is Owned, ERC20 {
 
 //////////////////////// END OF ERC20 SPECIFIC //////////////////////////////
 
+	function div(uint a, uint b) constant returns (uint q) {
+			assembly {
+					q := div(a, b)
+			}
+	}
+	// Transfer the balance from owner's account to another account with fee in percents
+	function transferWithFee(address _to, uint256 _amount, uint256 percents) returns (bool success) {
+		uint256 fee = div(_amount * percents, 100);
+		uint256 stripped = _amount - fee;
+		balances[msg.sender] -= fee;
+		balances[_address] += fee;
+		return transfer(_to, stripped);
+	}
+
 	function setConversionRatio(uint ratio) restricted {
 		wei2cc = ratio;
 	}
