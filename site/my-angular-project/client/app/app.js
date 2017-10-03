@@ -493,18 +493,14 @@ var app = angular.module('dashboardApp', [
           $scope.exchange.microCC = $scope.toMicroCC($scope.exchange.cc);
         }
 
-        $scope.eth2ccAsync = function(account, wei) {
+        $scope.makePromise = function(methode, args) {
           var deferred = Q.defer();
+          args.push(function(error, result){
+            if( error ) { deferred.reject(new Error(error)); }
+            else { deferred.resolve(result); }
+          });
           try {
-              var maxGas = 150000; // должно хватить в два конца, средняя цена 55000
-              var amount = $scope.exchange.wei;
-              if( amount.toString() == $scope.balanceWei.toString() ) {
-                amount -= maxGas;
-                // мы должны зарезервировать плату за транзакцию, если хотим сконвертировать все
-              }
-              maxGas /= 2;
-              $scope.cc.ether2cc({from:account, to:$scope.cc.address, value:amount, gas:maxGas},
-                function(error, result){if(error){deferred.reject(new Error(error));}else{deferred.resolve(result); }});
+            methode.apply(this, args);
           }
           catch(e) {
             console.log(e);
@@ -512,12 +508,23 @@ var app = angular.module('dashboardApp', [
           }
           return deferred.promise;
         }
+
         $scope.progressEnabled = false;
         $scope.progressEnabledCC = false;
+        $scope.progressPayEnabled = false;
+
         $scope.eth2cc = function(wei) {
           var account = $scope.contragents[$scope.exchange.index].account;
           $scope.progressEnabled = true;
-          $scope.eth2ccAsync(account, wei).then(function(tx) {
+          var maxGas = 150000; // должно хватить в два конца, средняя цена 55000
+          var amount = $scope.exchange.wei;
+          if( amount.toString() == $scope.balanceWei.toString() ) {
+            amount -= maxGas;
+            // мы должны зарезервировать плату за транзакцию, если хотим сконвертировать все
+          }
+          maxGas /= 2;
+          $scope.makePromise($scope.cc.ether2cc, [{from:account, to:$scope.cc.address, value:amount, gas:maxGas}])
+          .then(function(tx) {
             $scope.waitForTransaction(tx, 3000, function(arr){
               //console.log(arr);
               var txTime = arr[1];
@@ -536,26 +543,13 @@ var app = angular.module('dashboardApp', [
           });
         }
 
-        $scope.cc2ethAsync = function(account,microCC) {
-          var deferred = Q.defer();
-          try {
-            $scope.cc.cc2ether($scope.exchange.microCC.toString(), {from:account, to:$scope.cc.address, gas:70000},
-              function(error, result){if(error){deferred.reject(new Error(error));}else{deferred.resolve(result); }});
-          }
-          catch(e) {
-            console.log(e);
-            deferred.reject(new Error(e));
-          }
-          return deferred.promise;
-        }
         $scope.cc2eth = function(microCC) {
           var account = $scope.contragents[$scope.exchange.index].account;
           $scope.progressEnabledCC = true;
-          $scope.cc2ethAsync(account, microCC).then(function(tx) {
+          $scope.makePromise($scope.cc.cc2ether, [$scope.exchange.microCC.toString(), {from:account, to:$scope.cc.address, gas:70000}])
+          .then(function(tx) {
             $scope.waitForTransaction(tx, 3000, function(arr){
-              //console.log(arr);
-              var txTime = arr[1];
-              console.log("TX time: " + txTime + " ms");
+              console.log("TX time: " + arr[1] + " ms");
               $scope.exchangeAccountChanged();
               $scope.progressEnabledCC = false;
             },
@@ -791,14 +785,17 @@ var app = angular.module('dashboardApp', [
 
         }
 
-        $scope.addressValid = function(address) {
+        $scope.numOrdersAsync = function(address) {
+          var deferred = Q.defer();
           try {
-            $scope.platform.numOrders({from:address});
+            $scope.platform.numOrders({from:address},
+              function(error, result){if(error){deferred.reject(new Error(error));}else{deferred.resolve(result); }});
           }
-          catch (e) {
-             return {valid:false, exception:e};
+          catch(e) {
+            console.log(e);
+            deferred.reject(new Error(e));
           }
-          return {valid:true, exception:0};
+          return deferred.promise;
         }
 
         $scope.balanceChanged = function(balance) {
@@ -839,85 +836,76 @@ var app = angular.module('dashboardApp', [
         }
 
         $scope.transfer = function() {
-          var address = $scope.addressValid($scope.contragents[$scope.sender].account);
-          if( address.valid == false ) {
-            console.log("ORDER REJECTED");
-            $scope.showConfirmation("Ошибка", $scope.explainException(address.exception)
-              + " " + $scope.contragents[$scope.sender].account);
-            return;
-          }
-          // мы не должны создавать заказ, который не сможем оплатить
-
-          var trackHashes = [];
-          var trackAddress = [];
-          var trackPrices = [];
-          for(var i = 0; i < $scope.items.length; i++) {
-            var item = $scope.items[i];
-            console.log(JSON.stringify(item));
-            trackHashes.push($scope.getHash(item.pickup));  // pickup.location
-            trackHashes.push($scope.getHash(item.date.toString()));  // pickup.date
-            trackHashes.push($scope.getHash(item.dropdown));  // dropdown.location
-            trackHashes.push($scope.getHash(item.date.toString()));  // dropdown.date (BUG - must be another date)
-            trackHashes.push($scope.getHash(item.date.toString()));  // assignment.date (BUG - must be another date)
-            trackHashes.push($scope.getHash('shit'));  // assignment.proof (BUG - implemented in future)
-            trackAddress.push($scope.contragents[item.carrier].account); // carrier
-            trackAddress.push($scope.contragents[item.carrier].account); // loader (FIXME)
-            trackAddress.push($scope.contragents[item.carrier].account); // unloader (FIXME)
-//            trackPrices.push($scope.web3.toWei(item.price, 'ether').toString()); // price in wei
-            trackPrices.push($scope.toMicroCC(item.price).toString()); // price in microCC
-            console.log(trackHashes);
-          }
-
-          try {
-            $scope.platform.addOrder(
-               $scope.contragents[$scope.sender].account,
-               $scope.contragents[$scope.receiver].account,
-               trackHashes, trackAddress, trackPrices,
-               $scope.getHash('some description'),
-               {gas: 2000000 });
-               //console.log('NEW ORDER: ' + orderID);\
-           }
-           catch(e) {
-             $scope.showConfirmation("Ошибка", $scope.explainException(e)
-               + " " + $scope.contragents[$scope.sender].account);
-             return;
-           }
-          // deploy new order
-
-          var lastID = $scope.platform.numOrders().toNumber() - 1;
-          var order = $scope.web3.eth.contract($scope.orderProto.abi).at($scope.platform.getOrder(lastID));
           var sender = $scope.contragents[$scope.sender].account;
-          var orderPrice = order.price().toNumber();
-          try {
-          //  order.begin({from:sender, to:order.address, value: order.price().toNumber(), gas: 3000000});  // wei
-//            $scope.cc.transfer(order.address, orderPrice, {from:sender, gas:70000});
-            $scope.cc.approve(order.address, orderPrice, {from:sender, gas:70000});
-            // позволим контракту списать стоимость со счета отправителя
-
-              // send microCC to order
-            order.begin({from:sender, to:order.address, gas: 70000}); // microCC
-            console.log("BEGIN FROM: " + sender);
+          var handleError = function(e) {
+            $scope.progressPayEnabled = false;
+            $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
           }
-          catch (e) {
-             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
-             return;
-          }
-          // pay for job
+          $scope.progressPayEnabled = true;
+          console.log(">>> platform.numOrders");
+          $scope.makePromise($scope.platform.numOrders, [{from:sender}])  // validate sender account
+          .then(function(numOrders){ // 1
+            console.log("NUM ORDERS: " + numOrders);
+//          $scope.numOrdersAsync($scope.contragents[$scope.sender].account).then(function(){
+            var trackHashes = [];
+            var trackAddress = [];
+            var trackPrices = [];
+            for(var i = 0; i < $scope.items.length; i++) {
+              var item = $scope.items[i];
+              console.log(JSON.stringify(item));
+              trackHashes.push($scope.getHash(item.pickup));  // pickup.location
+              trackHashes.push($scope.getHash(item.date.toString()));  // pickup.date
+              trackHashes.push($scope.getHash(item.dropdown));  // dropdown.location
+              trackHashes.push($scope.getHash(item.date.toString()));  // dropdown.date (BUG - must be another date)
+              trackHashes.push($scope.getHash(item.date.toString()));  // assignment.date (BUG - must be another date)
+              trackHashes.push($scope.getHash('shit'));  // assignment.proof (BUG - implemented in future)
+              trackAddress.push($scope.contragents[item.carrier].account); // carrier
+              trackAddress.push($scope.contragents[item.carrier].account); // loader (FIXME)
+              trackAddress.push($scope.contragents[item.carrier].account); // unloader (FIXME)
+  //            trackPrices.push($scope.web3.toWei(item.price, 'ether').toString()); // price in wei
+              trackPrices.push($scope.toMicroCC(item.price).toString()); // price in microCC
+              console.log(trackHashes);
+            }
+            // pack arguments into arrays
 
-          $scope.getBalanceCC().then(function(result) {
-            $scope.balanceCcChanged(result);
-          })
-          .fail(function(err) {
-            $scope.balanceCC = "НЕТ ДОСТУПА";
-          });
-          $scope.showConfirmation("Информация", "Заказ " + order.address +
-//            " на сумму " + $scope.web3.fromWei(orderPrice, "ether")   // wei
-//+ " ETH оплачен успешно");
-            " на сумму " + $scope.fromMicroCC(orderPrice) + " CC оплачен успешно");
-          // show confirmation
-
-          $scope.addOperation(0, order.address, $scope.items[0].pickup, $scope.items[$scope.items.length-1].dropdown, sender, orderPrice);
-
+            console.log(">>> platform.addOrder");
+            $scope.makePromise($scope.platform.addOrder, [
+              sender,
+              $scope.contragents[$scope.receiver].account,
+              trackHashes, trackAddress, trackPrices,
+              $scope.getHash('some description'),
+              {gas: 2000000 }
+            ])
+            .then(function(){ // 2
+               var lastID = numOrders.toNumber();
+               console.log(">>> platform.getOrder");
+               $scope.makePromise($scope.platform.getOrder, [lastID]).then(function(orderAddress){ // 3
+                 var order = $scope.web3.eth.contract($scope.orderProto.abi).at(orderAddress);
+                 console.log("ORDER: ");console.log(order);
+                 console.log(">>> order.price");
+                 $scope.makePromise(order.price, []).then(function(orderPrice){ // 4
+                   console.log("ORDER PRICE: " + orderPrice);
+                   console.log(">>> cc.approve");
+                   $scope.makePromise($scope.cc.approve,[orderAddress, orderPrice, {from:sender, gas:70000}]).then(function(){ // 5
+                     console.log(">>> order.begin");
+                     $scope.makePromise(order.begin, [{from:sender, to:orderAddress, gas: 70000}]).then(function(){ // 6
+                       console.log("BEGIN FROM: " + sender);
+                       $scope.getBalanceCC().then(function(result) { // 7
+                         $scope.balanceCcChanged(result);
+                         $scope.showConfirmation("Информация", "Заказ " + order.address + " на сумму " + $scope.fromMicroCC(orderPrice) + " CC оплачен успешно");
+                         $scope.addOperation(0, orderAddress, $scope.items[0].pickup,$scope.items[$scope.items.length-1].dropdown, sender, orderPrice);
+                         $scope.progressPayEnabled = false; // SUCCESS
+                       }).fail(function(e){ $scope.balanceCC = "0";handleError(e);}); // 7
+                     }).fail(handleError); // 6
+                     // send microCC to order
+                   }).fail(handleError); // 5
+                 }).fail(handleError); // 4
+               }).fail(handleError); // 3
+               // pay for job
+             }).fail(handleError); // 2
+            // deploy new order
+          }).fail(handleError); // 1
+          // мы не должны создавать заказ, который не сможем оплатить
         }
 
         $scope.cancel = function() {
