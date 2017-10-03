@@ -72,7 +72,7 @@ contract Order is Owned {
                   address[] _trackAddresses,
                   uint[] _trackPrices,
                   uint32 _description) Owned() {
-    ccAddress = address(0x1dfc8f39f23b207f1894476627ff531d5492929d);
+    ccAddress = address(0x3951cfe2694a494b7751b0b4245362126256b383);
     cc = CargoCoin(ccAddress);
     _address = this;
     ID = _ID;
