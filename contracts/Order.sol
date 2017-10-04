@@ -143,13 +143,21 @@ contract Order is Owned {
     return Error.OK;
   }
 
-  function payZ(address account, uint amount) internal {
-    uint fee = amount / 100;
-    uint xamount = amount - fee;
-    //cc.transfer(ccAddress, fee);
-    // берем комиссию 1%
-    cc.transferFrom(_address, ccAddress, fee);
-    cc.transfer(account, xamount); // microCC
+  function getProps() constant returns (
+    State _state,
+    address _consignee,
+    address _consigner,
+    uint _price,
+    uint _numTracks,
+    uint _activeTrack,
+    uint32 _descr ) {
+      _state = state;
+      _consignee = consignee;
+      _consigner = consigner;
+      _price = price;
+      _numTracks = numTracks;
+      _activeTrack = activeTrackID;
+      _descr = description;
   }
 
   function complete() returns (Error) {

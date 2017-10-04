@@ -235,7 +235,7 @@
                    <div layout="row">
                      <md-input-container>
                        <label>Название</label>
-                       <md-select ng-model="sender" ng-change="getBalanceCC()">
+                       <md-select ng-model="sender" ng-change="tabOrder()">
                          <!--md-option><em>None</em></md-option-->
                          <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
                            {{contrag.name}}
@@ -369,10 +369,10 @@
                                  </md-input-container>
                                </div>
                                <md-datepicker ng-model="item.date" md-placeholder="Введите дату"></md-datepicker>
-                               <md-button class="md-warn pull-right" ng-click="deleteTrack(item.id)">Удалить</md-button>
+                               <md-button class="md-warn pull-right" ng-disabled="progressPayEnabled" ng-click="deleteTrack(item.id)">Удалить</md-button>
                            </div>
                        </uib-accordion>
-                       <md-button class="md-raised md-primary pull-left" ng-click="addTrack()">Добавить задание</md-button>
+                       <md-button class="md-raised md-primary pull-left" ng-disabled="progressPayEnabled" ng-click="addTrack()">Добавить задание</md-button>
                  </div><br><br>
              </div>
            </md-card-content>
@@ -405,7 +405,7 @@
                </md-input-container>
              </div>
              <div>
-               <md-button class="md-raised md-primary pull-left" ng-click="transfer()" ng-disabled="balanceCC < price">
+               <md-button class="md-raised md-primary pull-left" ng-click="transfer()" ng-disabled="balanceCC < price || progressPayEnabled">
                  <span>Оплатить заказ<md-tooltip md-direction="top" ng-if="balanceCC < price">Для оплаты заказа необходимо иметь достаточное число Cargo Coins на счету. Для покупки Cargo Coins перейдите на вкладку ОБМЕН ВАЛЮТЫ</md-tooltip></span>
                </md-button>
                <!--md-button class="pull-right" ng-click="cancel()">Отмена</md-button-->
@@ -436,7 +436,7 @@
 
                          <md-input-container>
                            <label>Номер</label>
-                           <md-select ng-model="orderIndex" ng-change="getOrderBalance(orders[orderIndex])">
+                           <md-select ng-model="orderIndex" ng-change="orderChanged(orderIndex)">
                              <!--md-option><em>None</em></md-option-->
                              <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
                                {{item.address}}
@@ -446,29 +446,32 @@
 
                          <md-input-container>
                            <label>Стоимость (CC)</label>
-                           <input ng-if="orders.length != 0" ng-model="fromMicroCC(orders[orderIndex].price)" ng-disabled="true"/>
+                           <input ng-if="orders[orderIndex] != undefined" ng-value="fromMicroCC(orders[orderIndex].price)" ng-disabled="true"/>
                          </md-input-container>
 
                          <md-input-container>
                            <label>Баланс (CC)</label>
-                           <input ng-if="orders.length != 0" ng-model="orderBalanceCC" ng-disabled="true"/>
+                           <input ng-if="orders[orderIndex] != undefined" ng-value="orderBalanceCC" ng-disabled="true"/>
                          </md-input-container>
 
                          <md-input-container>
                            <label>Статус</label>
-                           <input ng-if="orders.length != 0" ng-model="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
+                           <input ng-if="orders[orderIndex] != undefined" ng-value="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
                          </md-input-container>
                        </div>
                      </div>
                      <md-button class="md-raised md-primary pull-right"
-                       ng-if="orders[orderIndex].state == 0" ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
+                       ng-if="orderIndex < orders.length && orders[orderIndex].state == 0" ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
                      <md-button class="md-warn pull-right"
-                       ng-if="canDismiss(orders[orderIndex])"
+                       ng-if="orderIndex < orders.length && canDismiss(orders[orderIndex])"
+                       ng-disabled="progressStatusEnabled"
                        ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
                    </div>
                    <md-button class="md-raised md-primary pull-right"
-                     ng-if="orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
+                     ng-if="orderIndex < orders.length && orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
+                     ng-disabled="progressStatusEnabled"
                      ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
+                   <md-progress-linear ng-disabled="!progressStatusEnabled" md-mode="indeterminate"></md-progress-linear>
                </md-card-content>
               </md-card>
 
@@ -477,13 +480,14 @@
                    <div layout="row">
                      <md-list flex>
                        <md-subheader class="md-no-sticky">Задания (всего {{ orders[orderIndex].tracks.length }} для {{ orders[orderIndex].address }})</md-subheader>
-                       <md-list-item class="md-3-line" ng-repeat="item in orders[orderIndex].tracks track by item.index" ng-click="null">
+                       <md-list-item class="md-3-line" ng-if="orderIndex < orders.length" ng-repeat="item in orders[orderIndex].tracks track by item.index" ng-click="null">
                          <div class="md-list-item-text" layout="column">
                            <div>
                              <i class="material-icons md-48 pull-left">{{ getTrackIcon(item.state) }}</i>
                              <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
                               <md-button class="md-raised md-primary pull-right"
-                                ng-if="orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
+                                ng-if="orderIndex < orders.length && orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
+                                ng-disabled="progressStatusEnabled"
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
@@ -512,6 +516,7 @@
              <div class="md-padding" ng-cloak layout="column">
                <md-card md-whiteframe="12">
                  <md-card-content>
+                   <md-progress-linear ng-disabled="!progressStatusEnabled" md-mode="indeterminate"></md-progress-linear>
                    <div layout="row">
                      <md-list flex>
                        <md-subheader class="md-no-sticky">Заказы (всего {{ orders.length }})</md-subheader>
@@ -522,11 +527,13 @@
                              <h3>  [{{ item.index }}] {{ item.address }}</h3>
                              <md-button class="md-warn pull-right"
                                ng-if="canDismiss(item)"
+                               ng-disabled="progressStatusEnabled"
                                ng-click="dismiss(item)">Отменить</md-button>
                              <md-button class="md-raised md-primary pull-right"
                                ng-if="item.state == 0" ng-click="pay(item)">Оплатить</md-button>
                              <md-button class="md-raised md-primary pull-right"
                                ng-if="item.state == 1 && item.activeTrack == item.tracks.length"
+                               ng-disabled="progressStatusEnabled"
                                ng-click="approve(item, item.tracks[item.tracks.length-1])">Подтвердить получение</md-button>
                            </div>
                            <p>статус: {{ explainOrderState(item) }}</p>
@@ -544,6 +551,7 @@
                              <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
                               <md-button class="md-raised md-primary pull-right"
                                 ng-if="orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
+                                ng-disabled="progressStatusEnabled"
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
