@@ -997,18 +997,20 @@ var app = angular.module('dashboardApp', [
             $scope.progressStatusEnabled = true;
             var _address = await $scope.makePromise2($scope.platform.getOrder, [order.index]);
             var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
-            await $scope.getOrderBalance(order);
-            var before = $scope.orderBalanceCC;
+            //await $scope.getOrderBalance(order);
+            //var before = $scope.orderBalanceCC;
             //console.log("TRYING TO DISMISS " + order.consigner);
             await $scope.makePromise2(contract.complete2, [{from:order.consigner, gas:70000}]);
             order.state = await $scope.makePromise2(contract.state, []);
-            await $scope.getOrderBalance(order);
-            var feedback = before - $scope.orderBalanceCC;
+            //await $scope.getOrderBalance(order);
+            //var feedback = before - $scope.orderBalanceCC;
             $scope.showConfirmation("Информация", "Заказ " + order.address +
-              " успешно отменен. " + feedback + " CC возвращены на счет "
+              " успешно отменен. " + $scope.fromMicroCC(order.price) + " CC возвращены на счет "
               + order.consigner);
+            $scope.getOrderBalance(order);
           }
           catch(e) {
+            console.log(e);
             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
             $scope.progressStatusEnabled = false;
             return;
