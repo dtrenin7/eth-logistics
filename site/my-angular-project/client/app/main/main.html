@@ -321,7 +321,7 @@
              <div class="mycontainer">
                  <div class="left-nav">
                      <uib-accordion close-others="true"  style="color:#5f5f5f"><!-- isopen -->
-                           <div uib-accordion-group  is-open="true"
+                           <div uib-accordion-group  is-open="accordionIsOpen"
                                  ng-repeat="item in items" style="background-color:#efefef">
                                <uib-accordion-heading>
                                  {{item.desc}}
@@ -488,7 +488,8 @@
                               <md-button class="md-raised md-primary pull-right"
                                 ng-if="orderIndex < orders.length && orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
                                 ng-disabled="progressStatusEnabled"
-                                ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}</md-button>
+                                ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}
+                              </md-button>
                            </div>
                            <p>статус: {{ explainTrackState(item) }}</p>
                            <p>стоимость: {{ fromMicroCC(item.price) }} CC</p>

@@ -99,6 +99,7 @@ var app = angular.module('dashboardApp', [
       $scope.testValue = 0;
       $interval(function() {
         $scope.testValue++;
+        $scope.detectAccountChange();
       }, 500); // angular forms update enforsed
 
       $scope.ccJsonB64 = "ewogICJjb250cmFjdF9uYW1lIjogIkNhcmdvQ29pbiIsCiAgImFiaSI6IFsKICAgIHsKICAgICAgImNvbnN0YW50IjogdHJ1ZSwKICAgICAgImlucHV0cyI6IFtdLAogICAgICAibmFtZSI6ICJuYW1lIiwKICAgICAgIm91dHB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiIiwKICAgICAgICAgICJ0eXBlIjogInN0cmluZyIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogZmFsc2UsCiAgICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiX3NwZW5kZXIiLAogICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogIl9hbW91bnQiLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJuYW1lIjogImFwcHJvdmUiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJzdWNjZXNzIiwKICAgICAgICAgICJ0eXBlIjogImJvb2wiCiAgICAgICAgfQogICAgICBdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJmdW5jdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJjb25zdGFudCI6IGZhbHNlLAogICAgICAiaW5wdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogIl9vd25lciIsCiAgICAgICAgICAidHlwZSI6ICJhZGRyZXNzIgogICAgICAgIH0KICAgICAgXSwKICAgICAgIm5hbWUiOiAic2V0T3duZXIiLAogICAgICAib3V0cHV0cyI6IFtdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJmdW5jdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJjb25zdGFudCI6IHRydWUsCiAgICAgICJpbnB1dHMiOiBbXSwKICAgICAgIm5hbWUiOiAidG90YWxTdXBwbHkiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJ0b3RhbFN1cHBseSIsCiAgICAgICAgICAidHlwZSI6ICJ1aW50MjU2IgogICAgICAgIH0KICAgICAgXSwKICAgICAgInBheWFibGUiOiBmYWxzZSwKICAgICAgInR5cGUiOiAiZnVuY3Rpb24iCiAgICB9LAogICAgewogICAgICAiY29uc3RhbnQiOiB0cnVlLAogICAgICAiaW5wdXRzIjogW10sCiAgICAgICJuYW1lIjogIl9hZGRyZXNzIiwKICAgICAgIm91dHB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfQogICAgICBdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJmdW5jdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJjb25zdGFudCI6IGZhbHNlLAogICAgICAiaW5wdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogIl9mcm9tIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJfdG8iLAogICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogIl9hbW91bnQiLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJuYW1lIjogInRyYW5zZmVyRnJvbSIsCiAgICAgICJvdXRwdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogInN1Y2Nlc3MiLAogICAgICAgICAgInR5cGUiOiAiYm9vbCIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogdHJ1ZSwKICAgICAgImlucHV0cyI6IFtdLAogICAgICAibmFtZSI6ICJkZWNpbWFscyIsCiAgICAgICJvdXRwdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogIiIsCiAgICAgICAgICAidHlwZSI6ICJ1aW50OCIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogdHJ1ZSwKICAgICAgImlucHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJtaWNyb0NDIiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAibmFtZSI6ICJjYW5CdXkiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJjYW4iLAogICAgICAgICAgInR5cGUiOiAiYm9vbCIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogZmFsc2UsCiAgICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAicmF0aW8iLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJuYW1lIjogInNldENvbnZlcnNpb25SYXRpbyIsCiAgICAgICJvdXRwdXRzIjogW10sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogZmFsc2UsCiAgICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiX3RvIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJfYW1vdW50IiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJwZXJjZW50cyIsCiAgICAgICAgICAidHlwZSI6ICJ1aW50MjU2IgogICAgICAgIH0KICAgICAgXSwKICAgICAgIm5hbWUiOiAidHJhbnNmZXJXaXRoRmVlIiwKICAgICAgIm91dHB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAic3VjY2VzcyIsCiAgICAgICAgICAidHlwZSI6ICJib29sIgogICAgICAgIH0KICAgICAgXSwKICAgICAgInBheWFibGUiOiBmYWxzZSwKICAgICAgInR5cGUiOiAiZnVuY3Rpb24iCiAgICB9LAogICAgewogICAgICAiY29uc3RhbnQiOiBmYWxzZSwKICAgICAgImlucHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJtaWNyb0NDIiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAibmFtZSI6ICJjYzJldGhlciIsCiAgICAgICJvdXRwdXRzIjogW10sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogdHJ1ZSwKICAgICAgImlucHV0cyI6IFtdLAogICAgICAibmFtZSI6ICJnZXRPd25lckJhbGFuY2UiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJfYmFsYW5jZSIsCiAgICAgICAgICAidHlwZSI6ICJ1aW50MjU2IgogICAgICAgIH0KICAgICAgXSwKICAgICAgInBheWFibGUiOiBmYWxzZSwKICAgICAgInR5cGUiOiAiZnVuY3Rpb24iCiAgICB9LAogICAgewogICAgICAiY29uc3RhbnQiOiB0cnVlLAogICAgICAiaW5wdXRzIjogW10sCiAgICAgICJuYW1lIjogImdldENvbnZlcnNpb25SYXRpbyIsCiAgICAgICJvdXRwdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogInJhdGlvIiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJmdW5jdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJjb25zdGFudCI6IHRydWUsCiAgICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiYWRkciIsCiAgICAgICAgICAidHlwZSI6ICJhZGRyZXNzIgogICAgICAgIH0KICAgICAgXSwKICAgICAgIm5hbWUiOiAiZ2V0QmFsYW5jZUluV2VpIiwKICAgICAgIm91dHB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiIiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJmdW5jdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJjb25zdGFudCI6IHRydWUsCiAgICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiX293bmVyIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfQogICAgICBdLAogICAgICAibmFtZSI6ICJiYWxhbmNlT2YiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJiYWxhbmNlIiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJmdW5jdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJjb25zdGFudCI6IHRydWUsCiAgICAgICJpbnB1dHMiOiBbXSwKICAgICAgIm5hbWUiOiAiZ2V0T3duZXIiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJfb3duZXIiLAogICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogdHJ1ZSwKICAgICAgImlucHV0cyI6IFtdLAogICAgICAibmFtZSI6ICJzeW1ib2wiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICIiLAogICAgICAgICAgInR5cGUiOiAic3RyaW5nIgogICAgICAgIH0KICAgICAgXSwKICAgICAgInBheWFibGUiOiBmYWxzZSwKICAgICAgInR5cGUiOiAiZnVuY3Rpb24iCiAgICB9LAogICAgewogICAgICAiY29uc3RhbnQiOiB0cnVlLAogICAgICAiaW5wdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogImEiLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogImIiLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJuYW1lIjogImRpdiIsCiAgICAgICJvdXRwdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogInEiLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogZmFsc2UsCiAgICAgICJpbnB1dHMiOiBbCiAgICAgICAgewogICAgICAgICAgIm5hbWUiOiAiX3RvIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJfYW1vdW50IiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAibmFtZSI6ICJ0cmFuc2ZlciIsCiAgICAgICJvdXRwdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogInN1Y2Nlc3MiLAogICAgICAgICAgInR5cGUiOiAiYm9vbCIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogdHJ1ZSwKICAgICAgImlucHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJfb3duZXIiLAogICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJuYW1lIjogIl9zcGVuZGVyIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfQogICAgICBdLAogICAgICAibmFtZSI6ICJhbGxvd2FuY2UiLAogICAgICAib3V0cHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAibmFtZSI6ICJyZW1haW5pbmciLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJwYXlhYmxlIjogZmFsc2UsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImNvbnN0YW50IjogZmFsc2UsCiAgICAgICJpbnB1dHMiOiBbXSwKICAgICAgIm5hbWUiOiAiZXRoZXIyY2MiLAogICAgICAib3V0cHV0cyI6IFtdLAogICAgICAicGF5YWJsZSI6IHRydWUsCiAgICAgICJ0eXBlIjogImZ1bmN0aW9uIgogICAgfSwKICAgIHsKICAgICAgImlucHV0cyI6IFtdLAogICAgICAicGF5YWJsZSI6IGZhbHNlLAogICAgICAidHlwZSI6ICJjb25zdHJ1Y3RvciIKICAgIH0sCiAgICB7CiAgICAgICJhbm9ueW1vdXMiOiBmYWxzZSwKICAgICAgImlucHV0cyI6IFsKICAgICAgICB7CiAgICAgICAgICAiaW5kZXhlZCI6IHRydWUsCiAgICAgICAgICAibmFtZSI6ICJfZnJvbSIsCiAgICAgICAgICAidHlwZSI6ICJhZGRyZXNzIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImluZGV4ZWQiOiB0cnVlLAogICAgICAgICAgIm5hbWUiOiAiX3RvIiwKICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiaW5kZXhlZCI6IGZhbHNlLAogICAgICAgICAgIm5hbWUiOiAiX3ZhbHVlIiwKICAgICAgICAgICJ0eXBlIjogInVpbnQyNTYiCiAgICAgICAgfQogICAgICBdLAogICAgICAibmFtZSI6ICJUcmFuc2ZlciIsCiAgICAgICJ0eXBlIjogImV2ZW50IgogICAgfSwKICAgIHsKICAgICAgImFub255bW91cyI6IGZhbHNlLAogICAgICAiaW5wdXRzIjogWwogICAgICAgIHsKICAgICAgICAgICJpbmRleGVkIjogdHJ1ZSwKICAgICAgICAgICJuYW1lIjogIl9vd25lciIsCiAgICAgICAgICAidHlwZSI6ICJhZGRyZXNzIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImluZGV4ZWQiOiB0cnVlLAogICAgICAgICAgIm5hbWUiOiAiX3NwZW5kZXIiLAogICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJpbmRleGVkIjogZmFsc2UsCiAgICAgICAgICAibmFtZSI6ICJfdmFsdWUiLAogICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJuYW1lIjogIkFwcHJvdmFsIiwKICAgICAgInR5cGUiOiAiZXZlbnQiCiAgICB9CiAgXSwKICAidW5saW5rZWRfYmluYXJ5IjogIjB4NjA2MDYwNDA1MjYzM2I5YWNhMDA2MDAxNTUzNDE1NjEwMDE3NTc2MDAwODBmZDViNWI1YjYwMDA4MDU0NjAwMTYwYTA2MDAyMGEwMzE5MTYzMzYwMDE2MGEwNjAwMjBhMDMxNjE3OTA1NTViNjRlOGQ0YTUxMDAwNjAwMjgxOTA1NTYwMDM4MDU0NjAwMTYwYTA2MDAyMGEwMzE5MTYzMDYwMDE2MGEwNjAwMjBhMDM5MDgxMTY5MTkwOTExNzkxODI5MDU1MTY2MDAwOTA4MTUyNjAwNDYwMjA1MjYwNDA5MDIwNTU1YjViNjEwYjVkODA2MTAwODM2MDAwMzk2MDAwZjMwMDYwNjA2MDQwNTIzNjE1NjEwMTFhNTc2M2ZmZmZmZmZmN2MwMTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwNjAwMDM1MDQxNjYzMDZmZGRlMDM4MTE0NjEwMTFmNTc4MDYzMDk1ZWE3YjMxNDYxMDFhYTU3ODA2MzEzYWY0MDM1MTQ2MTAxZTA1NzgwNjMxODE2MGRkZDE0NjEwMjAxNTc4MDYzMThiYWQyMTcxNDYxMDIyNjU3ODA2MzIzYjg3MmRkMTQ2MTAyNTU1NzgwNjMzMTNjZTU2NzE0NjEwMjkxNTc4MDYzM2NhODhhMmYxNDYxMDJiYTU3ODA2MzRmNDlhNTk5MTQ2MTAyZTQ1NzgwNjM1MTM1NTM2MjE0NjEwMmZjNTc4MDYzNTFiMGZhZmQxNDYxMDMzNTU3ODA2MzU5MDc5MWYyMTQ2MTAzNGQ1NzgwNjM2OThlNTIxMTE0NjEwMzcyNTc4MDYzNmQ4YzQyOGQxNDYxMDM5NzU3ODA2MzcwYTA4MjMxMTQ2MTAzYzg1NzgwNjM4OTNkMjBlODE0NjEwM2Y5NTc4MDYzOTVkODliNDExNDYxMDQyODU3ODA2M2EzOTFjMTViMTQ2MTA0YjM1NzgwNjNhOTA1OWNiYjE0NjEwNGRlNTc4MDYzZGQ2MmVkM2UxNDYxMDUxNDU3ODA2M2RlN2M5NzZjMTQ2MTA1NGI1NzViNjAwMDgwZmQ1YjM0MTU2MTAxMmE1NzYwMDA4MGZkNWI2MTAxMzI2MTA1NTU1NjViNjA0MDUxNjAyMDgwODI1MjgxOTA4MTAxODM4MTgxNTE4MTUyNjAyMDAxOTE1MDgwNTE5MDYwMjAwMTkwODA4MzgzNjAwMDViODM4MTEwMTU2MTAxNmY1NzgwODIwMTUxODE4NDAxNTI1YjYwMjAwMTYxMDE1NjU2NWI1MDUwNTA1MDkwNTA5MDgxMDE5MDYwMWYxNjgwMTU2MTAxOWM1NzgwODIwMzgwNTE2MDAxODM2MDIwMDM2MTAxMDAwYTAzMTkxNjgxNTI2MDIwMDE5MTUwNWI1MDkyNTA1MDUwNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDFiNTU3NjAwMDgwZmQ1YjYxMDFjYzYwMDE2MGEwNjAwMjBhMDM2MDA0MzUxNjYwMjQzNTYxMDU4YzU2NWI2MDQwNTE5MDE1MTU4MTUyNjAyMDAxNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDFlYjU3NjAwMDgwZmQ1YjYxMDFmZjYwMDE2MGEwNjAwMjBhMDM2MDA0MzUxNjYxMDVmOTU2NWIwMDViMzQxNTYxMDIwYzU3NjAwMDgwZmQ1YjYxMDIxNDYxMDY0MTU2NWI2MDQwNTE5MDgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGYzNWIzNDE1NjEwMjMxNTc2MDAwODBmZDViNjEwMjM5NjEwNjQ4NTY1YjYwNDA1MTYwMDE2MGEwNjAwMjBhMDM5MDkxMTY4MTUyNjAyMDAxNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDI2MDU3NjAwMDgwZmQ1YjYxMDFjYzYwMDE2MGEwNjAwMjBhMDM2MDA0MzU4MTE2OTA2MDI0MzUxNjYwNDQzNTYxMDY1NzU2NWI2MDQwNTE5MDE1MTU4MTUyNjAyMDAxNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDI5YzU3NjAwMDgwZmQ1YjYxMDJhNDYxMDc2MTU2NWI2MDQwNTE2MGZmOTA5MTE2ODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwZjM1YjM0MTU2MTAyYzU1NzYwMDA4MGZkNWI2MTAxY2M2MDA0MzU2MTA3NjY1NjViNjA0MDUxOTAxNTE1ODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwZjM1YjM0MTU2MTAyZWY1NzYwMDA4MGZkNWI2MTAxZmY2MDA0MzU2MTA3ODk1NjViMDA1YjM0MTU2MTAzMDc1NzYwMDA4MGZkNWI2MTAxY2M2MDAxNjBhMDYwMDIwYTAzNjAwNDM1MTY2MDI0MzU2MDQ0MzU2MTA3YWU1NjViNjA0MDUxOTAxNTE1ODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwZjM1YjM0MTU2MTAzNDA1NzYwMDA4MGZkNWI2MTAxZmY2MDA0MzU2MTA3ZjU1NjViMDA1YjM0MTU2MTAzNTg1NzYwMDA4MGZkNWI2MTAyMTQ2MTA4YmU1NjViNjA0MDUxOTA4MTUyNjAyMDAxNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDM3ZDU3NjAwMDgwZmQ1YjYxMDIxNDYxMDhlZDU2NWI2MDQwNTE5MDgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGYzNWIzNDE1NjEwM2EyNTc2MDAwODBmZDViNjEwMjE0NjAwMTYwYTA2MDAyMGEwMzYwMDQzNTE2NjEwOGY0NTY1YjYwNDA1MTkwODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwZjM1YjM0MTU2MTAzZDM1NzYwMDA4MGZkNWI2MTAyMTQ2MDAxNjBhMDYwMDIwYTAzNjAwNDM1MTY2MTA5MGI1NjViNjA0MDUxOTA4MTUyNjAyMDAxNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDQwNDU3NjAwMDgwZmQ1YjYxMDIzOTYxMDkyYTU2NWI2MDQwNTE2MDAxNjBhMDYwMDIwYTAzOTA5MTE2ODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwZjM1YjM0MTU2MTA0MzM1NzYwMDA4MGZkNWI2MTAxMzI2MTA5M2E1NjViNjA0MDUxNjAyMDgwODI1MjgxOTA4MTAxODM4MTgxNTE4MTUyNjAyMDAxOTE1MDgwNTE5MDYwMjAwMTkwODA4MzgzNjAwMDViODM4MTEwMTU2MTAxNmY1NzgwODIwMTUxODE4NDAxNTI1YjYwMjAwMTYxMDE1NjU2NWI1MDUwNTA1MDkwNTA5MDgxMDE5MDYwMWYxNjgwMTU2MTAxOWM1NzgwODIwMzgwNTE2MDAxODM2MDIwMDM2MTAxMDAwYTAzMTkxNjgxNTI2MDIwMDE5MTUwNWI1MDkyNTA1MDUwNjA0MDUxODA5MTAzOTBmMzViMzQxNTYxMDRiZTU3NjAwMDgwZmQ1YjYxMDIxNDYwMDQzNTYwMjQzNTYxMDk3MTU2NWI2MDQwNTE5MDgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGYzNWIzNDE1NjEwNGU5NTc2MDAwODBmZDViNjEwMWNjNjAwMTYwYTA2MDAyMGEwMzYwMDQzNTE2NjAyNDM1NjEwOTdiNTY1YjYwNDA1MTkwMTUxNTgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGYzNWIzNDE1NjEwNTFmNTc2MDAwODBmZDViNjEwMjE0NjAwMTYwYTA2MDAyMGEwMzYwMDQzNTgxMTY5MDYwMjQzNTE2NjEwYTM4NTY1YjYwNDA1MTkwODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwZjM1YjYxMDFmZjYxMGE2NTU2NWIwMDViNjA0MDgwNTE5MDgxMDE2MDQwNTI2MDBiODE1MjdmNDM2MTcyNjc2ZjIwNDM2ZjY5NmU3MzAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDYwMjA4MjAxNTI4MTU2NWI2MDAxNjBhMDYwMDIwYTAzMzM4MTE2NjAwMDgxODE1MjYwMDU2MDIwOTA4MTUyNjA0MDgwODMyMDk0ODcxNjgwODQ1Mjk0OTA5MTUyODA4MjIwODU5MDU1OTA5MjkxOTA3ZjhjNWJlMWU1ZWJlYzdkNWJkMTRmNzE0MjdkMWU4NGYzZGQwMzE0YzBmN2IyMjkxZTViMjAwYWM4YzdjM2I5MjU5MDg1OTA1MTkwODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwYTM1MDYwMDE1YjkyOTE1MDUwNTY1YjYwMDA1NDMzNjAwMTYwYTA2MDAyMGEwMzkwODExNjkxMTYxNDYxMDYxNDU3NjAwMDgwZmQ1YjYwMDA4MDU0NzNmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmMTkxNjYwMDE2MGEwNjAwMjBhMDM4MzE2MTc5MDU1NWI1YjUwNTY1YjYwMDI1NDViOTA1NjViNjAwMzU0NjAwMTYwYTA2MDAyMGEwMzE2ODE1NjViNjAwMTYwYTA2MDAyMGEwMzgzMTY2MDAwOTA4MTUyNjAwNDYwMjA1MjYwNDA4MTIwNTQ4MjkwMTA4MDE1OTA2MTA2YTc1NzUwNjAwMTYwYTA2MDAyMGEwMzgwODUxNjYwMDA5MDgxNTI2MDA1NjAyMDkwODE1MjYwNDA4MDgzMjAzMzkwOTQxNjgzNTI5MjkwNTIyMDU0ODI5MDEwMTU1YjgwMTU2MTA2YjM1NzUwNjAwMDgyMTE1YjgwMTU2MTA2ZDg1NzUwNjAwMTYwYTA2MDAyMGEwMzgzMTY2MDAwOTA4MTUyNjAwNDYwMjA1MjYwNDA5MDIwNTQ4MjgxMDExMTViMTU2MTA3NTU1NzYwMDE2MGEwNjAwMjBhMDM4MDg1MTY2MDAwODE4MTUyNjAwNDYwMjA4MTgxNTI2MDQwODA4NDIwODA1NDg5OTAwMzkwNTU2MDA1ODI1MjgwODQyMDMzODcxNjg1NTI4MjUyODA4NDIwODA1NDg5OTAwMzkwNTU5NDg4MTY4MDg0NTI5MTkwNTI5MDgzOTAyMDgwNTQ4NjAxOTA1NTkxNjAwMDgwNTE2MDIwNjEwYjEyODMzOTgxNTE5MTUyOTA4NTkwNTE5MDgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGEzNTA2MDAxNjEwNzU5NTY1YjUwNjAwMDViNWI5MzkyNTA1MDUwNTY1YjYwMDY4MTU2NWI2MDAxNjBhMDYwMDIwYTAzMzAxNjYwMDA5MDgxNTI2MDA0NjAyMDUyNjA0MDkwMjA1NDgxOTAxMDE1NWI5MTkwNTA1NjViNjAwMDU0MzM2MDAxNjBhMDYwMDIwYTAzOTA4MTE2OTExNjE0NjEwN2E0NTc2MDAwODBmZDViNjAwMTgxOTA1NTViNWI1MDU2NWI2MDAwODA2MDAwNjEwN2MwODQ4NjAyNjA2NDYxMDk3MTU2NWI2MDAzNTQ5MDkyNTA4Mjg2MDM5MTUwNjEwN2RlOTA2MDAxNjBhMDYwMDIwYTAzMTY4MzYxMDk3YjU2NWI1MDYxMDdlOTg2ODI2MTA5N2I1NjViOTI1MDViNTA1MDkzOTI1MDUwNTA1NjViNjAwMDgxMTU4MDYxMDgxYzU3NTA2MDAxNjBhMDYwMDIwYTAzMzMxNjYwMDA5MDgxNTI2MDA0NjAyMDUyNjA0MDkwMjA1NDgyOTAxMDViMTU2MTA4MjY1NzYwMDA4MGZkNWI1MDYwMDE1NDYwMDE2MGEwNjAwMjBhMDMzMzgxMTY2MDAwODE4MTUyNjAwNDYwMjA1MjYwNDA4MDgyMjA4MDU0ODc5MDAzOTA1NTYwMDM4MDU0ODUxNjgzNTI5MTgxOTAyMDgwNTQ4NzAxOTA1NTkwNTQ5Mzg1MDI5MzkwOTIxNjkxNjAwMDgwNTE2MDIwNjEwYjEyODMzOTgxNTE5MTUyOTA4NTkwNTE5MDgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGEzNjAwMTYwYTA2MDAyMGEwMzMzMTY4MTE1NjEwOGZjMDI4MjYwNDA1MTYwMDA2MDQwNTE4MDgzMDM4MTg1ODg4OGYxOTM1MDUwNTA1MDE1MTU2MTA4Yjk1NzYwMDA4MGZkNWI1YjUwNTA1NjViNjAwMDgwNTQzMzYwMDE2MGEwNjAwMjBhMDM5MDgxMTY5MTE2MTQ2MTA4ZGE1NzYwMDA4MGZkNWI1MDYwMDA1NDYwMDE2MGEwNjAwMjBhMDMxNjMxNWI1YjkwNTY1YjYwMDE1NDViOTA1NjViNjAwMDYwMDE1NDYxMDkwMjgzNjEwOTBiNTY1YjAyOTA1MDViOTE5MDUwNTY1YjYwMDE2MGEwNjAwMjBhMDM4MTE2NjAwMDkwODE1MjYwMDQ2MDIwNTI2MDQwOTAyMDU0NWI5MTkwNTA1NjViNjAwMDU0NjAwMTYwYTA2MDAyMGEwMzE2NWI5MDU2NWI2MDQwODA1MTkwODEwMTYwNDA1MjYwMDI4MTUyN2Y0MzQzMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwNjAyMDgyMDE1MjgxNTY1YjgwODIwNDViOTI5MTUwNTA1NjViNjAwMTYwYTA2MDAyMGEwMzMzMTY2MDAwOTA4MTUyNjAwNDYwMjA1MjYwNDA4MTIwNTQ4MjkwMTA4MDE1OTA2MTA5YTQ1NzUwNjAwMDgyMTE1YjgwMTU2MTA5Yzk1NzUwNjAwMTYwYTA2MDAyMGEwMzgzMTY2MDAwOTA4MTUyNjAwNDYwMjA1MjYwNDA5MDIwNTQ4MjgxMDExMTViMTU2MTBhMjk1NzYwMDE2MGEwNjAwMjBhMDMzMzgxMTY2MDAwODE4MTUyNjAwNDYwMjA1MjYwNDA4MDgyMjA4MDU0ODc5MDAzOTA1NTkyODYxNjgwODI1MjkwODM5MDIwODA1NDg2MDE5MDU1OTE2MDAwODA1MTYwMjA2MTBiMTI4MzM5ODE1MTkxNTI5MDg1OTA1MTkwODE1MjYwMjAwMTYwNDA1MTgwOTEwMzkwYTM1MDYwMDE2MTA1ZjM1NjViNTA2MDAwNjEwNWYzNTY1YjViOTI5MTUwNTA1NjViNjAwMTYwYTA2MDAyMGEwMzgwODMxNjYwMDA5MDgxNTI2MDA1NjAyMDkwODE1MjYwNDA4MDgzMjA5Mzg1MTY4MzUyOTI5MDUyMjA1NDViOTI5MTUwNTA1NjViNjAwMDYwMDE1NDM0MTAxNTYxMGE3NjU3NjAwMDgwZmQ1YjYwMDE1NDM0ODExNTE1NjEwYTgzNTdmZTViNjAwMzU0NjAwMTYwYTA2MDAyMGEwMzE2NjAwMDkwODE1MjYwMDQ2MDIwNTI2MDQwOTAyMDU0OTE5MDA0OTE1MDgxOTAxMDE1NjEwYWIwNTc2MDAwODBmZDViNjAwMzgwNTQ2MDAxNjBhMDYwMDIwYTAzOTA4MTE2NjAwMDkwODE1MjYwMDQ2MDIwNTI2MDQwODA4MjIwODA1NDg2OTAwMzkwNTUzMzgzMTY4MDgzNTI5MTgxOTAyMDgwNTQ4NjAxOTA1NTkyNTQ5MDkyOTExNjkwNjAwMDgwNTE2MDIwNjEwYjEyODMzOTgxNTE5MTUyOTA4NDkwNTE5MDgxNTI2MDIwMDE2MDQwNTE4MDkxMDM5MGEzNWI1MDU2MDBkZGYyNTJhZDFiZTJjODliNjljMmIwNjhmYzM3OGRhYTk1MmJhN2YxNjNjNGExMTYyOGY1NWE0ZGY1MjNiM2VmYTE2NTYyN2E3YTcyMzA1ODIwZjMyMzA1MjcwNzI3YmVjMmI3ZTEwNzFiMjIzMjdjYzNkMTgyMGEwMGEyNzliNDRhZWQyMWQxMzc4YjQxOGNkMDAwMjkiLAogICJuZXR3b3JrcyI6IHsKICAgICIxNTA2OTQzMDI5NDI0IjogewogICAgICAiZXZlbnRzIjogewogICAgICAgICIweGRkZjI1MmFkMWJlMmM4OWI2OWMyYjA2OGZjMzc4ZGFhOTUyYmE3ZjE2M2M0YTExNjI4ZjU1YTRkZjUyM2IzZWYiOiB7CiAgICAgICAgICAiYW5vbnltb3VzIjogZmFsc2UsCiAgICAgICAgICAiaW5wdXRzIjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgImluZGV4ZWQiOiB0cnVlLAogICAgICAgICAgICAgICJuYW1lIjogIl9mcm9tIiwKICAgICAgICAgICAgICAidHlwZSI6ICJhZGRyZXNzIgogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgImluZGV4ZWQiOiB0cnVlLAogICAgICAgICAgICAgICJuYW1lIjogIl90byIsCiAgICAgICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICJpbmRleGVkIjogZmFsc2UsCiAgICAgICAgICAgICAgIm5hbWUiOiAiX3ZhbHVlIiwKICAgICAgICAgICAgICAidHlwZSI6ICJ1aW50MjU2IgogICAgICAgICAgICB9CiAgICAgICAgICBdLAogICAgICAgICAgIm5hbWUiOiAiVHJhbnNmZXIiLAogICAgICAgICAgInR5cGUiOiAiZXZlbnQiCiAgICAgICAgfSwKICAgICAgICAiMHg4YzViZTFlNWViZWM3ZDViZDE0ZjcxNDI3ZDFlODRmM2RkMDMxNGMwZjdiMjI5MWU1YjIwMGFjOGM3YzNiOTI1IjogewogICAgICAgICAgImFub255bW91cyI6IGZhbHNlLAogICAgICAgICAgImlucHV0cyI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICJpbmRleGVkIjogdHJ1ZSwKICAgICAgICAgICAgICAibmFtZSI6ICJfb3duZXIiLAogICAgICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAiaW5kZXhlZCI6IHRydWUsCiAgICAgICAgICAgICAgIm5hbWUiOiAiX3NwZW5kZXIiLAogICAgICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAiaW5kZXhlZCI6IGZhbHNlLAogICAgICAgICAgICAgICJuYW1lIjogIl92YWx1ZSIsCiAgICAgICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICAgICAgfQogICAgICAgICAgXSwKICAgICAgICAgICJuYW1lIjogIkFwcHJvdmFsIiwKICAgICAgICAgICJ0eXBlIjogImV2ZW50IgogICAgICAgIH0KICAgICAgfSwKICAgICAgImxpbmtzIjoge30sCiAgICAgICJhZGRyZXNzIjogIjB4Mzk1MWNmZTI2OTRhNDk0Yjc3NTFiMGI0MjQ1MzYyMTI2MjU2YjM4MyIsCiAgICAgICJ1cGRhdGVkX2F0IjogMTUwNjk0MzA0NzYwMAogICAgfSwKICAgICIxNTA2OTUwMTk4NjUxIjogewogICAgICAiZXZlbnRzIjogewogICAgICAgICIweGRkZjI1MmFkMWJlMmM4OWI2OWMyYjA2OGZjMzc4ZGFhOTUyYmE3ZjE2M2M0YTExNjI4ZjU1YTRkZjUyM2IzZWYiOiB7CiAgICAgICAgICAiYW5vbnltb3VzIjogZmFsc2UsCiAgICAgICAgICAiaW5wdXRzIjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgImluZGV4ZWQiOiB0cnVlLAogICAgICAgICAgICAgICJuYW1lIjogIl9mcm9tIiwKICAgICAgICAgICAgICAidHlwZSI6ICJhZGRyZXNzIgogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgImluZGV4ZWQiOiB0cnVlLAogICAgICAgICAgICAgICJuYW1lIjogIl90byIsCiAgICAgICAgICAgICAgInR5cGUiOiAiYWRkcmVzcyIKICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICJpbmRleGVkIjogZmFsc2UsCiAgICAgICAgICAgICAgIm5hbWUiOiAiX3ZhbHVlIiwKICAgICAgICAgICAgICAidHlwZSI6ICJ1aW50MjU2IgogICAgICAgICAgICB9CiAgICAgICAgICBdLAogICAgICAgICAgIm5hbWUiOiAiVHJhbnNmZXIiLAogICAgICAgICAgInR5cGUiOiAiZXZlbnQiCiAgICAgICAgfSwKICAgICAgICAiMHg4YzViZTFlNWViZWM3ZDViZDE0ZjcxNDI3ZDFlODRmM2RkMDMxNGMwZjdiMjI5MWU1YjIwMGFjOGM3YzNiOTI1IjogewogICAgICAgICAgImFub255bW91cyI6IGZhbHNlLAogICAgICAgICAgImlucHV0cyI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICJpbmRleGVkIjogdHJ1ZSwKICAgICAgICAgICAgICAibmFtZSI6ICJfb3duZXIiLAogICAgICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAiaW5kZXhlZCI6IHRydWUsCiAgICAgICAgICAgICAgIm5hbWUiOiAiX3NwZW5kZXIiLAogICAgICAgICAgICAgICJ0eXBlIjogImFkZHJlc3MiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAiaW5kZXhlZCI6IGZhbHNlLAogICAgICAgICAgICAgICJuYW1lIjogIl92YWx1ZSIsCiAgICAgICAgICAgICAgInR5cGUiOiAidWludDI1NiIKICAgICAgICAgICAgfQogICAgICAgICAgXSwKICAgICAgICAgICJuYW1lIjogIkFwcHJvdmFsIiwKICAgICAgICAgICJ0eXBlIjogImV2ZW50IgogICAgICAgIH0KICAgICAgfSwKICAgICAgImxpbmtzIjoge30sCiAgICAgICJhZGRyZXNzIjogIjB4Mzk1MWNmZTI2OTRhNDk0Yjc3NTFiMGI0MjQ1MzYyMTI2MjU2YjM4MyIsCiAgICAgICJ1cGRhdGVkX2F0IjogMTUwNjk1MDIwOTU0NQogICAgfQogIH0sCiAgInNjaGVtYV92ZXJzaW9uIjogIjAuMC41IiwKICAidXBkYXRlZF9hdCI6IDE1MDY5NTAyMDk1NDUKfQ==";
@@ -143,12 +144,31 @@ var app = angular.module('dashboardApp', [
       	}
       }
 
+      $scope.accordionIsOpen = true;
+
+        $scope.detectAccountChange = function() {
+          if( typeof(web3) != 'undefined' &&
+              typeof(web3.currentProvider) != 'undefined' &&
+              typeof($scope.web3) != 'undefined' &&
+              web3.currentProvider.isMetaMask == true ) {
+              var newWeb3 = new Web3(web3.currentProvider);
+              if( newWeb3.eth.accounts[0] != $scope.web3.eth.accounts[0] ) {
+                $scope.web3 = newWeb3;
+                console.log("ACCOUNT CHANGED TO: " + newWeb3.eth.accounts[0]);
+              }
+          }
+        }
+
         $scope.settings = {
           platformAddress: '0xb4c4323be73e076518648e57aa1e714987bcc93f',
           cargoCoinAddress: '0x3951cfe2694a494b7751b0b4245362126256b383',
           orderAddress: '0x37a1e48db18305e26d1d779a01597ae0841447e8',
-          httpProvider: "http://192.168.6.22:8545",
-          timeoutExchange: 4000
+          httpProvider: "http://127.0.0.1:8545",//"http://192.168.6.22:8545",
+          timeoutExchange: 4000,
+          timeountTransact: 3000,
+          intervalAwaitTx: 200,
+          timeoutTrackStateChange: 5000,
+          timeoutAwaitTx: 20000
         };
 
         $scope.platformJson = atob($scope.platformJsonb64);
@@ -159,7 +179,7 @@ var app = angular.module('dashboardApp', [
         $scope.ccProto = JSON.parse($scope.ccJson);
         // get the ABI from JSON files
 
-        $scope.web3provider = typeof web3 !== 'undefined' ? web3.currentProvider : new Web3.providers.HttpProvider($scope.settings.httpProvider);
+        $scope.web3provider = typeof(web3) !== 'undefined' ? web3.currentProvider : new Web3.providers.HttpProvider($scope.settings.httpProvider);
         //$scope.web3provider = new Web3.providers.HttpProvider($scope.settings.httpProvider);
         console.log($scope.web3provider);
         $scope.web3 = new Web3($scope.web3provider);
@@ -174,31 +194,43 @@ var app = angular.module('dashboardApp', [
 
         $scope.getPlatformCallback = function(error, result) {
           if(!error) {
-            console.log("PLATFORM:");
+            //console.log("PLATFORM:");
             $scope.platform = result;
-            console.log($scope.platform);
+            //console.log($scope.platform);
           }
           else {
             console.error(error);
           }
         }
         $scope.web3.eth.contract($scope.platformProto.abi).at($scope.settings.platformAddress, $scope.getPlatformCallback);
-        console.log("<< WOO 1 >>");
+        //console.log("<< WOO 1 >>");
         //console.log(JSON.stringify($scope.platform));
         // get platform contract
 
+        $scope.transactions = [];
         $scope.getCargoCoinCallback = function(error, result) {
           if(!error) {
-            console.log("CARGO COIN:");
+            //console.log("CARGO COIN:");
             $scope.cc = result;
-            console.log($scope.cc);
+            $scope.eventTransfer = $scope.cc.Transfer({fromBlock: 0, toBlock: 'latest'});
+            $scope.eventTransfer.watch(function(error, result) {
+              if(error) {
+                //console.log("TRANSFER ERROR: " + error);
+              }
+              else {
+                $scope.transactions.push(result.transactionHash);
+                // заполняем список выполненных транзакций по платежам CC
+                //console.log("TRANSFER: ");console.log($scope.transactions);
+              }
+            });
+            //console.log($scope.cc);
           }
           else {
             console.error(error);
           }
         }
         $scope.cc = $scope.web3.eth.contract($scope.ccProto.abi).at($scope.settings.cargoCoinAddress, $scope.getCargoCoinCallback);
-        console.log("<< WOO 2 >>");
+        //console.log("<< WOO 2 >>");
         //console.log(JSON.stringify($scope.cc));
         // get cargo coins contract
 
@@ -295,7 +327,7 @@ var app = angular.module('dashboardApp', [
             //console.log('TRACKS: ' + numTracks);
             $scope.orders[i] = order;
             //await $scope.getOrderBalance($scope.orders[$scope.orderIndex])
-            $scope.orderChanged($scope.orders[$scope.orderIndex]);
+            $scope.orderChanged($scope.orderIndex);
           } // for
         };
 
@@ -337,48 +369,96 @@ var app = angular.module('dashboardApp', [
             return approver;
           };
 
-        $scope.approve = async function(order, track) {
-          try {
+          $scope.updateChanges = async function(contract, order, track, handleError) {
+            var trackChanged = false;
+            var lastActiveTrack = order.activeTrack;
+            order.activeTrack = (await $scope.makePromise2(contract.activeTrackID, [])).toNumber();
+            if( lastActiveTrack != order.activeTrack ) {
+              trackChanged = true;
+            }
+            order.state = (await $scope.makePromise2(contract.state, [])).toNumber();
+            track.state = (await $scope.getTrack(contract, track.index)).state;
+            console.log("ORDER STATE: " + $scope.explainOrderState(order.state) + " TRACK STATE: " + $scope.explainTrackState(track.state));
+            // update track state in UI
+
+            console.log("APPROVE TRACK[" +track.index+ "]=" + track.state + " changed=" + trackChanged);
+            if( order.activeTrack > 0 && trackChanged == false && track.state == 1) {
+              var lastTrack = await $scope.getTrack(contract, track.index-1);
+              $scope.addOperation(1, order.address, lastTrack.pickup, lastTrack.dropdown, lastTrack.carrier, lastTrack.price);
+            }
+
+            else if( order.state == 2 && trackChanged == false && order.activeTrack == order.tracks.length ) {
+              $scope.addOperation(1, order.address, track.pickup, track.dropdown, track.carrier, track.price);
+              $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, order.consignee, 0);
+            }
+
+            await $scope.orderChanged(order.index);
+            // update order state in UI
+          }
+
+          // ждем изменения статуса задачи, чтобы понять что транзакция подтверждения завершена и баланс изменился
+          $scope.waitForTrackStateChange = async function(contract, track, milliseconds) {
+            var lastState = track.state;
+            var timeout = new Promise(function(resolve, reject) {
+                setTimeout(resolve, milliseconds, false);
+            });
+            var timer = null;
+            var txDone = new Promise(function(resolve, reject) {
+                timer = setInterval(async function() {
+                  var newTrack = await $scope.getTrack(contract, track.index);
+                  if( lastState != newTrack.state ) {
+                    track.state = newTrack.state;
+                    resolve(true);
+                    clearInterval(timer);
+                    timer = null;
+                  }
+                }, $scope.settings.intervalAwaitTx);
+            });
+
+            var isDone = await Promise.race([timeout, txDone]);
+            if( timer != null ) {
+              clearInterval(timer);
+            }
+            if( isDone == false ) {
+              console.log("waitForTrackStateChange() TIMEOUT" );
+              // time is out
+            }
+            return isDone;
+          }
+
+          // подтверждение задачи
+          $scope.approve = async function(order, track) {
+            console.log("APPROVE:");console.log(order);console.log(track);
             $scope.progressStatusEnabled = true;
-            var _address = await $scope.makePromise2($scope.platform.getOrder, [order.index]);
-            var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
             var approver = $scope.getTrackApprover(order, track);
-            await $scope.makePromise2(contract.complete, [{from: approver, gas:3500000}]);
-          }
-          catch (e) {
-             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + approver);
-             $scope.progressStatusEnabled = false;
-             return;
-          }
-          // change contract and track state
-
-          var trackChanged = false;
-          var lastActiveTrack = order.activeTrack;
-          order.activeTrack = (await $scope.makePromise2(contract.activeTrackID, [])).toNumber();
-          if( lastActiveTrack != order.activeTrack ) {
-            trackChanged = true;
-          }
-          order.state = (await $scope.makePromise2(contract.state, [])).toNumber();
-          // update order state in UI
-
-          var contractTrack = await $scope.getTrack(contract, track.index);
-          track.state = contractTrack.state;
-          // update track state in UI
-
-          console.log("APPROVE TRACK[" +track.index+ "]=" + track.state + " changed=" + trackChanged);
-          if( order.activeTrack > 0 && trackChanged == false && track.state == 1) {
-            var lastTrack = await $scope.getTrack(contract, track.index-1);
-            $scope.addOperation(1, order.address, lastTrack.pickup, lastTrack.dropdown, lastTrack.carrier, lastTrack.price);
-          }
-
-          else if( order.state == 2 && trackChanged == false && order.activeTrack == order.tracks.length ) {
-            $scope.addOperation(1, order.address, track.pickup, track.dropdown, track.carrier, track.price);
-            $scope.addOperation(2, order.address, order.tracks[0].pickup, order.tracks[order.tracks.length-1].dropdown, order.consignee, 0);
-          }
-
-          await $scope.getOrderBalance(order);
-          $scope.progressStatusEnabled = false;
-        };
+            console.log("APPROVER: " + approver);
+            var handleError = function(e) {
+              console.log(e);
+              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + approver);
+              $scope.progressStatusEnabled = false;
+            };
+            try {
+              var _address = await $scope.makePromise2($scope.platform.getOrder, [order.index]);
+              console.log("ADDRESS: " + _address);
+              var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
+              console.log("CONTRACT: ");console.log(contract);
+              var receipt = await $scope.transact(contract.complete, [{from: approver, to:_address, gas:500000}], $scope.settings.timeoutAwaitTx);
+              console.log("RECEIPT:");console.log(receipt);
+              await $scope.waitForTrackStateChange(contract, track, $scope.settings.timeoutTrackStateChange);
+              await (new Promise(function(resolve, reject) {
+                setTimeout(async function(){
+                  await $scope.updateChanges(contract, order, track, handleError);
+                  resolve();
+                }, 1000);
+              }));
+              // даем еще 1 секунду после обновления состояния задания на всякий случай
+            }
+            catch (e) {
+               handleError(e);
+               return;
+            }
+            $scope.progressStatusEnabled = false;
+          };
 
         $scope.operations = [];
         $scope.addOperation = function(_type, _order, _from, _to, _who, _amount) {
@@ -577,6 +657,40 @@ var app = angular.module('dashboardApp', [
           return deferred.promise;
         }
 
+        $scope.transact = async function(methode, args, timeout) {
+          var timeBegin = new Date();
+          var tx = await $scope.makePromise2(methode, args);
+          var txDone = await $scope.waitForTx(tx, timeout);
+          var milliseconds = new Date() - timeBegin;
+          console.log("TX: " + tx + " TIME: " + milliseconds + " ms");
+          return {success:txDone, time:milliseconds, transaction:tx};
+        }
+
+        $scope.waitForTx = async function(transaction, milliseconds) {
+          var timeout = new Promise(function(resolve, reject) {
+              setTimeout(resolve, milliseconds, false);
+          });
+          var txDone = new Promise(function(resolve, reject) {
+              var timer = setInterval(async function() {
+                //console.log(transaction);
+                var receipt = await $scope.makePromise2(web3.eth.getTransactionReceipt, [transaction]);
+                if( receipt != null ) {
+                  resolve(true);
+                  clearInterval(timer);
+                  //console.log("TX RECEIPT: ");console.log(receipt);
+                }
+              }, $scope.settings.intervalAwaitTx);
+          });
+
+          var isDone = await Promise.race([timeout, txDone]);
+          if( isDone == false ) {
+            console.log("TX TIMEOUT FOR " + transaction);
+            // time is out
+          }
+          return isDone;
+        }
+
+
         $scope.progressEnabled = false;
         $scope.progressEnabledCC = false;
         $scope.progressPayEnabled = false;
@@ -730,15 +844,16 @@ var app = angular.module('dashboardApp', [
         $scope.orderPrice = 0;
         $scope.orderState = "Не известно";
         $scope.getOrderBalance = async function(order) {
-            if( typeof(order) == 'undefined' ) {
-              return;
-            }
-            var balance = await $scope.makePromise2($scope.web3.eth.getBalance, [order.address]);
-            $scope.orderBalance = $scope.web3.fromWei(balance, 'ether');
-            //console.log('ORDER BALANCE: ' + $scope.orderBalance);
-            var balanceCC = await $scope.makePromise2($scope.cc.balanceOf, [order.address]);
-            $scope.orderBalanceCC = $scope.fromMicroCC(balanceCC);
-            //console.log('ORDER BALANCE CC: ' + $scope.orderBalanceCC);
+          if( typeof(order) == 'undefined' ) {
+            return;
+          }
+//            var bal = (await $scope.makePromise2($scope.web3.eth.getBalance, [order.address])).toNumber();
+//            $scope.orderBalance = $scope.web3.fromWei(bal, 'ether');
+//            console.log('ORDER BALANCE: ' + $scope.orderBalance);
+
+          var bcc = (await $scope.makePromise2($scope.cc.balanceOf, [order.address])).toNumber();
+          $scope.orderBalanceCC = $scope.fromMicroCC(bcc);
+          console.log('ORDER BALANCE CC: ' + $scope.orderBalanceCC);
         };
         $scope.orderChanged = async function(orderIndex) {
           if( orderIndex >= $scope.orders.length ) {
@@ -994,7 +1109,7 @@ var app = angular.module('dashboardApp', [
                  $scope.makePromise(order.price, []).then(function(orderPrice){ // 4
                    console.log("ORDER PRICE: " + orderPrice);
                    console.log(">>> cc.approve");
-                   $scope.makePromise($scope.cc.approve,[orderAddress, orderPrice, {from:sender, gas:70000}]).then(function(){ // 5
+                   $scope.makePromise($scope.cc.approve,[orderAddress, orderPrice, {from:sender, to:$scope.settings.cargoCoinAddress, gas:70000}]).then(function(){ // 5
                      console.log(">>> order.begin");
                      $scope.makePromise(order.begin, [{from:sender, to:orderAddress, gas: 70000}]).then(function(){ // 6
                        console.log("BEGIN FROM: " + sender);
