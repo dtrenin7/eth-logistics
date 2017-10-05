@@ -299,8 +299,10 @@ var app = angular.module('dashboardApp', [
         }
 
         $scope.orders = [];
+        var orders = []; // не будем обновлять список динамически, ждем полной загрузки
 
         $scope.readOrders = async function () {
+          $scope.progressStatusEnabled = true;
           var handleError = function(e){ console.log(e); };
           $scope.orders = [];
           //console.log(">>> platform.numOrders");
@@ -309,6 +311,9 @@ var app = angular.module('dashboardApp', [
           for(var i = 0; i < numOrders; i++) {
             //console.log(">>> platform.getOrder(" + i + ")");
             var _address = await $scope.makePromise2($scope.platform.getOrder, [i]);
+            if( $scope.preselectedOrder == _address ) {
+              $scope.orderIndex = i;
+            }
             //console.log(_address);
             var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(_address);
             //console.log(contract);
@@ -331,10 +336,15 @@ var app = angular.module('dashboardApp', [
               order.tracks[j] = await $scope.getTrack(contract, j);
             };
             //console.log('TRACKS: ' + numTracks);
-            $scope.orders[i] = order;
+            orders[i] = order;
             //await $scope.getOrderBalance($scope.orders[$scope.orderIndex])
-            $scope.orderChanged($scope.orderIndex);
           } // for
+          if( orders.length > 0 ) {
+            $scope.orderIndex = orders.length - 1; // последний скорее всего актуальный
+          }
+          $scope.orders = orders;
+          $scope.orderChanged($scope.orderIndex);
+          $scope.progressStatusEnabled = false;
         };
 
         $scope.getApproveButtonText = function(order, track) {
@@ -756,7 +766,8 @@ var app = angular.module('dashboardApp', [
             }, $scope.settings.timeoutExchange);
           });
         }
-
+        $scope.selectedTabIndex = 0; // selected tab by default
+        $scope.preselectedOrder = null; // select ordar after status page reload
         $scope.price = 3; // overall price of new order
         $scope.items = [
                             {
@@ -1126,15 +1137,16 @@ var app = angular.module('dashboardApp', [
                  $scope.makePromise(order.price, []).then(function(orderPrice){ // 4
                    console.log("ORDER PRICE: " + orderPrice);
                    console.log(">>> cc.approve");
-                   $scope.makePromise($scope.cc.approve,[orderAddress, orderPrice, {from:sender, to:$scope.settings.cargoCoinAddress, gas:70000}]).then(function(){ // 5
+                   $scope.makePromise($scope.cc.approve,[orderAddress, orderPrice, {from:sender, to:$scope.settings.cargoCoinAddress, gas:$scope.settings.gas.approve}]).then(function(){ // 5
                      console.log(">>> order.begin");
-                     $scope.makePromise(order.begin, [{from:sender, to:orderAddress, gas: 70000}]).then(function(){ // 6
+                     $scope.makePromise(order.begin, [{from:sender, to:orderAddress, gas:$scope.settings.gas.begin}]).then(function(){ // 6
                        console.log("BEGIN FROM: " + sender);
-                         $scope.getBalanceCC();//.then(function(result) { // 7
-                         //$scope.balanceCcChanged(result);
+                         //$scope.getBalanceCC(); // не надо, переходим на другую вкладку
+                         //$scope.preselectedOrder = orderAddress;
                          $scope.showConfirmation("Информация", "Заказ " + order.address + " на сумму " + $scope.fromMicroCC(orderPrice) + " CC оплачен успешно");
                          $scope.addOperation(0, orderAddress, $scope.items[0].pickup,$scope.items[$scope.items.length-1].dropdown, sender, orderPrice);
                          $scope.progressPayEnabled = false; // SUCCESS
+                         $scope.selectedTabIndex = 3; // переходим на вкладку "статус заказа"
                        //}).fail(function(e){ $scope.balanceCC = "0";handleError(e);}); // 7
                      }).fail(handleError); // 6
                      // send microCC to order

@@ -29,7 +29,7 @@
 
 <!-- For simple styling and transitions, include "angular-accordion.css". You can edit styles to meed your look and feel -->
 <div ng-controller="MainCtrl as ctrl">
-<md-tabs md-dynamic-height md-border-bottom>
+<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTabIndex">
    <md-tab label="Регистрация">
      <md-content class="md-padding">
        <div class="container">
@@ -430,6 +430,7 @@
 
                <md-card md-whiteframe="12">
                  <md-card-content>
+                   <md-progress-linear ng-disabled="!progressStatusEnabled" md-mode="indeterminate"></md-progress-linear>
                    <div class="mycontainer">
                      <div class="left-nav">
                        <div layout="row">
@@ -471,7 +472,6 @@
                      ng-if="orderIndex < orders.length && orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
                      ng-disabled="progressStatusEnabled"
                      ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
-                   <md-progress-linear ng-disabled="!progressStatusEnabled" md-mode="indeterminate"></md-progress-linear>
                </md-card-content>
               </md-card>
 
