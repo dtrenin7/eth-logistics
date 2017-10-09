@@ -170,10 +170,14 @@ var app = angular.module('dashboardApp', [
           intervalAwaitTx: 200,
           timeoutTrackStateChange: 5000,
           timeoutAwaitTx: 20000,
+          timeoutAddOrder: 60000,
+          timeoutApprove: 60000,
+          timeoutBegin: 60000,
           gas: {
             approve: 70000,
             begin: 70000,
-            cc2ether: 70000
+            cc2ether: 70000,
+            addOrder: 3000000
           }
         };
 
@@ -676,13 +680,14 @@ var app = angular.module('dashboardApp', [
         $scope.transact = async function(methode, args, timeout) {
           var timeBegin = new Date();
           var tx = await $scope.makePromise2(methode, args);
-          var txDone = await $scope.waitForTx(tx, timeout);
+          var result = await $scope.waitForTx(tx, timeout);
           var milliseconds = new Date() - timeBegin;
-          console.log("TX: " + tx + " TIME: " + milliseconds + " ms");
-          return {success:txDone, time:milliseconds, transaction:tx};
+          console.log("TX: " + tx + " TIME: " + milliseconds + " ms GAS: " + result.gas);
+          return {success:result.done, time:milliseconds, transaction:tx, gas:result.gas};
         }
 
         $scope.waitForTx = async function(transaction, milliseconds) {
+          var gasUsed = null;
           var timeout = new Promise(function(resolve, reject) {
               setTimeout(resolve, milliseconds, false);
           });
@@ -691,6 +696,7 @@ var app = angular.module('dashboardApp', [
                 //console.log(transaction);
                 var receipt = await $scope.makePromise2(web3.eth.getTransactionReceipt, [transaction]);
                 if( receipt != null ) {
+                  gasUsed = receipt.gasUsed;
                   resolve(true);
                   clearInterval(timer);
                   //console.log("TX RECEIPT: ");console.log(receipt);
@@ -703,7 +709,7 @@ var app = angular.module('dashboardApp', [
             console.log("TX TIMEOUT FOR " + transaction);
             // time is out
           }
-          return isDone;
+          return {done:isDone, gas:gasUsed};
         }
 
 
@@ -1086,18 +1092,18 @@ var app = angular.module('dashboardApp', [
           $scope.progressStatusEnabled = false;
         }
 
-        $scope.transfer = function() {
+        $scope.transfer = async function() {
           var sender = $scope.contragents[$scope.sender].account;
           var handleError = function(e) {
             $scope.progressPayEnabled = false;
             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
           }
-          $scope.progressPayEnabled = true;
-          console.log(">>> platform.numOrders");
-          $scope.makePromise($scope.platform.numOrders, [{from:sender}])  // validate sender account
-          .then(function(numOrders){ // 1
+          try {
+            $scope.progressPayEnabled = true;
+            console.log(">>> platform.numOrders");
+            var numOrders = (await $scope.makePromise2($scope.platform.numOrders, [{from:sender}])).toNumber();  // validate sender account
             console.log("NUM ORDERS: " + numOrders);
-//          $scope.numOrdersAsync($scope.contragents[$scope.sender].account).then(function(){
+
             var trackHashes = [];
             var trackAddress = [];
             var trackPrices = [];
@@ -1120,43 +1126,43 @@ var app = angular.module('dashboardApp', [
             // pack arguments into arrays
 
             console.log(">>> platform.addOrder");
-            $scope.makePromise($scope.platform.addOrder, [
+            await $scope.transact($scope.platform.addOrder, [
               sender,
               $scope.contragents[$scope.receiver].account,
               trackHashes, trackAddress, trackPrices,
               $scope.getHash('some description'),
-              {gas: 2000000 }
-            ])
-            .then(function(){ // 2
-               var lastID = numOrders.toNumber();
-               console.log(">>> platform.getOrder");
-               $scope.makePromise($scope.platform.getOrder, [lastID]).then(function(orderAddress){ // 3
-                 var order = $scope.web3.eth.contract($scope.orderProto.abi).at(orderAddress);
-                 console.log("ORDER: ");console.log(order);
-                 console.log(">>> order.price");
-                 $scope.makePromise(order.price, []).then(function(orderPrice){ // 4
-                   console.log("ORDER PRICE: " + orderPrice);
-                   console.log(">>> cc.approve");
-                   $scope.makePromise($scope.cc.approve,[orderAddress, orderPrice, {from:sender, to:$scope.settings.cargoCoinAddress, gas:$scope.settings.gas.approve}]).then(function(){ // 5
-                     console.log(">>> order.begin");
-                     $scope.makePromise(order.begin, [{from:sender, to:orderAddress, gas:$scope.settings.gas.begin}]).then(function(){ // 6
-                       console.log("BEGIN FROM: " + sender);
-                         //$scope.getBalanceCC(); // не надо, переходим на другую вкладку
-                         //$scope.preselectedOrder = orderAddress;
-                         $scope.showConfirmation("Информация", "Заказ " + order.address + " на сумму " + $scope.fromMicroCC(orderPrice) + " CC оплачен успешно");
-                         $scope.addOperation(0, orderAddress, $scope.items[0].pickup,$scope.items[$scope.items.length-1].dropdown, sender, orderPrice);
-                         $scope.progressPayEnabled = false; // SUCCESS
-                         $scope.selectedTabIndex = 3; // переходим на вкладку "статус заказа"
-                       //}).fail(function(e){ $scope.balanceCC = "0";handleError(e);}); // 7
-                     }).fail(handleError); // 6
-                     // send microCC to order
-                   }).fail(handleError); // 5
-                 }).fail(handleError); // 4
-               }).fail(handleError); // 3
-               // pay for job
-             }).fail(handleError); // 2
+              {gas: $scope.settings.gas.addOrder }
+            ], $scope.settings.timeoutAddOrder);
             // deploy new order
-          }).fail(handleError); // 1
+
+           console.log(">>> platform.getOrder");
+           var orderAddress = await $scope.makePromise2($scope.platform.getOrder, [numOrders]);
+           var order = $scope.web3.eth.contract($scope.orderProto.abi).at(orderAddress);
+           console.log("ORDER: ");console.log(order);
+
+           console.log(">>> order.price");
+           var orderPrice = await $scope.makePromise2(order.price, []);
+           console.log("ORDER PRICE: " + orderPrice);
+
+           console.log(">>> cc.approve");
+           await $scope.transact($scope.cc.approve,[orderAddress, orderPrice, {from:sender, to:$scope.settings.cargoCoinAddress, gas:$scope.settings.gas.approve}], $scope.settings.timeoutApprove);
+
+           console.log(">>> order.begin");
+           await $scope.transact(order.begin, [{from:sender, to:orderAddress, gas:$scope.settings.gas.begin}], $scope.settings.timeoutBegin);
+           console.log("BEGIN FROM: " + sender);
+           // send microCC to order
+
+           //$scope.getBalanceCC(); // не надо, переходим на другую вкладку
+           //$scope.preselectedOrder = orderAddress;
+           $scope.showConfirmation("Информация", "Заказ " + order.address + " на сумму " + $scope.fromMicroCC(orderPrice) + " CC оплачен успешно");
+           $scope.addOperation(0, orderAddress, $scope.items[0].pickup,$scope.items[$scope.items.length-1].dropdown, sender, orderPrice);
+           $scope.progressPayEnabled = false; // SUCCESS
+           $scope.selectedTabIndex = 3; // переходим на вкладку "статус заказа"
+           // pay for job
+          }
+          catch(e) {
+            handleError(e);
+          };
           // мы не должны создавать заказ, который не сможем оплатить
         }
 
