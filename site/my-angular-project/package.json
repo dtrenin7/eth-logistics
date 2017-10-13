@@ -5,6 +5,7 @@
   "dependencies": {
     "angular-accordion": "^1.0.2",
     "angular-animate": "^1.6.6",
+    "angular-qrcode-it": "^6.0.4",
     "angular-ui-bootstrap": "^2.5.0",
     "angular-ui-router": "^1.0.3",
     "body-parser": "~1.5.0",

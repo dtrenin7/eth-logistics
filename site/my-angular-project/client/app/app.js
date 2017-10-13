@@ -62,7 +62,8 @@ var app = angular.module('dashboardApp', [
   //'angular-ui-bootstrap',
   'ui.router',
   'ui.bootstrap',
-  'xeditable'
+  'xeditable',
+  'monospaced.qrcode'
 ])
 
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
@@ -333,6 +334,7 @@ var app = angular.module('dashboardApp', [
               price: props[3].toNumber(),
               activeTrack: props[5].toNumber()
             };
+            //order.qr = $scope.createQRCode(order);
             //console.log("ORDER: ");console.log(order);
 
             var numTracks = props[4].toNumber();
@@ -712,6 +714,15 @@ var app = angular.module('dashboardApp', [
           return {done:isDone, gas:gasUsed};
         }
 
+        $scope.createQRCode = function(order) {
+          // https://libraries.io/bower/qrcode
+          // new QRCode(typeNumber, correction, inputMode);
+          var qr = new QRCode(0, 2, '8bit');
+          qr.addData(order.address);
+          qr.make();
+          console.log(qr);
+          return qr;
+        }
 
         $scope.progressEnabled = false;
         $scope.progressEnabledCC = false;

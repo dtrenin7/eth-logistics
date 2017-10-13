@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="bower_components/web3/dist/web3.min.js"></script>
   <script src="bower_components/truffle-contract/dist/truffle-contract.min.js"></script>
+  <script src="bower_components/qrcode-generator/js/qrcode.js"></script>
+  <script src="bower_components/angular-qrcode/angular-qrcode.js"></script>
   <style>
   table, th , td  {
     border: 1px solid grey;
@@ -216,7 +218,7 @@
     </md-tab>
 
    <!-- ФОРМИРОВАНИЕ ЗАКАЗА -->
-   <md-tab label="Формирование заказа" md-on-select="tabOrder()">
+   <md-tab label="Создать контракт" md-on-select="tabOrder()">
      <md-content class="md-padding">
        <div class="container">
          <div class="row">
@@ -435,43 +437,62 @@
                      <div class="left-nav">
                        <div layout="row">
 
-                         <md-input-container>
-                           <label>Номер</label>
-                           <md-select ng-model="orderIndex" ng-change="orderChanged(orderIndex)">
-                             <!--md-option><em>None</em></md-option-->
-                             <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
-                               {{item.address}}
-                             </md-option>
-                           </md-select>
-                         </md-input-container>
+                         <div layout="column">
+                           <md-input-container>
+                             <qrcode ng-if="orders[orderIndex] != undefined" version="3" error-correction-level="M" size="100" data="{{orders[orderIndex].address}}"></qrcode>
+                           </md-input-container>
+                         </div>
 
-                         <md-input-container>
-                           <label>Стоимость (CC)</label>
-                           <input ng-if="orders[orderIndex] != undefined" ng-value="fromMicroCC(orders[orderIndex].price)" ng-disabled="true"/>
-                         </md-input-container>
+                         <div layout="column">
+                           <md-input-container width= "40px">
+                           </md-input-container>
+                         </div>
 
-                         <md-input-container>
-                           <label>Баланс (CC)</label>
-                           <input ng-if="orders[orderIndex] != undefined" ng-value="orderBalanceCC" ng-disabled="true"/>
-                         </md-input-container>
+                         <div layout="row">
+                           <md-input-container>
+                             <label>Номер</label>
+                             <md-select ng-model="orderIndex" ng-change="orderChanged(orderIndex)">
+                               <!--md-option><em>None</em></md-option-->
+                               <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                                 {{item.address}}
+                               </md-option>
+                             </md-select>
+                           </md-input-container>
 
-                         <md-input-container>
-                           <label>Статус</label>
-                           <input ng-if="orders[orderIndex] != undefined" ng-value="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
-                         </md-input-container>
+                           <md-input-container>
+                             <label>Стоимость (CC)</label>
+                             <input ng-if="orders[orderIndex] != undefined" ng-value="fromMicroCC(orders[orderIndex].price)" ng-disabled="true"/>
+                           </md-input-container>
+
+                           <md-input-container>
+                             <label>Баланс (CC)</label>
+                             <input ng-if="orders[orderIndex] != undefined" ng-value="orderBalanceCC" ng-disabled="true"/>
+                           </md-input-container>
+
+                           <md-input-container>
+                             <label>Статус</label>
+                             <input ng-if="orders[orderIndex] != undefined" ng-value="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
+                           </md-input-container>
+                         </div>
+
+                         <div layout="column">
+                           <md-input-container>
+                             <md-button class="md-raised md-primary pull-right"
+                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 0" ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
+                             <md-button class="md-warn pull-right"
+                               ng-if="orderIndex < orders.length && canDismiss(orders[orderIndex])"
+                               ng-disabled="progressStatusEnabled"
+                               ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
+                             <md-button class="md-raised md-primary pull-right"
+                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
+                               ng-disabled="progressStatusEnabled"
+                               ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
+                           </div>
+                           </md-input-container>
+
+                         </div>
                        </div>
                      </div>
-                     <md-button class="md-raised md-primary pull-right"
-                       ng-if="orderIndex < orders.length && orders[orderIndex].state == 0" ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
-                     <md-button class="md-warn pull-right"
-                       ng-if="orderIndex < orders.length && canDismiss(orders[orderIndex])"
-                       ng-disabled="progressStatusEnabled"
-                       ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
-                   </div>
-                   <md-button class="md-raised md-primary pull-right"
-                     ng-if="orderIndex < orders.length && orders[orderIndex].state == 1 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
-                     ng-disabled="progressStatusEnabled"
-                     ng-click="approve(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1])">Подтвердить получение</md-button>
                </md-card-content>
               </md-card>
 
@@ -523,9 +544,32 @@
                        <md-subheader class="md-no-sticky">Заказы (всего {{ orders.length }})</md-subheader>
                        <md-list-item class="md-3-line" ng-repeat="item in orders track by item.index" ng-click="selectOrder(item.index);">
                          <div class="md-list-item-text" layout="column">
-                           <div>
-                             <i class="material-icons md-48 pull-left">{{ getOrderIcon(item.state) }}</i>
-                             <h3>  [{{ item.index }}] {{ item.address }}</h3>
+
+                           <div layout="column">
+                             <md-input-container height="20px"/>
+                           </div>
+
+                           <div layout="row">
+
+                             <div class="pull-right" layout="column">
+                              <qrcode version="2" error-correction-level="M" size="80" data="{{item.address}}"></qrcode>
+                             </div>
+
+                             <div layout="column">
+                               <md-input-container width="20px">
+                               </md-input-container>
+                             </div>
+
+                             <div layout="column">
+                               <h3>  [{{ item.index }}] {{ item.address }}</h3>
+                               <p>статус: {{ explainOrderState(item) }}</p>
+                               <!--i class="material-icons md-48">{{ getOrderIcon(item.state) }}</i-->
+                               <p>текущее задание: {{ item.activeTrack }}</p>
+                             </div>
+
+                           </div>
+
+                           <div layout="row">
                              <md-button class="md-warn pull-right"
                                ng-if="canDismiss(item)"
                                ng-disabled="progressStatusEnabled"
@@ -537,8 +581,7 @@
                                ng-disabled="progressStatusEnabled"
                                ng-click="approve(item, item.tracks[item.tracks.length-1])">Подтвердить получение</md-button>
                            </div>
-                           <p>статус: {{ explainOrderState(item) }}</p>
-                           <p>текущее задание: {{ item.activeTrack }}</p>
+
                          </div>
                        </md-list-item>
                        <md-divider ></md-divider>
