@@ -376,16 +376,6 @@
 
                                <!--div ng-repeat="subitem in item.subitems">{{subitem.desc}}</div-->
                                <div layout="row">
-                                 <md-input-container>
-                                   <label>Точка загрузки</label>
-                                   <input ng-model="item.pickup" size="100"/>
-                                 </md-input-container>
-                                 <md-input-container>
-                                   <label>Точка выгрузки</label>
-                                   <input ng-model="item.dropdown" size="100"/>
-                                 </md-input-container>
-                               </div>
-                               <div layout="row">
 
                                  <md-input-container>
                                    <label>Грузоперевозчик</label>
@@ -413,7 +403,62 @@
                                    </input>
                                  </md-input-container>
                                </div>
-                               <md-datepicker ng-model="item.date" md-placeholder="Введите дату"></md-datepicker>
+                               <div layout="row">
+                                 <md-card style="background-color:#dfdfdf">
+                                   <md-card-title>
+                                     <md-card-title-text>
+                                       <span class="md-title" align="center">Загрузка</span>
+                                     </md-card-title-text>
+                                   </md-card-title>
+                                   <md-card-content>
+                                     <md-input-container>
+                                       <label>Адрес</label>
+                                       <input ng-model="item.pickup.address" size="100"/>
+                                     </md-input-container>
+                                     <md-input-container>
+                                       <label>Название груза</label>
+                                       <input ng-model="item.pickup.cargo.name" size="100"/>
+                                     </md-input-container>
+                                     <md-input-container>
+                                       <label>Кол-во едениц груза</label>
+                                       <input type="number" ng-model="item.pickup.cargo.amount" size="100"/>
+                                     </md-input-container>
+                                     <md-input-container>
+                                       <label>Еденицы измерения груза</label>
+                                       <input ng-model="item.pickup.cargo.units" size="100"/>
+                                     </md-input-container>
+                                     <md-datepicker ng-model="item.pickup.date" md-placeholder="Введите дату"></md-datepicker>
+                                   </md-card-content>
+                                 </md-card>
+
+                                 <md-card style="background-color:#dfdfdf">
+                                   <md-card-title>
+                                     <md-card-title-text>
+                                       <span class="md-title" align="center">Выгрузка</span>
+                                     </md-card-title-text>
+                                   </md-card-title>
+                                   <md-card-content>
+                                     <md-input-container>
+                                       <label>Адрес</label>
+                                       <input ng-model="item.dropdown.address" size="100"/>
+                                     </md-input-container>
+                                     <md-input-container>
+                                       <label>Название груза</label>
+                                       <input ng-model="item.dropdown.cargo.name" size="100"/>
+                                     </md-input-container>
+                                     <md-input-container>
+                                       <label>Кол-во едениц груза</label>
+                                       <input type="number" ng-model="item.dropdown.cargo.amount" size="100"/>
+                                     </md-input-container>
+                                     <md-input-container>
+                                       <label>Еденицы измерения груза</label>
+                                       <input ng-model="item.dropdown.cargo.units" size="100"/>
+                                     </md-input-container>
+                                     <md-datepicker ng-model="item.dropdown.date" md-placeholder="Введите дату"></md-datepicker>
+                                   </md-card-content>
+                                 </md-card>
+
+                               </div>
                                <md-button class="md-warn pull-right" ng-disabled="progressPayEnabled" ng-click="deleteTrack(item.id)">Удалить</md-button>
                            </div>
                        </uib-accordion>

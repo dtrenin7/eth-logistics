@@ -795,21 +795,51 @@ var app = angular.module('dashboardApp', [
                                 id: 0,
                                 name: "item1",
                                 desc: "Задание 1",
-                                pickup: "Россия, Москва, ул. Советская, 18",
-                                dropdown: "Россия, Химки, ул. Строителей, 42",
+                                pickup: {
+                                  address: "Россия, Москва, ул. Советская, 18",
+                                  date: new Date(),
+                                  cargo: {
+                                    name: "Хлопчатобумажные изделия",
+                                    amount: 2,
+                                    units: "шт."
+                                  }
+                                },
+                                dropdown: {
+                                  address: "Россия, Химки, ул. Строителей, 42",
+                                  date: new Date(),
+                                  cargo: {
+                                    name: "Хлопчатобумажные изделия",
+                                    amount: 1,
+                                    units: "шт."
+                                  }
+                                },
                                 carrier: 2,
-                                price: 2,
-                                date: new Date(2017, 9, 10)
+                                price: 2
                             },
                             {
                                 id: 1,
                                 name: "item2",
                                 desc: "Задание 2",
-                                pickup: "Россия, Химки, ул. Строителей, 42",
-                                dropdown: "Россия, Клин, ул. Главная, 1",
+                                pickup: {
+                                  address: "Россия, Химки, ул. Строителей, 42",
+                                  date: new Date(),
+                                  cargo: {
+                                    name: "Арбузы",
+                                    amount: 3,
+                                    units: "т."
+                                  }
+                                },
+                                dropdown: {
+                                    address: "Россия, Клин, ул. Главная, 1",
+                                    date: new Date(),
+                                    cargo: {
+                                      name: "Арбузы",
+                                      amount: 2,
+                                      units: "т."
+                                    }
+                                },
                                 carrier: 3,
-                                price: 1,
-                                date: new Date(2017, 9, 22)
+                                price: 1
                             }
                         ];
 
@@ -914,11 +944,26 @@ var app = angular.module('dashboardApp', [
               id: $scope.items.length,
               name: "item" + ($scope.items.length + 1),
               desc: "Задание "+ ($scope.items.length + 1),
-              pickup: "Россия, ",
-              dropdown: "Россия, ",
+              pickup: {
+                address: "Россия, ",
+                date: new Date(),
+                cargo: {
+                  name: "Дрова",
+                  amount: 1,
+                  units: "куб. м."
+                }
+              },
+              dropdown: {
+                address: "Россия, ",
+                date: new Date(),
+                cargo: {
+                  name: "Дрова",
+                  amount: 1,
+                  units: "куб. м."
+                }
+              },
               carrier: $scope.contragents.length - 1,
-              price: 1,
-              date: new Date(2017, 9, 22)
+              price: 1
           };
 
           $scope.items.push(newItem);
@@ -1100,6 +1145,7 @@ var app = angular.module('dashboardApp', [
             // show confirmation
           }
           catch (e) {
+             console.log(e);
              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
              $scope.progressStatusEnabled = false;
              return;
@@ -1110,6 +1156,7 @@ var app = angular.module('dashboardApp', [
         $scope.transfer = async function() {
           var sender = $scope.contragents[$scope.sender].account;
           var handleError = function(e) {
+            console.log(e);
             $scope.progressPayEnabled = false;
             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
           }
@@ -1125,13 +1172,13 @@ var app = angular.module('dashboardApp', [
             for(var i = 0; i < $scope.items.length; i++) {
               var item = $scope.items[i];
               console.log(JSON.stringify(item));
-              trackHashes.push($scope.getHash(item.pickup));  // pickup.location
-              trackHashes.push($scope.getHash(item.date.toString()));  // pickup.date
-              trackHashes.push($scope.getHash('shit'));  // pickup.description (BUG - implemented in future)
-              trackHashes.push($scope.getHash(item.dropdown));  // dropdown.location
-              trackHashes.push($scope.getHash(item.date.toString()));  // dropdown.date (BUG - must be another date)
-              trackHashes.push($scope.getHash('shit'));  // dropdown.description (BUG - implemented in future)
-              trackHashes.push($scope.getHash(item.date.toString()));  // assignment.date (BUG - must be another date)
+              trackHashes.push($scope.getHash(item.pickup.address));  // pickup.location
+              trackHashes.push($scope.getHash(item.pickup.date.toString()));  // pickup.date
+              trackHashes.push($scope.getHash(JSON.stringify(item.pickup.cargo)));  // pickup.description
+              trackHashes.push($scope.getHash(item.dropdown.address));  // dropdown.location
+              trackHashes.push($scope.getHash(item.dropdown.date.toString()));  // dropdown.date
+              trackHashes.push($scope.getHash(JSON.stringify(item.dropdown.cargo)));  // dropdown.description
+              trackHashes.push($scope.getHash(new Date().toString()));  // assignment.date (BUG - must be another date)
               trackHashes.push($scope.getHash('shit'));  // assignment.proof (BUG - implemented in future)
               trackAddress.push($scope.contragents[item.carrier].account); // carrier
               trackAddress.push($scope.contragents[item.carrier].account); // loader (FIXME)
