@@ -16,6 +16,7 @@ contract Order is Owned {
   struct Position {
     uint32 location;
     uint32 date;
+    uint32 description;
   }
 
   struct Assignment {
@@ -55,6 +56,7 @@ contract Order is Owned {
   State public state;
   address public consigner;
   address public consignee;
+  address public cargoOwner;
   uint public price;   // общая стоимость заказа
   uint public numTracks;
   uint public activeTrackID;
@@ -67,11 +69,11 @@ contract Order is Owned {
   function Order( uint _ID,
                   address _consigner,
                   address _consignee,
+                  address _cargoOwner,
   //                bytes32[] _trackHashes,
                   uint32[] _trackHashes,
                   address[] _trackAddresses,
-                  uint[] _trackPrices,
-                  uint32 _description) Owned() {
+                  uint[] _trackPrices) Owned() {
     ccAddress = address(0x3951cfe2694a494b7751b0b4245362126256b383);
     cc = CargoCoin(ccAddress);
     _address = this;
@@ -79,13 +81,13 @@ contract Order is Owned {
     state = State.New;
     consigner = _consigner;
     consignee = _consignee;
-    description = _description;
+    cargoOwner = _cargoOwner;
 
     uint j = 0;
     uint k = 0;
     uint _price = 0;
     for(uint i = 0; i < _trackPrices.length; i++) {
-      k = i * 6;
+      k = i * 8;
       j = i * 3;
       /*tracks[numTracks].trackState = TrackState.New;
       tracks[numTracks].pickup.location = _trackHashes[i];
@@ -98,9 +100,9 @@ contract Order is Owned {
       tracks[numTracks].assignment.date = _trackHashes[i+4];
       tracks[numTracks].assignment.proof = _trackHashes[i+5];
       tracks[numTracks].price = _trackPrices[numTracks]; */
-      Position memory _pickup = Position(_trackHashes[k], _trackHashes[k+1]);
-      Position memory _dropdown = Position(_trackHashes[k+2], _trackHashes[k+3]);
-      Assignment memory _assignment = Assignment(_trackHashes[k+4], _trackHashes[k+5]);
+      Position memory _pickup = Position(_trackHashes[k], _trackHashes[k+1], _trackHashes[k+2]);
+      Position memory _dropdown = Position(_trackHashes[k+3], _trackHashes[k+4], _trackHashes[k+5]);
+      Assignment memory _assignment = Assignment(_trackHashes[k+6], _trackHashes[k+7]);
       tracks[numTracks] = Track(TrackState.New, _pickup, _dropdown,
         _trackAddresses[j], _trackAddresses[j+1], _trackAddresses[j+2],
         _assignment, _trackPrices[i]); //*/
@@ -147,6 +149,7 @@ contract Order is Owned {
     State _state,
     address _consignee,
     address _consigner,
+    address _cargoOwner,
     uint _price,
     uint _numTracks,
     uint _activeTrack,
@@ -154,6 +157,7 @@ contract Order is Owned {
       _state = state;
       _consignee = consignee;
       _consigner = consigner;
+      _cargoOwner = cargoOwner;
       _price = price;
       _numTracks = numTracks;
       _activeTrack = activeTrackID;
@@ -235,7 +239,9 @@ contract Order is Owned {
                                                       address _unloader,
                                                       uint _price,
                                                       uint32 _pickup,
-                                                      uint32 _dropdown ) {
+                                                      uint32 _pickupDescr,
+                                                      uint32 _dropdown,
+                                                      uint32 _dropdownDescr ) {
     assert(trackID < numTracks);
     _state = tracks[trackID].trackState;
     _carrier = tracks[trackID].carrier;
@@ -243,6 +249,8 @@ contract Order is Owned {
     _unloader = tracks[trackID].unloader;
     _price = tracks[trackID].price;
     _pickup = tracks[trackID].pickup.location;
+    _pickupDescr = tracks[trackID].pickup.description;
     _dropdown = tracks[trackID].dropdown.location;
+    _dropdownDescr = tracks[trackID].dropdown.description;
   }
 }

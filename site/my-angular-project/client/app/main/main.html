@@ -311,6 +311,49 @@
                  </md-card-content>
                </md-card>
 
+               <!-- ВЛАДЕЛЕЦ -->
+               <md-card md-whiteframe="12">
+                 <md-card-title>
+                   <md-card-title-text>
+                     <span class="md-headline">Владелец</span>
+                   </md-card-title-text>
+                 </md-card-title>
+
+                 <md-card-content>
+                   <div layout="row">
+                     <md-input-container>
+                       <label>Название</label>
+                       <md-select ng-model="cargoOwner">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                           {{contrag.name}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>ИНН</label>
+                       <input ng-model="contragents[cargoOwner].INN" ng-disabled="true">
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>ОГРН</label>
+                       <input ng-model="contragents[cargoOwner].OGRN" ng-disabled="true">
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>Номер счета</label>
+                       <input ng-model="contragents[cargoOwner].account" ng-disabled="true" size="80"/>
+                       <!--md-select ng-model="contragents[receiver].account" ng-disabled="true">
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
+                           {{acc}}
+                         </md-option>
+                       </md-select-->
+                     </md-input-container>
+                   </div>
+                 </md-card-content>
+               </md-card>
+
                <!-- ЗАКАЗ -->
              <md-card md-whiteframe="12">
                <md-card-title>
@@ -423,7 +466,7 @@
    </md-tab>
 
    <!-- СТАТУС ЗАКАЗА -->
-   <md-tab label="Статус заказа" md-on-select="readOrders()">
+   <md-tab label="Статус контракта" md-on-select="readOrders()">
      <md-content class="md-padding">
        <div class="container">
          <div class="row">
@@ -530,7 +573,7 @@
    </md-tab>
 
    <!-- АКТИВНЫЕ ЗАКАЗЫ -->
-   <md-tab label="Активные заказы" md-on-select="readOrders()">
+   <md-tab label="Активные контракты" md-on-select="readOrders()">
      <md-content class="md-padding">
        <div class="container">
          <div class="row">
@@ -552,7 +595,7 @@
                            <div layout="row">
 
                              <div class="pull-right" layout="column">
-                              <qrcode version="2" error-correction-level="M" size="80" data="{{item.address}}"></qrcode>
+                              <qrcode version="3" error-correction-level="M" size="80" data="{{item.address}}"></qrcode>
                              </div>
 
                              <div layout="column">

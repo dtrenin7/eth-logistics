@@ -89,13 +89,13 @@ contract Platform is Owned {
 
     function addOrder(  address _consigner,
                         address _consignee,
+                        address _cargoOwner,
                         uint32[] _trackHashes,
                         address[] _trackAddresses,
-                        uint[] _trackPrices,
-                        uint32 _description ) returns (uint ID) {
+                        uint[] _trackPrices ) returns (uint ID) {
       ID = numOrders++;
-      Order order = new Order(ID, _consigner, _consignee, _trackHashes,
-        _trackAddresses, _trackPrices, _description);
+      Order order = new Order(ID, _consigner, _consignee, _cargoOwner,
+        _trackHashes, _trackAddresses, _trackPrices);
       order.setOwner(_consigner);
       orders[ID] = order;
     }
@@ -150,7 +150,7 @@ contract Platform is Owned {
       uint carrier = addPartner(acc3);
       setPartnerAttribute(carrier, 'name', 'Грузоперевозчик1: Деловые линии'); */
 
-      uint32[] memory trackHashes = new uint32[](12);
+      uint32[] memory trackHashes = new uint32[](14);
       trackHashes[0] = hash; // [0] pickup.location
       trackHashes[1] = hash; // [0] pickup.date
       trackHashes[2] = hash; // [0] dropdown.location
@@ -159,10 +159,12 @@ contract Platform is Owned {
       trackHashes[5] = hash; // [0] assignment.proof
       trackHashes[6] = hash; // [1] pickup.location
       trackHashes[7] = hash; // [1] pickup.date
-      trackHashes[8] = hash; // [1] dropdown.location
-      trackHashes[9] = hash; // [1] dropdown.date
-      trackHashes[10] = hash; // [1] assignment.date
-      trackHashes[11] = hash; // [1] assignment.proof
+      trackHashes[8] = hash; // [1] pickup.description
+      trackHashes[9] = hash; // [1] dropdown.location
+      trackHashes[10] = hash; // [1] dropdown.date
+      trackHashes[11] = hash; // [1] dropdown.description
+      trackHashes[12] = hash; // [1] assignment.date
+      trackHashes[13] = hash; // [1] assignment.proof
       address[] memory trackAddress = new address[](6);
       trackAddress[0] = acc2; // [0] carrier
       trackAddress[1] = acc2; // [0] loader
@@ -176,9 +178,10 @@ contract Platform is Owned {
 
       address consigner = acc1;
       address consignee = acc4;
+      address cargoOwner = acc5;
       uint32 description = hash;
-      uint orderID = addOrder(consigner, consignee, trackHashes, trackAddress,
-        trackPrices, description); // */
+      uint orderID = addOrder(consigner, consignee, cargoOwner, trackHashes,
+        trackAddress, trackPrices); // */
   //    Order order = Order(orders[orderID]);
 //      order.addPosition(hash, hash);
 //      order.addAssignment(acc4, acc5, hash, hash);
