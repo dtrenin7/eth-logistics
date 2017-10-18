@@ -241,7 +241,9 @@ contract Order is Owned {
                                                       uint32 _pickup,
                                                       uint32 _pickupDescr,
                                                       uint32 _dropdown,
-                                                      uint32 _dropdownDescr ) {
+                                                      uint32 _dropdownDescr,
+                                                      uint32 _assignmentDate,
+                                                      uint32 _assignmentProof ) {
     assert(trackID < numTracks);
     _state = tracks[trackID].trackState;
     _carrier = tracks[trackID].carrier;
@@ -252,5 +254,7 @@ contract Order is Owned {
     _pickupDescr = tracks[trackID].pickup.description;
     _dropdown = tracks[trackID].dropdown.location;
     _dropdownDescr = tracks[trackID].dropdown.description;
+    _assignmentDate = tracks[trackID].assignment.date;
+    _assignmentProof = tracks[trackID].assignment.proof;
   }
 }

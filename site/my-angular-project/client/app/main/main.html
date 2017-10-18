@@ -627,8 +627,45 @@
                <md-card md-whiteframe="12">
                  <md-card-content>
                    <md-progress-linear ng-disabled="!progressStatusEnabled" md-mode="indeterminate"></md-progress-linear>
-                   <div layout="row">
-                     <md-list flex>
+                   <div layout="column">
+                     <md-input-container ng-if="false">
+                       <label>Поиск</label>
+                       <input ng-model="filt.searchKeyword"/>
+                     </md-input-container>
+                     <table class="table">
+                    	<tr>
+                        <th ng-click="sortBy('item.order.index')">Время создания
+                          <span class="sortorder" ng-if="filt.propertyName === 'item.order.index'" ng-class="{reverse: filt.reverse}"></span>
+                    		</th>
+                    		<th ng-click="sortBy('item.order.cargoOwner')">Владелец груза
+                          <span class="sortorder" ng-if="filt.propertyName === 'item.order.cargoOwner'" ng-class="{reverse: filt.reverse}"></span>
+                    		</th>
+                    		<th ng-click="sortBy('item.track.carrier')">Перевозчик
+                          <span class="sortorder" ng-if="filt.propertyName === 'item.track.carrier'" ng-class="{reverse: filt.reverse}"></span>
+                    		</th>
+                    		<th ng-click="sortBy('item.track.pickup.address')">Откуда
+                          <span class="sortorder" ng-if="filt.propertyName === 'item.track.pickup.address'" ng-class="{reverse: filt.reverse}"></span>
+                    		</th>
+                        <th ng-click="sortBy('item.track.dropdown.address')">Куда
+                          <span class="sortorder" ng-if="filt.propertyName === 'item.track.dropdown.address'" ng-class="{reverse: filt.reverse}"></span>
+                    		</th>
+                    	</tr>
+                    	<tr ng-repeat="item in orderTracks | filter:filt.searchKeyword | orderBy:filt.propertyName:filt.reverse" ng-click="showOrder(item.order, item.track)">
+                    		<td>{{ getHashValue(item.track.assignment.date) }}
+                    		</td>
+                    		<td>{{ contragentName(item.order.cargoOwner) }}<br>
+                          {{ item.order.cargoOwner }}
+                    		</td>
+                    		<td>{{ contragentName(item.track.carrier) }}<br>
+                          {{ item.track.carrier }}
+                    		</td>
+                    		<td>{{ getHashValue(item.track.pickup.address) }}
+                    		</td>
+                        <td>{{ getHashValue(item.track.dropdown.address) }}
+                    		</td>
+                    	</tr>
+                    </table>
+                     <!--md-list flex>
                        <md-subheader class="md-no-sticky">Заказы (всего {{ orders.length }})</md-subheader>
                        <md-list-item class="md-3-line" ng-repeat="item in orders track by item.index" ng-click="selectOrder(item.index);">
                          <div class="md-list-item-text" layout="column">
@@ -651,7 +688,7 @@
                              <div layout="column">
                                <h3>  [{{ item.index }}] {{ item.address }}</h3>
                                <p>статус: {{ explainOrderState(item) }}</p>
-                               <!--i class="material-icons md-48">{{ getOrderIcon(item.state) }}</i-->
+                               <!--i class="material-icons md-48">{{ getOrderIcon(item.state) }}</i>
                                <p>текущее задание: {{ item.activeTrack }}</p>
                              </div>
 
@@ -691,7 +728,7 @@
                          </div>
                        </md-list-item>
                        <md-divider ></md-divider>
-                     </md-list>
+                     </md-list-->
                  </div>
                </md-card-content>
               </md-card>

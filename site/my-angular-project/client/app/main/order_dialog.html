@@ -1,0 +1,111 @@
+<md-dialog aria-label="Mango (Fruit)">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Контракт {{order.address}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <!--md-content class="md-padding"-->
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="md-padding" ng-cloak layout="column">
+
+                <md-card md-whiteframe="12">
+                  <md-card-content>
+                    <md-progress-linear ng-disabled="!progressStatusEnabled" md-mode="indeterminate"></md-progress-linear>
+                    <div class="mycontainer">
+                      <div class="left-nav">
+                        <div layout="row">
+
+                          <div layout="column">
+                            <md-input-container>
+                              <qrcode version="3" error-correction-level="M" size="100" data="{{order.address}}"></qrcode>
+                            </md-input-container>
+                          </div>
+
+                          <div layout="column">
+                            <md-input-container width= "40px">
+                            </md-input-container>
+                          </div>
+
+                          <div layout="row">
+                            <md-input-container>
+                              <label>Стоимость (CC)</label>
+                              <input ng-value="parentScope.fromMicroCC(order.price)" ng-disabled="true"/>
+                            </md-input-container>
+
+                            <md-input-container>
+                              <label>Баланс (CC)</label>
+                              <input ng-value="parentScope.orderBalanceCC" ng-disabled="true"/>
+                            </md-input-container>
+
+                            <md-input-container>
+                              <label>Статус</label>
+                              <input ng-value="parentScope.explainOrderState(order)" ng-disabled="true"/>
+                            </md-input-container>
+                          </div>
+
+                          <div layout="column">
+                            <md-input-container>
+                              <md-button class="md-raised md-primary pull-right"
+                                ng-if="order.state == 0" ng-click="parentScope.pay(order)">Оплатить заказ</md-button>
+                              <md-button class="md-warn pull-right"
+                                ng-if="parentScope.canDismiss(order)"
+                                ng-disabled="parentScope.progressStatusEnabled"
+                                ng-click="parentScope.dismiss(order)">Отменить заказ</md-button>
+                              <md-button class="md-raised md-primary pull-right"
+                                ng-if="order.state == 1 && order.activeTrack == order.tracks.length"
+                                ng-disabled="parentScope.progressStatusEnabled"
+                                ng-click="parentScope.approve(order, order.tracks[order.tracks.length-1])">Подтвердить получение</md-button>
+                            </div>
+                            </md-input-container>
+
+                          </div>
+                        </div>
+                      </div>
+                </md-card-content>
+               </md-card>
+
+                <md-card md-whiteframe="12">
+                  <md-card-content>
+                    <div layout="row">
+                      <md-list flex>
+                        <md-subheader class="md-no-sticky">Задания (всего {{ order.tracks.length }} для {{ order.address }})</md-subheader>
+                        <md-list-item class="md-3-line" ng-repeat="item in order.tracks track by item.index" ng-click="null">
+                          <div class="md-list-item-text" layout="column">
+                            <div>
+                              <i class="material-icons md-48 pull-left">{{ parentScope.getTrackIcon(item.state) }}</i>
+                              <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                               <md-button class="md-raised md-primary pull-right"
+                                 ng-if="order.state != 0 && order.state != 3 && order.activeTrack == item.index"
+                                 ng-disabled="parentScope.progressStatusEnabled"
+                                 ng-click="parentScope.approve(order, item)">{{ parentScope.getApproveButtonText(order, item) }}
+                               </md-button>
+                            </div>
+                            <p>статус: {{ parentScope.explainTrackState(item) }}</p>
+                            <p>стоимость: {{ parentScope.fromMicroCC(item.price) }} CC</p>
+                          </div>
+                        </md-list-item>
+                        <md-divider ></md-divider>
+                      </md-list>
+                  </div>
+                </md-card-content>
+               </md-card>
+
+              <!--/md-content-->
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button ng-click="answer('')">
+        Закрыть
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

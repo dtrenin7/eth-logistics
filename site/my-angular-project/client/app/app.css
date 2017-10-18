@@ -38,6 +38,15 @@
     padding: 0.2em 0;
 }
 
+.td { white-space:pre }
+
+.sortorder:after {
+  content: '\25b2';   // BLACK UP-POINTING TRIANGLE
+}
+.sortorder.reverse:after {
+  content: '\25bc';   // BLACK DOWN-POINTING TRIANGLE
+}
+
 .selectdemoBasicUsage md-input-container {
   margin-right: 10px; }
 
