@@ -35,21 +35,29 @@
                             </md-input-container>
                           </div>
 
-                          <div layout="row">
-                            <md-input-container>
-                              <label>Стоимость (CC)</label>
-                              <input ng-value="parentScope.fromMicroCC(order.price)" ng-disabled="true"/>
-                            </md-input-container>
+                          <div layout="column">
 
-                            <md-input-container>
-                              <label>Баланс (CC)</label>
-                              <input ng-value="parentScope.orderBalanceCC" ng-disabled="true"/>
-                            </md-input-container>
+                            <div layout="row">
+                              <md-input-container>
+                                <label>Владелец груза</label>
+                                <input ng-value="parentScope.contragentName(order.cargoOwner)" ng-disabled="true"/>
+                              </md-input-container>
 
-                            <md-input-container>
-                              <label>Статус</label>
-                              <input ng-value="parentScope.explainOrderState(order)" ng-disabled="true"/>
-                            </md-input-container>
+                              <md-input-container>
+                                <label>Стоимость (CC)</label>
+                                <input ng-value="parentScope.fromMicroCC(order.price)" ng-disabled="true"/>
+                              </md-input-container>
+
+                              <md-input-container>
+                                <label>Баланс (CC)</label>
+                                <input ng-value="parentScope.orderBalanceCC" ng-disabled="true"/>
+                              </md-input-container>
+
+                              <md-input-container>
+                                <label>Статус</label>
+                                <input ng-value="parentScope.explainOrderState(order)" ng-disabled="true"/>
+                              </md-input-container>
+                            </div>
                           </div>
 
                           <div layout="column">
@@ -82,15 +90,38 @@
                           <div class="md-list-item-text" layout="column">
                             <div>
                               <i class="material-icons md-48 pull-left">{{ parentScope.getTrackIcon(item.state) }}</i>
-                              <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                              <h3>  [{{ item.index }}] перевозчик: {{ parentScope.contragentName(item.carrier) }} ({{ item.carrier }})</h3>
                                <md-button class="md-raised md-primary pull-right"
                                  ng-if="order.state != 0 && order.state != 3 && order.activeTrack == item.index"
                                  ng-disabled="parentScope.progressStatusEnabled"
                                  ng-click="parentScope.approve(order, item)">{{ parentScope.getApproveButtonText(order, item) }}
                                </md-button>
                             </div>
-                            <p>статус: {{ parentScope.explainTrackState(item) }}</p>
-                            <p>стоимость: {{ parentScope.fromMicroCC(item.price) }} CC</p>
+                            <table class="table">
+                             <tr>
+                               <th>Груз (загрузка)
+                               </th>
+                               <th>Груз (выгрузка)
+                               </th>
+                               <th>Статус
+                               </th>
+                               <th>Стоимость
+                               </th>
+                             </tr>
+                             <tr>
+                               <td>{{ parentScope.getCargo(item.pickup.description) }}
+                               </td>
+                               <td>{{ parentScope.getCargo(item.dropdown.description) }}
+                               </td>
+                               <td>{{ parentScope.explainTrackState(item) }}
+                               </td>
+                               <td>{{ parentScope.fromMicroCC(item.price) }} CC
+                               </td>
+                             </tr>
+                           </table>
+
+                            <!--p>груз (загрузка): {{ parentScope.getCargo(item.pickup.description) }}       груз (выгрузка): {{ parentScope.getCargo(item.dropdown.description) }}</p>
+                            <p>статус: {{ parentScope.explainTrackState(item) }}       стоимость: {{ parentScope.fromMicroCC(item.price) }} CC</p-->
                           </div>
                         </md-list-item>
                         <md-divider ></md-divider>

@@ -536,31 +536,41 @@
                            </md-input-container>
                          </div>
 
-                         <div layout="row">
-                           <md-input-container>
-                             <label>Номер</label>
-                             <md-select ng-model="orderIndex" ng-change="orderChanged(orderIndex)">
-                               <!--md-option><em>None</em></md-option-->
-                               <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
-                                 {{item.address}}
-                               </md-option>
-                             </md-select>
-                           </md-input-container>
+                         <div layout="column">
 
-                           <md-input-container>
-                             <label>Стоимость (CC)</label>
-                             <input ng-if="orders[orderIndex] != undefined" ng-value="fromMicroCC(orders[orderIndex].price)" ng-disabled="true"/>
-                           </md-input-container>
+                           <div layout="row">
+                             <md-input-container>
+                               <label>Номер</label>
+                               <md-select ng-model="orderIndex" ng-change="orderChanged(orderIndex)">
+                                 <!--md-option><em>None</em></md-option-->
+                                 <md-option ng-repeat="item in orders track by item.index" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                                   {{item.address}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container>
+                           </div>
 
-                           <md-input-container>
-                             <label>Баланс (CC)</label>
-                             <input ng-if="orders[orderIndex] != undefined" ng-value="orderBalanceCC" ng-disabled="true"/>
-                           </md-input-container>
+                           <div layout="row">
+                             <md-input-container>
+                               <label>Владелец груза</label>
+                               <input ng-if="orders[orderIndex] != undefined" ng-value="contragentName(orders[orderIndex].cargoOwner)" ng-disabled="true"/>
+                             </md-input-container>
+                             <md-input-container>
+                               <label>Стоимость (CC)</label>
+                               <input ng-if="orders[orderIndex] != undefined" ng-value="fromMicroCC(orders[orderIndex].price)" ng-disabled="true"/>
+                             </md-input-container>
 
-                           <md-input-container>
-                             <label>Статус</label>
-                             <input ng-if="orders[orderIndex] != undefined" ng-value="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
-                           </md-input-container>
+                             <md-input-container>
+                               <label>Баланс (CC)</label>
+                               <input ng-if="orders[orderIndex] != undefined" ng-value="orderBalanceCC" ng-disabled="true"/>
+                             </md-input-container>
+
+                             <md-input-container>
+                               <label>Статус</label>
+                               <input ng-if="orders[orderIndex] != undefined" ng-value="explainOrderState(orders[orderIndex])" ng-disabled="true"/>
+                             </md-input-container>
+                           </div>
+
                          </div>
 
                          <div layout="column">
@@ -593,15 +603,37 @@
                          <div class="md-list-item-text" layout="column">
                            <div>
                              <i class="material-icons md-48 pull-left">{{ getTrackIcon(item.state) }}</i>
-                             <h3>  [{{ item.index }}] перевозчик: {{ item.carrier }}</h3>
+                             <h3>  [{{ item.index }}] перевозчик: {{ contragentName(item.carrier) }} ({{ item.carrier }})</h3>
                               <md-button class="md-raised md-primary pull-right"
                                 ng-if="orderIndex < orders.length && orders[orderIndex].state != 0 && orders[orderIndex].state != 3 && orders[orderIndex].activeTrack == item.index"
                                 ng-disabled="progressStatusEnabled"
                                 ng-click="approve(orders[orderIndex], item)">{{ getApproveButtonText(orders[orderIndex], item) }}
                               </md-button>
                            </div>
-                           <p>статус: {{ explainTrackState(item) }}</p>
-                           <p>стоимость: {{ fromMicroCC(item.price) }} CC</p>
+                           <table class="table">
+                            <tr>
+                              <th>Груз (загрузка)
+                              </th>
+                              <th>Груз (выгрузка)
+                              </th>
+                              <th>Статус
+                              </th>
+                              <th>Стоимость
+                              </th>
+                            </tr>
+                            <tr>
+                              <td>{{ getCargo(item.pickup.description) }}
+                              </td>
+                              <td>{{ getCargo(item.dropdown.description) }}
+                              </td>
+                              <td>{{ explainTrackState(item) }}
+                              </td>
+                              <td>{{ fromMicroCC(item.price) }} CC
+                              </td>
+                            </tr>
+                          </table>
+                           <!--p>статус: {{ explainTrackState(item) }}</p>
+                           <p>стоимость: {{ fromMicroCC(item.price) }} CC</p-->
                          </div>
                        </md-list-item>
                        <md-divider ></md-divider>

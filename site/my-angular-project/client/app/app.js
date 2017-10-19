@@ -1313,6 +1313,22 @@ var app = angular.module('dashboardApp', [
           $scope.filt.propertyName = propertyName;
         };
 
+        $scope.getCargo = function(hash) {
+          var value = $scope.hashMap[hash];
+          if( value == undefined ) {
+            return hash;
+          }
+          try {
+            var json = JSON.parse(value);
+            var cargo = json.name + ' (' + json.amount + ' ' + json.units + ')';
+            return cargo;
+          }
+          catch(e) {
+            console.log(e);
+            return hash;
+          }
+        };
+
     }
 
 //  ]  // INJECT! scope
