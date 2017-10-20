@@ -1298,6 +1298,7 @@ var app = angular.module('dashboardApp', [
             clickOutsideToClose:true,
             fullscreen: true//$scope.customFullscreen // Only for -xs, -sm breakpoints.
           });
+          $scope.getOrderBalance(_order);
         }
 
         $scope.default = $scope.items[2];
