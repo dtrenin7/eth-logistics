@@ -9,6 +9,7 @@ contract Order is Owned {
   enum State {
     New,
     Signed,
+    Shipped,
     Done,
     Cancelled
   }
@@ -123,12 +124,14 @@ contract Order is Owned {
   function begin() payable returns (Error) {
     if( msg.sender == consigner ) {
       //uint balanceCC = cc.balanceOf(_address);
-      if( state != State.New ) {
-        //msg.sender.transfer(msg.value); // wei
-        return Error.OrderAlreadyPaid;
+      if( state == State.New ) {
+        if( cc.transferFrom(msg.sender, _address, price) != true ) {
+          return Error.PriceIsWrong;
+        }
+        state = State.Signed;
       }
-      if( cc.transferFrom(msg.sender, _address, price) != true ) {
-        return Error.PriceIsWrong;
+      else if( state == State.Signed ) {
+        state = State.Shipped;
       }
 
       /*if( balanceCC != price ) {  // microCC
@@ -140,7 +143,6 @@ contract Order is Owned {
         return Error.PriceIsWrong;
       } */
       // возврат, если условия не соблюдены
-      state = State.Signed;
     }
     return Error.OK;
   }
@@ -165,9 +167,9 @@ contract Order is Owned {
   }
 
   function complete() returns (Error) {
-    if( state != State.Signed  )
+    if( state != State.Shipped  )
       return Error.OrderIsNotPaid;
-    // если отправитель не оплатил, обрабатывать нечего
+    // если отправитель не отправил, обрабатывать нечего
 
     if( activeTrackID < numTracks ) {
       if( tracks[activeTrackID].trackState == TrackState.Loaded &&

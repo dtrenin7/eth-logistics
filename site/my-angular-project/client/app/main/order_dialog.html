@@ -64,12 +64,14 @@
                             <md-input-container>
                               <md-button class="md-raised md-primary pull-right"
                                 ng-if="order.state == 0" ng-click="parentScope.pay(order)">Оплатить заказ</md-button>
+                              <md-button class="md-raised md-primary pull-right"
+                                ng-if="order.state == 1" ng-click="parentScope.ship(order)">Подтвердить отправление</md-button>
                               <md-button class="md-warn pull-right"
                                 ng-if="parentScope.canDismiss(order)"
                                 ng-disabled="parentScope.progressStatusEnabled"
                                 ng-click="parentScope.dismiss(order)">Отменить заказ</md-button>
                               <md-button class="md-raised md-primary pull-right"
-                                ng-if="order.state == 1 && order.activeTrack == order.tracks.length"
+                                ng-if="order.state == 2 && order.activeTrack == order.tracks.length"
                                 ng-disabled="parentScope.progressStatusEnabled"
                                 ng-click="parentScope.approve(order, order.tracks[order.tracks.length-1])">Подтвердить получение</md-button>
                             </div>
@@ -92,7 +94,7 @@
                               <i class="material-icons md-48 pull-left">{{ parentScope.getTrackIcon(item.state) }}</i>
                               <h3>  [{{ item.index }}] перевозчик: {{ parentScope.contragentName(item.carrier) }} ({{ item.carrier }})</h3>
                                <md-button class="md-raised md-primary pull-right"
-                                 ng-if="order.state != 0 && order.state != 3 && order.activeTrack == item.index"
+                                 ng-if="order.state == 2 && order.activeTrack == item.index"
                                  ng-disabled="parentScope.progressStatusEnabled"
                                  ng-click="parentScope.approve(order, item)">{{ parentScope.getApproveButtonText(order, item) }}
                                </md-button>

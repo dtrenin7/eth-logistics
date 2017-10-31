@@ -265,7 +265,7 @@ var app = angular.module('dashboardApp', [
           if( typeof(order) == 'undefined' ) {
             return "Не известно";
           }
-          var descs = ["Новый", "Оплачен", "Выполнен", "Отменен"];
+          var descs = ["Новый", "Оплачен", "Отправлен", "Выполнен", "Отменен"];
           if(order.state < descs.length) {
             return descs[order.state];
           }
@@ -1192,6 +1192,31 @@ var app = angular.module('dashboardApp', [
             $scope.showConfirmation("Информация", "Заказ " + order.address +
               " на сумму " + $scope.fromMicroCC(order.price) + " CC оплачен успешно");
             // show confirmation
+          }
+          catch (e) {
+             console.log(e);
+             $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
+             $scope.progressStatusEnabled = false;
+             return;
+          }
+          $scope.progressStatusEnabled = false;
+        }
+
+        // подтверждение отгрузки отправителем
+        $scope.ship = async function(order) {
+          console.log("SHIP");
+          $scope.progressStatusEnabled = true;
+          try {
+            var contract = $scope.web3.eth.contract($scope.orderProto.abi).at(order.address);
+            console.log("CONTRACT: ");console.log(contract);
+            console.log(">>> begin");
+            var tx = await $scope.makePromise2(contract.begin, [{from:order.consigner, to:order.address, gas: $scope.settings.gas.begin}]);
+            console.log("BEGIN TX: " + tx);
+            // set state to "Shipped"
+
+            console.log(">>> state");
+            order.state = (await $scope.makePromise2(contract.state, [])).toNumber();
+            console.log("STATE: " + $scope.explainOrderState(order));
           }
           catch (e) {
              console.log(e);
