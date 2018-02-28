@@ -13,42 +13,8 @@ import "./Order.sol";
 /// @title Platform
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
 contract Platform is Owned {
-    /// var car;ObozCarrier.deployed().then(function(i){car=i})
-    /// web3.fromWei(web3.eth.getBalance(acc[0]), 'ether').toNumber()
-    /// var bal; car.getBalance().then(function(i){bal=i}); web3.fromWei(bal, 'ether').toNumber()
-    /// var cc; CargoCoin.deployed().then(function(i){cc=i})
-    /// cc.buy({from:acc[3], to:cc.address, value: web3.toWei(2, "ether")})
-    /// cc.sell(1, {from:acc[3]})
-    /// web3.eth.defaultAccount = web3.eth.accounts[0];var x;app.addOboz();app.getOboz(0).then(function(i){x = web3.eth.contract(ObozCarrier.abi).at(i)})
-    /// x.donate({from:acc[3], to:x.address, value: web3.toWei(4, "ether")})
-    /// x.pay(web3.toWei(1, "ether"))
-    /// var x;app.addConsigner('xxx', acc[7]);app.getConsigner(1).then(function(i){x = web3.eth.contract(Consigner.abi).at(i)})
-    /// x.catchCoins({from:acc[3], to:x.address, value: web3.toWei(4, "ether")})
     /// @dev Рейс (Перевозка)
 
-/*    struct Cargo {
-      uint ID;
-      string name;
-      bytes32 attributes; // характеристики груза
-    }
-
-    struct Partner {
-      uint ID;
-      address account;
-      mapping (string => string) attributes;
-    }
-
-    mapping (uint => Partner) partners;
-//    mapping (uint => address) consignements;
-//    mapping (uint => address) details;
-    mapping (uint => Cargo) cargos;
-    uint public numPartners;
-    //uint public numConsigners;
-    //uint public numCarriers;
-    //uint public numConsignees;
-    //uint public numDetails;
-    //uint public numConsignements;
-    uint public numCargos; */
     uint public numOrders;
     mapping (uint => address) orders;
 
@@ -56,46 +22,16 @@ contract Platform is Owned {
 
     }
 
-/*    function addPartner(address acc) returns (uint ID) {
-      ID = numPartners++;
-      partners[ID] = Partner(ID, acc);
-    }
-
-    function setPartnerAttribute(uint ID, string key, string value) {
-      assert(ID < numPartners);
-      partners[ID].attributes[key] = value;
-    }
-
-    function getPartnerAccount(uint ID) constant returns (address _account) {
-      assert(ID < numPartners);
-      _account = partners[ID].account;
-    }
-
-    function getPartnerAttribute(uint ID, string key) constant returns (string value) {
-      assert(ID < numPartners);
-      value = partners[ID].attributes[key];
-    }
-
-    function addCargo(string _name, bytes32 attributes) returns (uint ID) {
-      ID = numCargos++;
-      cargos[ID] = Cargo(ID, _name, attributes);
-    }
-
-    function getCargo(uint ID) constant returns (string name, bytes32 attributes) {
-      assert(ID < numCargos);
-      name = cargos[ID].name;
-      attributes = cargos[ID].attributes;
-    } */
-
     function addOrder(  address _consigner,
                         address _consignee,
                         address _cargoOwner,
                         uint32[] _trackHashes,
                         address[] _trackAddresses,
-                        uint[] _trackPrices ) returns (uint ID) {
+                        uint[] _trackPrices,
+                        address _ccAddress ) returns (uint ID) {
       ID = numOrders++;
       Order order = new Order(ID, _consigner, _consignee, _cargoOwner,
-        _trackHashes, _trackAddresses, _trackPrices);
+        _trackHashes, _trackAddresses, _trackPrices, _ccAddress);
       order.setOwner(_consigner);
       orders[ID] = order;
     }
@@ -180,8 +116,9 @@ contract Platform is Owned {
       address consignee = acc4;
       address cargoOwner = acc5;
       uint32 description = hash;
-      uint orderID = addOrder(consigner, consignee, cargoOwner, trackHashes,
-        trackAddress, trackPrices); // */
+/*      uint orderID = addOrder(consigner, consignee, cargoOwner, trackHashes,
+
+        trackAddress, trackPrices, 0x6661fd16e676a73b07dd873f6beadc2a7db7305a); // */
   //    Order order = Order(orders[orderID]);
 //      order.addPosition(hash, hash);
 //      order.addAssignment(acc4, acc5, hash, hash);

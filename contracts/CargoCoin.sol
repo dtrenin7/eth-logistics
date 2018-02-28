@@ -1,11 +1,11 @@
 pragma solidity ^0.4.11;
 
-import "./ConvertLib.sol";
+//import "./ConvertLib.sol";
 import "./Owned.sol";
-import "./ECR20.sol";
+//import "./ECR20.sol";
 
 
-contract CargoCoin is Owned, ERC20 {
+contract CargoCoin is Owned {
 	string public constant symbol = "CC";
 	string public constant name = "Cargo Coins";
 

@@ -63,7 +63,6 @@ contract Order is Owned {
   uint public activeTrackID;
   mapping (uint => Track) tracks;
   uint32 public description;  // хеш на описание перевозки (в т.ч.груза)
-  address ccAddress;
   CargoCoin cc;
   address _address;
 
@@ -74,9 +73,9 @@ contract Order is Owned {
   //                bytes32[] _trackHashes,
                   uint32[] _trackHashes,
                   address[] _trackAddresses,
-                  uint[] _trackPrices) Owned() {
-    ccAddress = address(0x3951cfe2694a494b7751b0b4245362126256b383);
-    cc = CargoCoin(ccAddress);
+                  uint[] _trackPrices,
+                  address _ccAddress) Owned() {
+    cc = CargoCoin(_ccAddress);
     _address = this;
     ID = _ID;
     state = State.New;
