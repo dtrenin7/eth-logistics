@@ -576,9 +576,13 @@
                          <div layout="column">
                            <md-input-container>
                              <md-button class="md-raised md-primary pull-right"
-                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 0" ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
+                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 0"
+                               ng-disabled="progressPayEnabled"
+                               ng-click="pay(orders[orderIndex])">Оплатить заказ</md-button>
                              <md-button class="md-raised md-primary pull-right"
-                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 1" ng-click="ship(orders[orderIndex])">Подтвердить отправление</md-button>
+                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 1"
+                               ng-disabled="progressStatusEnabled"
+                               ng-click="ship(orders[orderIndex])">Подтвердить отправление</md-button>
                              <md-button class="md-warn pull-right"
                                ng-if="orderIndex < orders.length && canDismiss(orders[orderIndex])"
                                ng-disabled="progressStatusEnabled"
@@ -812,6 +816,81 @@
       </div>
     </div>
    </md-tab>
+
+   <!-- АУТЕНТИФИКАЦИЯ -->
+   <md-tab label="Аутентификация">
+     <md-content layout="row" layout-align="space-around" layout-padding="layout-padding" ng-cloak="ng-cloak" class="md-padding">
+       <div class="container">
+         <div class="row">
+           <div class="col-lg-12">
+             <div class="md-padding" ng-cloak layout="column">
+               <md-card flex="flex" flex-gt-sm="50" flex-gt-md="33" md-whiteframe="12">
+                 <md-card-content>
+                   <form name="Form">
+                     <md-input-container class="md-block">
+                       <label>Номер счета</label>
+                       <!--md-select ng-model="sender" ng-change="tabOrder()"-->
+                       <md-select ng-model="authenticatingAccount">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                           {{contrag.name}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+                     <!--md-input-container class="md-block">
+                       <label>Номер счета</label>
+                       <input type="text" name="email" ng-model="vm.formData.email" placeholder="номер счета" required=""/>
+                       <div ng-messages="Form.email.$error" role="alert" multiple="">
+                         <div ng-message="required" class="my-message">Пожалуйста введите номер счета.</div>
+                       </div>
+                     </md-input-container-->
+                     <md-input-container class="md-block">
+                       <label>Пароль</label>
+                       <input type="password" name="password" ng-model="authenticatingPassword" placeholder="пароль" required="" md-maxlength="16"/>
+                       <div ng-messages="Form.password.$error" role="alert" multiple="">
+                         <div ng-message="required" class="my-message">Пожалуйста введите пароль.</div>
+                         <!--div ng-message="md-maxlength" class="my-message">Too long.</div-->
+                       </div>
+                     </md-input-container>
+                     <md-button ng-disabled="!Form.$valid" ng-click="login()" class="md-raised md-primary">&nbsp Войти &nbsp</md-button>
+                   </form>
+                 </md-card-content>
+                </md-card>
+             </md-content>
+          </div>
+        </div>
+      </div>
+    </div>
+   </md-tab>
+   <!--
+     <md-content ng-app="LoginForm" ng-controller="Ctrl" layout="row" layout-align="space-around" layout-padding="layout-padding" ng-cloak="ng-cloak" class="login-form">
+   <md-card flex="flex" flex-gt-sm="50" flex-gt-md="33">
+     <md-toolbar>
+       <div class="md-toolbar-tools">
+         <h2><span>Login Form</span></h2>
+       </div>
+     </md-toolbar>
+     <md-card-content>
+       <form name="Form">
+         <md-input-container class="md-block">
+           <label>Login</label>
+           <input type="text" name="email" ng-model="vm.formData.email" placeholder="login" required=""/>
+           <div ng-messages="Form.email.$error" role="alert" multiple="">
+             <div ng-message="required" class="my-message">Please enter your email.</div>
+           </div>
+         </md-input-container>
+         <md-input-container class="md-block">
+           <label>Password</label>
+           <input type="password" name="password" ng-model="vm.formData.password" placeholder="password" required="" md-maxlength="16"/>
+           <div ng-messages="Form.password.$error" role="alert" multiple="">
+             <div ng-message="required" class="my-message">Please enter your password.</div>
+             <div ng-message="md-maxlength" class="my-message">Too long.</div>
+           </div>
+         </md-input-container>
+         <md-button ng-disabled="!Form.$valid" ng-click="vm.submit()" class="md-raised md-primary">&nbsp Login &nbsp</md-button>
+       </form>
+     </md-card-content>
+   </md-card> -->
 
  </md-tabs>
  </div>

@@ -661,6 +661,9 @@ var app = angular.module('dashboardApp', [
         $scope.addContragent($scope.web3.eth.accounts[3], "'ЗАО Деловые линии'", "7710197534", "102770092347");
         $scope.sender = 0;      // new order consigner index in contragents[]
         $scope.receiver = 1;    // new order consignee index in contragents[]
+        $scope.authenticatingAccount = 0; // authenticating account index in contragents[]
+        $scope.authenticatingPassword = ""; // authenticating account index in contragents[]
+        $scope.authenticatedAccount = -1; // authenticated account index in contragents[]
         $scope.cargoOwner = 2;  // cargo owner (index in contragents[])
         $scope.newContragent = {
           account: $scope.web3.eth.accounts[0],
@@ -668,6 +671,19 @@ var app = angular.module('dashboardApp', [
           INN: 7710197534,
           OGRN: 1027700505348
         };
+
+        $scope.login = async function() {
+          try {
+            var account = $scope.contragents[$scope.authenticatingAccount].account;
+            var password = $scope.authenticatingPassword;
+            var answer = await $scope.makePromise2($scope.web3.personal.unlockAccount, [account, password]);
+            console.log("LOGIN: " + account + " PASSWORD: " + password + " = " + answer);
+          }
+          catch(e) {
+            console.log(e);
+            $scope.showConfirmation("Ошибка", $scope.explainException(e));
+          };
+        }
 
         $scope.fromMicroCC = function(value) {
           return value / 1000000;
@@ -1140,7 +1156,10 @@ var app = angular.module('dashboardApp', [
             return "Недостаточно средств на счете";
           }
           else if( text.indexOf('User denied transaction signature') >= 0 ) {
-            return "Операция отменена пользователем"
+            return "Операция отменена пользователем";
+          }
+          else if( text.indexOf('could not decrypt key with given passphrase') >= 0 ) {
+            return "Неверный пароль";
           }
           return text;
         }
@@ -1161,7 +1180,7 @@ var app = angular.module('dashboardApp', [
             //await $scope.getOrderBalance(order);
             //var before = $scope.orderBalanceCC;
             //console.log("TRYING TO DISMISS " + order.consigner);
-            await $scope.makePromise2(contract.complete2, [{from:order.consigner, gas:70000}]);
+            await $scope.transact(contract.complete2, [{from:order.consigner, gas:70000}], $scope.settings.timeoutAwaitTx);
             order.state = await $scope.makePromise2(contract.state, []);
             //await $scope.getOrderBalance(order);
             //var feedback = before - $scope.orderBalanceCC;
@@ -1207,16 +1226,15 @@ var app = angular.module('dashboardApp', [
         // оплата "нового"" заказа
         $scope.pay = async function(order) {
           console.log("PAY");
-          $scope.progressStatusEnabled = true;
+          $scope.progressPayEnabled = true;
           try {
             var contract = $scope.web3.eth.contract($scope.orderProto).at(order.address);
             console.log("CONTRACT: ");console.log(contract);
             console.log(">>> cc.approve");
-            var tx = await $scope.makePromise2($scope.cc.approve, [order.address, order.price, {from:order.consigner, gas: $scope.settings.gas.approve}]);
-            console.log("APPROVE TX: " + tx);
+            await $scope.transact($scope.cc.approve,[order.address, order.price, {from:order.consigner, gas: $scope.settings.gas.approve}], $scope.settings.timeoutApprove);
+
             console.log(">>> begin");
-            tx = await $scope.makePromise2(contract.begin, [{from:order.consigner, to:order.address, gas: $scope.settings.gas.begin}]);
-            console.log("BEGIN TX: " + tx);
+            await $scope.transact(contract.begin, [{from:order.consigner, to:order.address, gas: $scope.settings.gas.begin}], $scope.settings.timeoutBegin);
             // pay for job
 
             await $scope.getBalance();
@@ -1231,10 +1249,10 @@ var app = angular.module('dashboardApp', [
           catch (e) {
              console.log(e);
              $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + order.consigner);
-             $scope.progressStatusEnabled = false;
+             $scope.progressPayEnabled = false;
              return;
           }
-          $scope.progressStatusEnabled = false;
+          $scope.progressPayEnabled = false;
         }
 
         // подтверждение отгрузки отправителем
@@ -1245,8 +1263,9 @@ var app = angular.module('dashboardApp', [
             var contract = $scope.web3.eth.contract($scope.orderProto).at(order.address);
             console.log("CONTRACT: ");console.log(contract);
             console.log(">>> begin");
-            var tx = await $scope.makePromise2(contract.begin, [{from:order.consigner, to:order.address, gas: $scope.settings.gas.begin}]);
-            console.log("BEGIN TX: " + tx);
+//            var tx = await $scope.makePromise2(contract.begin, [{from:order.consigner, to:order.address, gas: $scope.settings.gas.begin}]);
+            await $scope.transact(contract.begin, [{from:order.consigner, to:order.address, gas: $scope.settings.gas.begin}], $scope.settings.timeoutBegin);
+  //          console.log("BEGIN TX: " + tx);
             // set state to "Shipped"
 
             console.log(">>> state");

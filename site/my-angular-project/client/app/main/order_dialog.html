@@ -63,9 +63,13 @@
                           <div layout="column">
                             <md-input-container>
                               <md-button class="md-raised md-primary pull-right"
-                                ng-if="order.state == 0" ng-click="parentScope.pay(order)">Оплатить заказ</md-button>
+                                ng-if="order.state == 0"
+                                ng-disabled="parentScope.progressPayEnabled"
+                                ng-click="parentScope.pay(order)">Оплатить заказ</md-button>
                               <md-button class="md-raised md-primary pull-right"
-                                ng-if="order.state == 1" ng-click="parentScope.ship(order)">Подтвердить отправление</md-button>
+                                ng-if="order.state == 1"
+                                ng-disabled="parentScope.progressStatusEnabled"
+                                ng-click="parentScope.ship(order)">Подтвердить отправление</md-button>
                               <md-button class="md-warn pull-right"
                                 ng-if="parentScope.canDismiss(order)"
                                 ng-disabled="parentScope.progressStatusEnabled"
