@@ -674,15 +674,59 @@ var app = angular.module('dashboardApp', [
 
         $scope.login = async function() {
           try {
+            $scope.progressPayEnabled = true;
             var account = $scope.contragents[$scope.authenticatingAccount].account;
             var password = $scope.authenticatingPassword;
-            var answer = await $scope.makePromise2($scope.web3.personal.unlockAccount, [account, password]);
-            console.log("LOGIN: " + account + " PASSWORD: " + password + " = " + answer);
+            //account = '0x8f7f8e3bb8e8dc73a4a240b636e8580a523064c1';//$scope.web3.personal.newAccount(password);
+
+            console.log("LOGIN: " + account + " PASSWORD: " + password);
+            var answer = await $scope.makePromise2($scope.web3.personal.unlockAccount, [account, password, 5000000000]);
+            if(answer.toString() == "true") {
+              $scope.authenticatedAccount = $scope.authenticatingAccount;
+              await $scope.getBalanceCC(account);
+            }
+            console.log(answer);
+            $scope.progressPayEnabled = false;
           }
           catch(e) {
             console.log(e);
+            $scope.progressPayEnabled = false;
             $scope.showConfirmation("Ошибка", $scope.explainException(e));
           };
+        }
+
+        $scope.logout = async function() {
+          try {
+            $scope.progressPayEnabled = true;
+            var account = $scope.contragents[$scope.authenticatedAccount].account;
+            console.log("LOGOUT: " + account);
+            var answer = await $scope.makePromise2($scope.web3.personal.lockAccount, [account]);
+            if(answer.toString() == "true") {
+              $scope.authenticatedAccount = -1;
+              $scope.balanceCC = 0;
+            }
+            console.log(answer);
+            $scope.progressPayEnabled = false;
+          }
+          catch(e) {
+            console.log(e);
+            $scope.progressPayEnabled = false;
+            $scope.showConfirmation("Ошибка", $scope.explainException(e));
+          };
+        }
+
+        $scope.getAuthenticatedAccount = function() {
+          if($scope.authenticatedAccount < 0) {
+            return "НЕ ОПРЕДЕЛЕНО";
+          }
+          return $scope.contragents[$scope.authenticatedAccount].account;
+        }
+
+        $scope.getAuthenticatedContragent = function() {
+          if($scope.authenticatedAccount < 0) {
+            return "НЕ ОПРЕДЕЛЕНО";
+          }
+          return $scope.contragents[$scope.authenticatedAccount].name;
         }
 
         $scope.fromMicroCC = function(value) {
@@ -1161,6 +1205,9 @@ var app = angular.module('dashboardApp', [
           else if( text.indexOf('could not decrypt key with given passphrase') >= 0 ) {
             return "Неверный пароль";
           }
+          else if( text.indexOf('authentication needed: password or unlock') >= 0 ) {
+            return "Требуется аутентификация для доступа к счету";
+          }
           return text;
         }
 
@@ -1221,6 +1268,10 @@ var app = angular.module('dashboardApp', [
           $scope.balanceMicroCC = balance;
           $scope.balanceCC = Math.round10($scope.fromMicroCC($scope.balanceMicroCC), -3);
           console.log('BALANCE CC: ' + $scope.balanceMicroCC);
+        }
+
+        $scope.cant = function(account) {
+          return ($scope.authenticatedAccount < 0 || account != $scope.contragents[$scope.authenticatedAccount].account);
         }
 
         // оплата "нового"" заказа
