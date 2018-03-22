@@ -74,6 +74,10 @@
                                 ng-if="parentScope.canDismiss(order)"
                                 ng-disabled="parentScope.progressStatusEnabled || parentScope.cant(order.consigner)"
                                 ng-click="parentScope.dismiss(order)">Отменить заказ</md-button>
+                              <md-button class="md-warn pull-right"
+                                ng-if="order.state != 3 && order.state != 5"
+                                ng-disabled="parentScope.progressStatusEnabled || parentScope.cant(order.seal)"
+                                ng-click="parentScope.broke(order)">Нарушить пломбу</md-button>
                               <md-button class="md-raised md-primary pull-right"
                                 ng-if="order.state == 2 && order.activeTrack == order.tracks.length"
                                 ng-disabled="parentScope.progressStatusEnabled || parentScope.cant(parentScope.getTrackApprover(order, order.tracks[order.tracks.length-1]))"

@@ -1,18 +1,19 @@
 pragma solidity ^0.4.11;
 
-import "./Owned.sol";
 import "./CargoCoin.sol";
 
 /// @title Заказ на перевозку
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
-contract Order is Owned {
+contract Order {
   enum State {
     New,
     Signed,
     Shipped,
     Done,
-    Cancelled
+    Cancelled,
+    Broken          // пломба нарушена
   }
+
 
   struct Position {
     uint32 location;
@@ -53,11 +54,13 @@ contract Order is Owned {
     uint price;
   }
 
+  address owner;
   uint public ID;   // public for DEBUG
   State public state;
   address public consigner;
   address public consignee;
   address public cargoOwner;
+  address public seal; // пломба
   uint public price;   // общая стоимость заказа
   uint public numTracks;
   uint public activeTrackID;
@@ -66,15 +69,27 @@ contract Order is Owned {
   CargoCoin cc;
   address _address;
 
+  modifier restricted {
+      if (msg.sender != owner)
+          revert();
+      _;
+  }
+
+  function setOwner(address _owner) restricted {
+    owner = _owner;
+  }
+
   function Order( uint _ID,
                   address _consigner,
                   address _consignee,
                   address _cargoOwner,
+                  address _seal,
   //                bytes32[] _trackHashes,
                   uint32[] _trackHashes,
                   address[] _trackAddresses,
                   uint[] _trackPrices,
-                  address _ccAddress) Owned() {
+                  address _ccAddress) {
+    owner = msg.sender;
     cc = CargoCoin(_ccAddress);
     _address = this;
     ID = _ID;
@@ -82,6 +97,7 @@ contract Order is Owned {
     consigner = _consigner;
     consignee = _consignee;
     cargoOwner = _cargoOwner;
+    seal = _seal;
 
     uint j = 0;
     uint k = 0;
@@ -146,11 +162,12 @@ contract Order is Owned {
     return Error.OK;
   }
 
-  function getProps() constant returns (
+  function getOrder() constant returns (
     State _state,
     address _consignee,
     address _consigner,
     address _cargoOwner,
+    address _seal,
     uint _price,
     uint _numTracks,
     uint _activeTrack,
@@ -159,6 +176,7 @@ contract Order is Owned {
       _consignee = consignee;
       _consigner = consigner;
       _cargoOwner = cargoOwner;
+      _seal = seal;
       _price = price;
       _numTracks = numTracks;
       _activeTrack = activeTrackID;
@@ -183,10 +201,8 @@ contract Order is Owned {
         msg.sender == tracks[activeTrackID].loader ) {
         tracks[activeTrackID].trackState = TrackState.Loaded;
         if( activeTrackID > 0 ) {
-        //  tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price); // wei
-        uint fee = 1;
-        cc.transferWithFee(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price, fee); // microCC
-//          payZ(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
+          uint fee = 1;
+          cc.transferWithFee(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price, fee); // microCC
         }
         // предидущие участники трека выполнили свою работу, платим им
         return Error.OK;
@@ -195,11 +211,7 @@ contract Order is Owned {
     }
 
     else if( numTracks > 0 && msg.sender == consignee ) {
-      // tracks[activeTrackID-1].carrier.transfer(tracks[activeTrackID-1].price); // wei
-
       cc.transferWithFee(tracks[activeTrackID-1].carrier,tracks[activeTrackID-1].price, 1); // microCC
-
-      //payZ(tracks[activeTrackID-1].carrier, tracks[activeTrackID-1].price); // microCC
       state = State.Done;
       return Error.OK;
     }
@@ -207,12 +219,13 @@ contract Order is Owned {
     return Error.UnknownCompletion;
   }
 
-  function getBalance() constant returns (uint) {
-    // return this.balance; // wei
-    return cc.balanceOf(_address); // microCC
+  function broke() {  // нарушение пломбы
+    if( msg.sender == seal ) {
+      state = State.Broken;
+    }
   }
 
-  function complete2() returns (Error) {
+  function complete2() returns (Error) {  // отмена
     if( msg.sender == consigner ) {
       if( numTracks > 0 && tracks[0].trackState != TrackState.New ) {
         return Error.OrderAlreadyProcessing;
@@ -221,7 +234,7 @@ contract Order is Owned {
 
       // нельзя запрашивать баланс и производить оплату в одном методе (!!!)
       // вызывает Invalid Opcode - походу BUG solidity
-      uint bal = this.getBalance();
+      uint bal = cc.balanceOf(_address);
       if( bal > 0 ) {
         // consigner.transfer(bal); // wei
         cc.transfer(consigner, bal); // microCC

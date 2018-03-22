@@ -354,6 +354,39 @@
                  </md-card-content>
                </md-card>
 
+               <!-- ПЛОМБА -->
+               <md-card md-whiteframe="12">
+                 <md-card-title>
+                   <md-card-title-text>
+                     <span class="md-headline">Пломба</span>
+                   </md-card-title-text>
+                 </md-card-title>
+
+                 <md-card-content>
+                   <div layout="row">
+                     <md-input-container>
+                       <label>Название</label>
+                       <md-select ng-model="seal">
+                         <!--md-option><em>None</em></md-option-->
+                         <md-option ng-repeat="contrag in contragents" ng-value="$index"> <!--  ng-disabled="$index === 1" -->
+                           {{contrag.name}}
+                         </md-option>
+                       </md-select>
+                     </md-input-container>
+
+                     <md-input-container>
+                       <label>Номер счета</label>
+                       <input ng-model="contragents[seal].account" ng-disabled="true" size="80"/>
+                       <!--md-select ng-model="contragents[receiver].account" ng-disabled="true">
+                         <md-option ng-repeat="acc in ctrl.accs" ng-value="acc">
+                           {{acc}}
+                         </md-option>
+                       </md-select-->
+                     </md-input-container>
+                   </div>
+                 </md-card-content>
+               </md-card>
+
                <!-- ЗАКАЗ -->
              <md-card md-whiteframe="12">
                <md-card-title>
@@ -587,6 +620,10 @@
                                ng-if="orderIndex < orders.length && canDismiss(orders[orderIndex])"
                                ng-disabled="progressStatusEnabled || cant(orders[orderIndex].consigner)"
                                ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
+                             <md-button class="md-warn pull-right"
+                               ng-if="orderIndex < orders.length && orders[orderIndex].state != 3 && orders[orderIndex].state != 5"
+                               ng-disabled="progressStatusEnabled || cant(orders[orderIndex].seal)"
+                               ng-click="broke(orders[orderIndex])">Нарушить пломбу</md-button>
                              <md-button class="md-raised md-primary pull-right"
                                ng-if="orderIndex < orders.length && orders[orderIndex].state == 2 && orders[orderIndex].activeTrack == orders[orderIndex].tracks.length"
                                ng-disabled="progressStatusEnabled || cant(getTrackApprover(orders[orderIndex], orders[orderIndex].tracks[orders[orderIndex].tracks.length-1]))"
