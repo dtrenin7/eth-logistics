@@ -621,7 +621,7 @@
                                ng-disabled="progressStatusEnabled || cant(orders[orderIndex].consigner)"
                                ng-click="dismiss(orders[orderIndex])">Отменить заказ</md-button>
                              <md-button class="md-warn pull-right"
-                               ng-if="orderIndex < orders.length && orders[orderIndex].state != 3 && orders[orderIndex].state != 5"
+                               ng-if="orderIndex < orders.length && orders[orderIndex].state == 2"
                                ng-disabled="progressStatusEnabled || cant(orders[orderIndex].seal)"
                                ng-click="broke(orders[orderIndex])">Нарушить пломбу</md-button>
                              <md-button class="md-raised md-primary pull-right"
