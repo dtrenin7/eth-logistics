@@ -1252,13 +1252,8 @@ var app = angular.module('dashboardApp', [
             $scope.progressStatusEnabled = true;
             var _address = await $scope.makePromise2($scope.platform.getOrder, [order.index]);
             var contract = $scope.web3.eth.contract($scope.orderProto).at(_address);
-            //await $scope.getOrderBalance(order);
-            //var before = $scope.orderBalanceCC;
-            //console.log("TRYING TO DISMISS " + order.consigner);
             await $scope.transact(contract.broke, [{from:order.seal, gas:70000}], $scope.settings.timeoutAwaitTx);
             order.state = await $scope.makePromise2(contract.state, []);
-            //await $scope.getOrderBalance(order);
-            //var feedback = before - $scope.orderBalanceCC;
             $scope.showConfirmation("Информация", "Заказ " + order.address +
               " пломба успешно нарушена. ");
           }
