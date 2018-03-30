@@ -59,12 +59,12 @@ exports.index = async function(req, res) {
 
     await makePromise2(web3.personal.unlockAccount, [input.sender, input.password]);
     var microCC = toMicroCC(input.cc);
-    var transactionHash = await makePromise2(cc.transfer, [input.receiver, microCC, {from:input.sender, gasLimit:210000, gasPrice:20000000000}]);
+    var transactionHash = await makePromise2(cc.approve, [input.receiver, microCC, {from:input.sender, to:settings.cargoCoinAddress, gasLimit:210000, gasPrice:20000000000}]);
 
     res.json({
       status: 'OK',
       tx: transactionHash,
-      sent: microCC
+      approved: microCC
     });
   }
   catch(e) {
