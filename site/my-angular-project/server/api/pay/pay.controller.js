@@ -48,10 +48,10 @@ exports.index = async function(req, res) {
      }
    }
 
-    await makePromise2(web3.eth.personal.unlockAccount, [input.sender, input.password]);
+    await makePromise2(web3.personal.unlockAccount, [input.sender, input.password]);
     var transactionHash = await makePromise2(web3.eth.sendTransaction,
-      [{from:input.sender, to:input.receiver, value:web3.utils.toWei(input.ethers, 'ether'), gasLimit:210000, gasPrice:20000000000}])
-    await makePromise2(web3.eth.personal.lockAccount, [input.sender]);
+      [{from:input.sender, to:input.receiver, value:web3.toWei(input.ethers, 'ether'), gasLimit:210000, gasPrice:20000000000}])
+    await makePromise2(web3.personal.lockAccount, [input.sender]);
 
     res.json({
       status: 'OK',

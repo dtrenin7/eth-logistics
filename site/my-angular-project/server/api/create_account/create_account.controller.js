@@ -32,7 +32,7 @@ exports.index = async function(req, res) {
   }
 
   try {
-    var newAccount = await makePromise2(web3.eth.personal.newAccount, [data]);
+    var newAccount = await makePromise2(web3.personal.newAccount, [data]);
     //var unlockAccount = await makePromise2(web3.eth.personal.unlockAccount, [newAccount, data]);
     //var lockAccount = await makePromise2(web3.eth.personal.lockAccount, [newAccount]);
 
