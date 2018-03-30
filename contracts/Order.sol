@@ -221,7 +221,7 @@ contract Order {
 
   function broke() {  // нарушение пломбы
     if( msg.sender == seal ) {
-      state = State.Broken;
+      state = State.Broken; // TODO: возврат остатка отправителю
     }
   }
 
