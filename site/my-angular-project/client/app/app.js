@@ -107,8 +107,8 @@ var app = angular.module('dashboardApp', [
 
 
       $scope.ccJsonB64 = "W3siY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJuYW1lIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJzdHJpbmcifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbeyJuYW1lIjoiX3NwZW5kZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9hbW91bnQiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6ImFwcHJvdmUiLCJvdXRwdXRzIjpbeyJuYW1lIjoic3VjY2VzcyIsInR5cGUiOiJib29sIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W3sibmFtZSI6Il9vd25lciIsInR5cGUiOiJhZGRyZXNzIn1dLCJuYW1lIjoic2V0T3duZXIiLCJvdXRwdXRzIjpbXSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJ0b3RhbFN1cHBseSIsIm91dHB1dHMiOlt7Im5hbWUiOiJ0b3RhbFN1cHBseSIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6Il9hZGRyZXNzIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJhZGRyZXNzIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W3sibmFtZSI6Il9mcm9tIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfdG8iLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9hbW91bnQiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6InRyYW5zZmVyRnJvbSIsIm91dHB1dHMiOlt7Im5hbWUiOiJzdWNjZXNzIiwidHlwZSI6ImJvb2wifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoiZGVjaW1hbHMiLCJvdXRwdXRzIjpbeyJuYW1lIjoiIiwidHlwZSI6InVpbnQ4In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbeyJuYW1lIjoibWljcm9DQyIsInR5cGUiOiJ1aW50MjU2In1dLCJuYW1lIjoiY2FuQnV5Iiwib3V0cHV0cyI6W3sibmFtZSI6ImNhbiIsInR5cGUiOiJib29sIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W3sibmFtZSI6InJhdGlvIiwidHlwZSI6InVpbnQyNTYifV0sIm5hbWUiOiJzZXRDb252ZXJzaW9uUmF0aW8iLCJvdXRwdXRzIjpbXSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOlt7Im5hbWUiOiJfdG8iLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9hbW91bnQiLCJ0eXBlIjoidWludDI1NiJ9LHsibmFtZSI6InBlcmNlbnRzIiwidHlwZSI6InVpbnQyNTYifV0sIm5hbWUiOiJ0cmFuc2ZlcldpdGhGZWUiLCJvdXRwdXRzIjpbeyJuYW1lIjoic3VjY2VzcyIsInR5cGUiOiJib29sIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W3sibmFtZSI6Im1pY3JvQ0MiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6ImNjMmV0aGVyIiwib3V0cHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoiZ2V0T3duZXJCYWxhbmNlIiwib3V0cHV0cyI6W3sibmFtZSI6Il9iYWxhbmNlIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoiZ2V0Q29udmVyc2lvblJhdGlvIiwib3V0cHV0cyI6W3sibmFtZSI6InJhdGlvIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOlt7Im5hbWUiOiJhZGRyIiwidHlwZSI6ImFkZHJlc3MifV0sIm5hbWUiOiJnZXRCYWxhbmNlSW5XZWkiLCJvdXRwdXRzIjpbeyJuYW1lIjoiIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOlt7Im5hbWUiOiJfb3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwibmFtZSI6ImJhbGFuY2VPZiIsIm91dHB1dHMiOlt7Im5hbWUiOiJiYWxhbmNlIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoiZ2V0T3duZXIiLCJvdXRwdXRzIjpbeyJuYW1lIjoiX293bmVyIiwidHlwZSI6ImFkZHJlc3MifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoic3ltYm9sIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJzdHJpbmcifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOlt7Im5hbWUiOiJhIiwidHlwZSI6InVpbnQyNTYifSx7Im5hbWUiOiJiIiwidHlwZSI6InVpbnQyNTYifV0sIm5hbWUiOiJkaXYiLCJvdXRwdXRzIjpbeyJuYW1lIjoicSIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W3sibmFtZSI6Il90byIsInR5cGUiOiJhZGRyZXNzIn0seyJuYW1lIjoiX2Ftb3VudCIsInR5cGUiOiJ1aW50MjU2In1dLCJuYW1lIjoidHJhbnNmZXIiLCJvdXRwdXRzIjpbeyJuYW1lIjoic3VjY2VzcyIsInR5cGUiOiJib29sIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbeyJuYW1lIjoiX293bmVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfc3BlbmRlciIsInR5cGUiOiJhZGRyZXNzIn1dLCJuYW1lIjoiYWxsb3dhbmNlIiwib3V0cHV0cyI6W3sibmFtZSI6InJlbWFpbmluZyIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W10sIm5hbWUiOiJldGhlcjJjYyIsIm91dHB1dHMiOltdLCJwYXlhYmxlIjp0cnVlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImlucHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiY29uc3RydWN0b3IifSx7ImFub255bW91cyI6ZmFsc2UsImlucHV0cyI6W3siaW5kZXhlZCI6dHJ1ZSwibmFtZSI6Il9mcm9tIiwidHlwZSI6ImFkZHJlc3MifSx7ImluZGV4ZWQiOnRydWUsIm5hbWUiOiJfdG8iLCJ0eXBlIjoiYWRkcmVzcyJ9LHsiaW5kZXhlZCI6ZmFsc2UsIm5hbWUiOiJfdmFsdWUiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6IlRyYW5zZmVyIiwidHlwZSI6ImV2ZW50In0seyJhbm9ueW1vdXMiOmZhbHNlLCJpbnB1dHMiOlt7ImluZGV4ZWQiOnRydWUsIm5hbWUiOiJfb3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsiaW5kZXhlZCI6dHJ1ZSwibmFtZSI6Il9zcGVuZGVyIiwidHlwZSI6ImFkZHJlc3MifSx7ImluZGV4ZWQiOmZhbHNlLCJuYW1lIjoiX3ZhbHVlIiwidHlwZSI6InVpbnQyNTYifV0sIm5hbWUiOiJBcHByb3ZhbCIsInR5cGUiOiJldmVudCJ9XQ==";
-      $scope.platformJsonb64 = "W3siY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOlt7Im5hbWUiOiJfb3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwibmFtZSI6InNldE93bmVyIiwib3V0cHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoibnVtT3JkZXJzIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImdldE93bmVyQmFsYW5jZSIsIm91dHB1dHMiOlt7Im5hbWUiOiJfYmFsYW5jZSIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6ZmFsc2UsImlucHV0cyI6W3sibmFtZSI6Il9jb25zaWduZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9jb25zaWduZWUiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9jYXJnb093bmVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfc2VhbCIsInR5cGUiOiJhZGRyZXNzIn0seyJuYW1lIjoiX3RyYWNrSGFzaGVzIiwidHlwZSI6InVpbnQzMltdIn0seyJuYW1lIjoiX3RyYWNrQWRkcmVzc2VzIiwidHlwZSI6ImFkZHJlc3NbXSJ9LHsibmFtZSI6Il90cmFja1ByaWNlcyIsInR5cGUiOiJ1aW50MjU2W10ifSx7Im5hbWUiOiJfY2NBZGRyZXNzIiwidHlwZSI6ImFkZHJlc3MifV0sIm5hbWUiOiJhZGRPcmRlciIsIm91dHB1dHMiOlt7Im5hbWUiOiJJRCIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImdldE93bmVyIiwib3V0cHV0cyI6W3sibmFtZSI6Il9vd25lciIsInR5cGUiOiJhZGRyZXNzIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbeyJuYW1lIjoiSUQiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6ImdldE9yZGVyIiwib3V0cHV0cyI6W3sibmFtZSI6Im9yZGVyIiwidHlwZSI6ImFkZHJlc3MifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImlucHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiY29uc3RydWN0b3IifV0=";
-      $scope.orderJsonb64 = "W3siY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOlt7Im5hbWUiOiJfb3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwibmFtZSI6InNldE93bmVyIiwib3V0cHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbXSwibmFtZSI6ImJlZ2luIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50OCJ9XSwicGF5YWJsZSI6dHJ1ZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6Im51bVRyYWNrcyIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDI1NiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJzZWFsIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJhZGRyZXNzIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImNvbnNpZ25lZSIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOltdLCJuYW1lIjoiY29tcGxldGUiLCJvdXRwdXRzIjpbeyJuYW1lIjoiIiwidHlwZSI6InVpbnQ4In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImNvbnNpZ25lciIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W3sibmFtZSI6InRyYWNrSUQiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6ImdldFRyYWNrIiwib3V0cHV0cyI6W3sibmFtZSI6Il9zdGF0ZSIsInR5cGUiOiJ1aW50OCJ9LHsibmFtZSI6Il9jYXJyaWVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfbG9hZGVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfdW5sb2FkZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9wcmljZSIsInR5cGUiOiJ1aW50MjU2In0seyJuYW1lIjoiX3BpY2t1cCIsInR5cGUiOiJ1aW50MzIifSx7Im5hbWUiOiJfcGlja3VwRGVzY3IiLCJ0eXBlIjoidWludDMyIn0seyJuYW1lIjoiX2Ryb3Bkb3duIiwidHlwZSI6InVpbnQzMiJ9LHsibmFtZSI6Il9kcm9wZG93bkRlc2NyIiwidHlwZSI6InVpbnQzMiJ9LHsibmFtZSI6Il9hc3NpZ25tZW50RGF0ZSIsInR5cGUiOiJ1aW50MzIifSx7Im5hbWUiOiJfYXNzaWdubWVudFByb29mIiwidHlwZSI6InVpbnQzMiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJkZXNjcmlwdGlvbiIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDMyIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImNhcmdvT3duZXIiLCJvdXRwdXRzIjpbeyJuYW1lIjoiIiwidHlwZSI6ImFkZHJlc3MifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbXSwibmFtZSI6ImNvbXBsZXRlMiIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDgifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbXSwibmFtZSI6ImJyb2tlIiwib3V0cHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoicHJpY2UiLCJvdXRwdXRzIjpbeyJuYW1lIjoiIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoiYWN0aXZlVHJhY2tJRCIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDI1NiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJJRCIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDI1NiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJzdGF0ZSIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDgifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoiZ2V0T3JkZXIiLCJvdXRwdXRzIjpbeyJuYW1lIjoiX3N0YXRlIiwidHlwZSI6InVpbnQ4In0seyJuYW1lIjoiX2NvbnNpZ25lZSIsInR5cGUiOiJhZGRyZXNzIn0seyJuYW1lIjoiX2NvbnNpZ25lciIsInR5cGUiOiJhZGRyZXNzIn0seyJuYW1lIjoiX2NhcmdvT3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9zZWFsIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfcHJpY2UiLCJ0eXBlIjoidWludDI1NiJ9LHsibmFtZSI6Il9udW1UcmFja3MiLCJ0eXBlIjoidWludDI1NiJ9LHsibmFtZSI6Il9hY3RpdmVUcmFjayIsInR5cGUiOiJ1aW50MjU2In0seyJuYW1lIjoiX2Rlc2NyIiwidHlwZSI6InVpbnQzMiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiaW5wdXRzIjpbeyJuYW1lIjoiX0lEIiwidHlwZSI6InVpbnQyNTYifSx7Im5hbWUiOiJfY29uc2lnbmVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfY29uc2lnbmVlIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfY2FyZ29Pd25lciIsInR5cGUiOiJhZGRyZXNzIn0seyJuYW1lIjoiX3NlYWwiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il90cmFja0hhc2hlcyIsInR5cGUiOiJ1aW50MzJbXSJ9LHsibmFtZSI6Il90cmFja0FkZHJlc3NlcyIsInR5cGUiOiJhZGRyZXNzW10ifSx7Im5hbWUiOiJfdHJhY2tQcmljZXMiLCJ0eXBlIjoidWludDI1NltdIn0seyJuYW1lIjoiX2NjQWRkcmVzcyIsInR5cGUiOiJhZGRyZXNzIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImNvbnN0cnVjdG9yIn1d";
+      $scope.platformJsonb64 = "W3siY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOlt7Im5hbWUiOiJfb3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwibmFtZSI6InNldE93bmVyIiwib3V0cHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbeyJuYW1lIjoiX2N1c3RvbWVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfdHJhY2tIYXNoZXMiLCJ0eXBlIjoidWludDMyW10ifSx7Im5hbWUiOiJfdHJhY2tBZGRyZXNzZXMiLCJ0eXBlIjoiYWRkcmVzc1tdIn0seyJuYW1lIjoiX3RyYWNrUHJpY2VzIiwidHlwZSI6InVpbnQyNTZbXSJ9LHsibmFtZSI6Il9jY0FkZHJlc3MiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwibmFtZSI6ImFkZE9yZGVyIiwib3V0cHV0cyI6W3sibmFtZSI6IklEIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50Ijp0cnVlLCJpbnB1dHMiOltdLCJuYW1lIjoibnVtT3JkZXJzIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImdldE93bmVyQmFsYW5jZSIsIm91dHB1dHMiOlt7Im5hbWUiOiJfYmFsYW5jZSIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6ImdldE93bmVyIiwib3V0cHV0cyI6W3sibmFtZSI6Il9vd25lciIsInR5cGUiOiJhZGRyZXNzIn1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbeyJuYW1lIjoiSUQiLCJ0eXBlIjoidWludDI1NiJ9XSwibmFtZSI6ImdldE9yZGVyIiwib3V0cHV0cyI6W3sibmFtZSI6Im9yZGVyIiwidHlwZSI6ImFkZHJlc3MifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImlucHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiY29uc3RydWN0b3IifV0=";
+      $scope.orderJsonb64 = "W3siY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOlt7Im5hbWUiOiJfb3duZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwibmFtZSI6InNldE93bmVyIiwib3V0cHV0cyI6W10sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbXSwibmFtZSI6ImJlZ2luIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50OCJ9XSwicGF5YWJsZSI6dHJ1ZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6Im51bVRyYWNrcyIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDI1NiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJjdXN0b21lciIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOmZhbHNlLCJpbnB1dHMiOltdLCJuYW1lIjoiY29tcGxldGUiLCJvdXRwdXRzIjpbeyJuYW1lIjoiIiwidHlwZSI6InVpbnQ4In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbeyJuYW1lIjoidHJhY2tJRCIsInR5cGUiOiJ1aW50MjU2In1dLCJuYW1lIjoiZ2V0VHJhY2siLCJvdXRwdXRzIjpbeyJuYW1lIjoiX3N0YXRlIiwidHlwZSI6InVpbnQ4In0seyJuYW1lIjoiX2NhcnJpZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9wcmljZSIsInR5cGUiOiJ1aW50MjU2In0seyJuYW1lIjoiX3BpY2t1cCIsInR5cGUiOiJ1aW50MzIifSx7Im5hbWUiOiJfcGlja3VwRGVzY3IiLCJ0eXBlIjoidWludDMyIn0seyJuYW1lIjoiX2Ryb3Bkb3duIiwidHlwZSI6InVpbnQzMiJ9LHsibmFtZSI6Il9kcm9wZG93bkRlc2NyIiwidHlwZSI6InVpbnQzMiJ9LHsibmFtZSI6Il9hc3NpZ25tZW50RGF0ZSIsInR5cGUiOiJ1aW50MzIifSx7Im5hbWUiOiJfYXNzaWdubWVudFByb29mIiwidHlwZSI6InVpbnQzMiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJwcmljZSIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDI1NiJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJhY3RpdmVUcmFja0lEIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6IklEIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50MjU2In1dLCJwYXlhYmxlIjpmYWxzZSwidHlwZSI6ImZ1bmN0aW9uIn0seyJjb25zdGFudCI6dHJ1ZSwiaW5wdXRzIjpbXSwibmFtZSI6InN0YXRlIiwib3V0cHV0cyI6W3sibmFtZSI6IiIsInR5cGUiOiJ1aW50OCJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJmdW5jdGlvbiJ9LHsiY29uc3RhbnQiOnRydWUsImlucHV0cyI6W10sIm5hbWUiOiJnZXRPcmRlciIsIm91dHB1dHMiOlt7Im5hbWUiOiJfc3RhdGUiLCJ0eXBlIjoidWludDgifSx7Im5hbWUiOiJfY3VzdG9tZXIiLCJ0eXBlIjoiYWRkcmVzcyJ9LHsibmFtZSI6Il9wcmljZSIsInR5cGUiOiJ1aW50MjU2In0seyJuYW1lIjoiX251bVRyYWNrcyIsInR5cGUiOiJ1aW50MjU2In0seyJuYW1lIjoiX2FjdGl2ZVRyYWNrIiwidHlwZSI6InVpbnQyNTYifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImNvbnN0YW50IjpmYWxzZSwiaW5wdXRzIjpbXSwibmFtZSI6ImNhbmNlbCIsIm91dHB1dHMiOlt7Im5hbWUiOiIiLCJ0eXBlIjoidWludDgifV0sInBheWFibGUiOmZhbHNlLCJ0eXBlIjoiZnVuY3Rpb24ifSx7ImlucHV0cyI6W3sibmFtZSI6Il9JRCIsInR5cGUiOiJ1aW50MjU2In0seyJuYW1lIjoiX2N1c3RvbWVyIiwidHlwZSI6ImFkZHJlc3MifSx7Im5hbWUiOiJfdHJhY2tIYXNoZXMiLCJ0eXBlIjoidWludDMyW10ifSx7Im5hbWUiOiJfdHJhY2tBZGRyZXNzZXMiLCJ0eXBlIjoiYWRkcmVzc1tdIn0seyJuYW1lIjoiX3RyYWNrUHJpY2VzIiwidHlwZSI6InVpbnQyNTZbXSJ9LHsibmFtZSI6Il9jY0FkZHJlc3MiLCJ0eXBlIjoiYWRkcmVzcyJ9XSwicGF5YWJsZSI6ZmFsc2UsInR5cGUiOiJjb25zdHJ1Y3RvciJ9XQ==";
 
       // backwards compatibility from mozilla developers team. required to create await/async compatible promise from callback handler
       function Deferred() {
@@ -219,12 +219,8 @@ var app = angular.module('dashboardApp', [
         }
 
         $scope.settings = {
-//          platformAddress: '0x71a7b75fab488d7ca203dc9a02b37a48a93d711d',
-          //cargoCoinAddress: '0x4d265b328510d944563b844a9a1eed1e7968bda7',
-          //orderAddress: '0xfe26cc1de5797cafa7e412a44bef63c38e9e17e7',
-          platformAddress: '0xc5f0e6c5296d3295d359630542a315d97635f5e7',
+          platformAddress: '0xc8c4305cf93ed27ff1689f160d9ebbda42239411',
           cargoCoinAddress: '0x6661fd16e676a73b07dd873f6beadc2a7db7305a',
-          //orderAddress: '0x37a1e48db18305e26d1d779a01597ae0841447e8',
           httpProvider: "http://127.0.0.1:8546",//"http://192.168.6.22:8546",
           timeoutExchange: 4000,
           timeountTransact: 3000,
@@ -325,7 +321,7 @@ var app = angular.module('dashboardApp', [
           if( typeof(order) == 'undefined' ) {
             return "Не известно";
           }
-          var descs = ["Новый", "Оплачен", "Отправлен", "Выполнен", "Отменен", "Пломба нарушена"];
+          var descs = ["Новый", "Оплачен", "В пути", "Выполнен", "Отменен", "Пломба нарушена"];
           if(order.state < descs.length) {
             return descs[order.state];
           }
@@ -352,21 +348,19 @@ var app = angular.module('dashboardApp', [
             index: trackIndex,
             state: contractTrack[0].toNumber(),
             carrier: contractTrack[1],
-            loader: contractTrack[2],
-            unloader: contractTrack[3],
-            price: contractTrack[4].toNumber(),
+            price: contractTrack[2].toNumber(),
 //            price: $scope.web3.fromWei(contractTrack[4].toNumber(), 'ether'),
             pickup: {
+              address: contractTrack[3].toNumber(),
+              description: contractTrack[4].toNumber()
+            },
+            dropdown: {
               address: contractTrack[5].toNumber(),
               description: contractTrack[6].toNumber()
             },
-            dropdown: {
-              address: contractTrack[7].toNumber(),
-              description: contractTrack[8].toNumber()
-            },
             assignment: {
-              date: contractTrack[9].toNumber(),
-              proof: contractTrack[10].toNumber()
+              date: contractTrack[7].toNumber(),
+              proof: contractTrack[8].toNumber()
             }
           };
           //console.log(track);
@@ -403,18 +397,15 @@ var app = angular.module('dashboardApp', [
               index: i,
               state: props[0].toNumber(),
               address: _address,
-              consignee: props[1],
-              consigner: props[2],
-              cargoOwner: props[3],
-              seal: props[4],
+              customer: props[1],
               tracks: [],
-              price: props[5].toNumber(),
-              activeTrack: props[7].toNumber()
+              price: props[2].toNumber(),
+              activeTrack: props[4].toNumber()
             };
             //order.qr = $scope.createQRCode(order);
             //console.log("ORDER: ");console.log(order);
 
-            var numTracks = props[6].toNumber();
+            var numTracks = props[3].toNumber();
             for(var j = 0; j < numTracks; j++) {
               order.tracks[j] = await $scope.getTrack(contract, j);
               orderTracks.push({
@@ -534,7 +525,8 @@ var app = angular.module('dashboardApp', [
           $scope.approve = async function(order, track) {
             console.log("APPROVE:");console.log(order);console.log(track);
             $scope.progressStatusEnabled = true;
-            var approver = $scope.getTrackApprover(order, track);
+            //var approver = $scope.getTrackApprover(order, track);
+            var approver = $scope.contragents[$scope.authenticatedAccount].account;
             console.log("APPROVER: " + approver);
             var handleError = function(e) {
               console.log(e);
@@ -656,12 +648,10 @@ var app = angular.module('dashboardApp', [
           return _key;
         }
 
-        $scope.addContragent($scope.web3.eth.accounts[0], "'ООО ТехноПарк'", "7710152113", "1027700505348");
-        $scope.addContragent($scope.web3.eth.accounts[1], "'ООО Сельхозпродукция'", "7710152213", "1027700805346");
-        $scope.addContragent($scope.web3.eth.accounts[2], "'ЗАО ПЭК'", "7710134532", "102770088293");
-        $scope.addContragent($scope.web3.eth.accounts[3], "'ЗАО Деловые линии'", "7710197534", "102770092347");
-        $scope.sender = 0;      // new order consigner index in contragents[]
-        $scope.receiver = 1;    // new order consignee index in contragents[]
+        $scope.addContragent($scope.web3.eth.accounts[0], "ОБОЗ", "7710152113", "1027700505348");
+        $scope.addContragent($scope.web3.eth.accounts[1], "'ЗАО ПЭК'", "7710134532", "102770088293");
+        $scope.addContragent($scope.web3.eth.accounts[2], "'ЗАО Деловые линии'", "7710197534", "102770092347");
+        $scope.customer = 0;      // new order consigner index in contragents[]
         $scope.authenticatingAccount = 0; // authenticating account index in contragents[]
         $scope.authenticatingPassword = ""; // authenticating account index in contragents[]
         $scope.authenticatedAccount = -1; // authenticated account index in contragents[]
@@ -970,12 +960,12 @@ var app = angular.module('dashboardApp', [
 
         $scope.selectedTabIndex = 0; // selected tab by default
         $scope.preselectedOrder = null; // select ordar after status page reload
-        $scope.price = 3; // overall price of new order
+        $scope.price = 20; // overall price of new order
         $scope.items = [
                             {
                                 id: 0,
                                 name: "item1",
-                                desc: "Задание 1",
+                                desc: "Рейс 1",
                                 pickup: {
                                   address: "Россия, Москва, ул. Советская, 18",
                                   date: new Date(),
@@ -994,40 +984,19 @@ var app = angular.module('dashboardApp', [
                                     units: "шт."
                                   }
                                 },
-                                carrier: 2,
-                                price: 2
-                            },
-                            {
-                                id: 1,
-                                name: "item2",
-                                desc: "Задание 2",
-                                pickup: {
-                                  address: "Россия, Химки, ул. Строителей, 42",
-                                  date: new Date(),
-                                  cargo: {
-                                    name: "Арбузы",
-                                    amount: 3,
-                                    units: "т."
-                                  }
-                                },
-                                dropdown: {
-                                    address: "Россия, Клин, ул. Главная, 1",
-                                    date: new Date(),
-                                    cargo: {
-                                      name: "Арбузы",
-                                      amount: 2,
-                                      units: "т."
-                                    }
-                                },
-                                carrier: 3,
-                                price: 1
+                                carrier: 1,
+                                price: 20
                             }
                         ];
         $scope.getHash($scope.items[0].pickup.address);
         $scope.getHash($scope.items[0].dropdown.address);
-        $scope.getHash($scope.items[1].pickup.address);
-        $scope.getHash($scope.items[1].dropdown.address);
+        $scope.getHash(JSON.stringify($scope.items[0].pickup.cargo));
+        $scope.getHash(JSON.stringify($scope.items[0].dropdown.cargo));
+//        $scope.getHash($scope.items[1].pickup.address);
+//        $scope.getHash($scope.items[1].dropdown.address);
         $scope.getHash("Россия, ");
+        $scope.getHash("Россия, Химки, ул. Строителей, 42");
+        $scope.getHash("Россия, Москва, ул. Советская, 18");
         // хеши должны расшифровываться
 
         $scope.opened = {};
@@ -1054,7 +1023,7 @@ var app = angular.module('dashboardApp', [
         $scope.balanceMicroCC = 0;
         $scope.getBalance = async function(account) {
           if(account == undefined) {
-            account = $scope.contragents[$scope.sender].account;
+            account = $scope.contragents[$scope.customer].account;
           }
           try {
             var balance = await $scope.makePromise2($scope.web3.eth.getBalance, [account]);
@@ -1068,7 +1037,7 @@ var app = angular.module('dashboardApp', [
 
         $scope.getBalanceCC = async function(account) {
           if(account == undefined) {
-            account = $scope.contragents[$scope.sender].account;
+            account = $scope.contragents[$scope.customer].account;
           }
           try {
             //var balance = $scope.cc.balanceOf(account);
@@ -1132,7 +1101,7 @@ var app = angular.module('dashboardApp', [
           var newItem =  {
               id: $scope.items.length,
               name: "item" + ($scope.items.length + 1),
-              desc: "Задание "+ ($scope.items.length + 1),
+              desc: "Рейс "+ ($scope.items.length + 1),
               pickup: {
                 address: "Россия, ",
                 date: new Date(),
@@ -1157,7 +1126,7 @@ var app = angular.module('dashboardApp', [
 
           $scope.items.push(newItem);
           $scope.calcPrice();
-          console.log($scope.sender.INN);
+          console.log($scope.customer.INN);
         };
 
         $scope.onChange = function(field) {
@@ -1169,7 +1138,7 @@ var app = angular.module('dashboardApp', [
           for (var i = 0; i < $scope.items.length; i++) {
             $scope.items[i].id = i;
             $scope.items[i].name = "item" + (i + 1);
-            $scope.items[i].desc = "Задание " + (i + 1);
+            $scope.items[i].desc = "Рейс " + (i + 1);
           }
           $scope.calcPrice();
         }
@@ -1217,8 +1186,9 @@ var app = angular.module('dashboardApp', [
           if(order == undefined) {
             return false;
           }
-          return (order.state < 2 && (order.tracks.length == 0 ||
-            (order.tracks.length > 0 && order.tracks[0].state == 0)));
+//          return (order.state < 2 && (order.tracks.length == 0 ||
+//            (order.tracks.length > 0 && order.tracks[0].state == 0)));
+          return (order.state < 3);
         }
 
         $scope.dismiss = async function(order) {
@@ -1229,13 +1199,13 @@ var app = angular.module('dashboardApp', [
             //await $scope.getOrderBalance(order);
             //var before = $scope.orderBalanceCC;
             //console.log("TRYING TO DISMISS " + order.consigner);
-            await $scope.transact(contract.complete2, [{from:order.consigner, gas:70000}], $scope.settings.timeoutAwaitTx);
+            await $scope.transact(contract.cancel, [{from:order.customer, gas:70000}], $scope.settings.timeoutAwaitTx);
             order.state = await $scope.makePromise2(contract.state, []);
             //await $scope.getOrderBalance(order);
             //var feedback = before - $scope.orderBalanceCC;
             $scope.showConfirmation("Информация", "Заказ " + order.address +
               " успешно отменен. " + $scope.fromMicroCC(order.price) + " CC возвращены на счет "
-              + order.consigner);
+              + order.customer);
             $scope.getOrderBalance(order);
           }
           catch(e) {
@@ -1354,16 +1324,16 @@ var app = angular.module('dashboardApp', [
         }
 
         $scope.transfer = async function() {
-          var sender = $scope.contragents[$scope.sender].account;
+          var customer = $scope.contragents[$scope.customer].account;
           var handleError = function(e) {
             console.log(e);
             $scope.progressPayEnabled = false;
-            $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + sender);
+            $scope.showConfirmation("Ошибка", $scope.explainException(e) + " " + customer);
           }
           try {
             $scope.progressPayEnabled = true;
             console.log(">>> platform.numOrders");
-            var numOrders = (await $scope.makePromise2($scope.platform.numOrders, [{from:sender}])).toNumber();  // validate sender account
+            var numOrders = (await $scope.makePromise2($scope.platform.numOrders, [{from:customer}])).toNumber();  // validate sender account
             console.log("NUM ORDERS: " + numOrders);
 
             var trackHashes = [];
@@ -1381,8 +1351,6 @@ var app = angular.module('dashboardApp', [
               trackHashes.push($scope.getHash(new Date().toString()));  // assignment.date (.getTime() needed??)
               trackHashes.push($scope.getHash('shit'));  // assignment.proof (BUG - implemented in future)
               trackAddress.push($scope.contragents[item.carrier].account); // carrier
-              trackAddress.push($scope.contragents[item.carrier].account); // loader (FIXME)
-              trackAddress.push($scope.contragents[item.carrier].account); // unloader (FIXME)
   //            trackPrices.push($scope.web3.toWei(item.price, 'ether').toString()); // price in wei
               trackPrices.push($scope.toMicroCC(item.price).toString()); // price in microCC
               console.log(trackHashes);
@@ -1391,10 +1359,7 @@ var app = angular.module('dashboardApp', [
 
             console.log(">>> platform.addOrder");
             await $scope.transact($scope.platform.addOrder, [
-              sender,
-              $scope.contragents[$scope.receiver].account,
-              $scope.contragents[$scope.cargoOwner].account,
-              $scope.contragents[$scope.seal].account,
+              customer,
               trackHashes, trackAddress, trackPrices,
               $scope.settings.cargoCoinAddress,
               {gas: $scope.settings.gas.addOrder }
@@ -1411,17 +1376,17 @@ var app = angular.module('dashboardApp', [
            console.log("ORDER PRICE: " + orderPrice);
 
            console.log(">>> cc.approve");
-           await $scope.transact($scope.cc.approve,[orderAddress, orderPrice.valueOf(), {from:sender, to:$scope.settings.cargoCoinAddress, gas:$scope.settings.gas.approve}], $scope.settings.timeoutApprove);
+           await $scope.transact($scope.cc.approve,[orderAddress, orderPrice.valueOf(), {from:customer, to:$scope.settings.cargoCoinAddress, gas:$scope.settings.gas.approve}], $scope.settings.timeoutApprove);
 
            console.log(">>> order.begin");
-           await $scope.transact(order.begin, [{from:sender, to:orderAddress, gas:$scope.settings.gas.begin}], $scope.settings.timeoutBegin);
-           console.log("BEGIN FROM: " + sender);
+           await $scope.transact(order.begin, [{from:customer, to:orderAddress, gas:$scope.settings.gas.begin}], $scope.settings.timeoutBegin);
+           console.log("BEGIN FROM: " + customer);
            // send microCC to order
 
            //$scope.getBalanceCC(); // не надо, переходим на другую вкладку
            //$scope.preselectedOrder = orderAddress;
            $scope.showConfirmation("Информация", "Заказ " + order.address + " на сумму " + $scope.fromMicroCC(orderPrice) + " CC оплачен успешно");
-           $scope.addOperation(0, orderAddress, $scope.items[0].pickup.address, $scope.items[$scope.items.length-1].dropdown.address, sender, orderPrice);
+           $scope.addOperation(0, orderAddress, $scope.items[0].pickup.address, $scope.items[$scope.items.length-1].dropdown.address, customer, orderPrice);
            $scope.progressPayEnabled = false; // SUCCESS
            $scope.selectedTabIndex = 3; // переходим на вкладку "статус заказа"
            // pay for job

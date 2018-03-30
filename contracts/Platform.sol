@@ -22,18 +22,14 @@ contract Platform is Owned {
 
     }
 
-    function addOrder(  address _consigner,
-                        address _consignee,
-                        address _cargoOwner,
-                        address _seal,
+    function addOrder(  address _customer,
                         uint32[] _trackHashes,
                         address[] _trackAddresses,
                         uint[] _trackPrices,
                         address _ccAddress ) returns (uint ID) {
       ID = numOrders++;
-      Order order = new Order(ID, _consigner, _consignee, _cargoOwner,
-        _seal, _trackHashes, _trackAddresses, _trackPrices, _ccAddress);
-      order.setOwner(_consigner);
+      Order order = new Order(ID, _customer, _trackHashes, _trackAddresses, _trackPrices, _ccAddress);
+      order.setOwner(_customer);
       orders[ID] = order;
     }
 
