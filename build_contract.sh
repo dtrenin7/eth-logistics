@@ -1,6 +1,6 @@
 cd contracts
 rm -rf build
-solc -o build --bin --overwrite --optimize --abi Platform.sol
+solc -o build --bin --overwrite --optimize --abi Order.sol
 
 cd build
 cat Platform.abi | base64 --wrap=0 > Platform.abi.b64

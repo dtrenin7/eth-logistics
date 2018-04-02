@@ -1,6 +1,7 @@
 pragma solidity ^0.4.11;
 
 import "./CargoCoin.sol";
+import "./Platform.sol";
 
 /// @title Заказ на перевозку
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
@@ -53,7 +54,6 @@ contract Order {
   }
 
   address owner;
-  uint public ID;   // public for DEBUG
   State public state;
   address public customer;  // заказчик (ОБОЗ)
   uint public price;   // общая стоимость заказа
@@ -61,6 +61,7 @@ contract Order {
   uint public activeTrackID;
   mapping (uint => Track) tracks;
   CargoCoin cc;
+  Platform platform;
   address _address;
 
   modifier restricted {
@@ -69,20 +70,16 @@ contract Order {
       _;
   }
 
-  function setOwner(address _owner) restricted {
-    owner = _owner;
-  }
-
-  function Order( uint _ID,
-                  address _customer,
+  function Order( address _customer,
                   uint32[] _trackHashes,
                   address[] _trackAddresses,
                   uint[] _trackPrices,
-                  address _ccAddress) {
+                  address _ccAddress,
+                  address _platformAddress) {
     owner = msg.sender;
     cc = CargoCoin(_ccAddress);
+    platform = Platform(_platformAddress);
     _address = this;
-    ID = _ID;
     state = State.New;
     customer = _customer;
 
@@ -98,6 +95,7 @@ contract Order {
       numTracks++;
     }
     price = _price;
+    platform.addOrder(_address);
   }
 
   function begin() payable returns (Error) {
@@ -143,6 +141,10 @@ contract Order {
   }
 
   function cancel() returns (Error) {  // отмена
+    if( state != State.Shipped  )
+      return Error.OrderIsNotPaid;
+    // если отправитель не отправил, обрабатывать нечего
+
     if( msg.sender == customer ) {
       // нельзя запрашивать баланс и производить оплату в одном методе (!!!)
       // вызывает Invalid Opcode - походу BUG solidity

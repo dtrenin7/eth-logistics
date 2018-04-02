@@ -1,14 +1,7 @@
 pragma solidity ^0.4.11;
 
 import "./Owned.sol";
-//import "./Partner.sol";
-//import "./Consigner.sol";
-//import "./Consignee.sol";
-//import "./Consignement.sol";
-//import "./Carrier.sol";
-//import "./Cargo.sol";
-import "./Order.sol";
-//import "./Detail.sol";
+//import "./Order.sol";
 
 /// @title Platform
 /// @author Dmitry Trenin (dtrenin7@gmail.com)
@@ -22,15 +15,8 @@ contract Platform is Owned {
 
     }
 
-    function addOrder(  address _customer,
-                        uint32[] _trackHashes,
-                        address[] _trackAddresses,
-                        uint[] _trackPrices,
-                        address _ccAddress ) returns (uint ID) {
-      ID = numOrders++;
-      Order order = new Order(ID, _customer, _trackHashes, _trackAddresses, _trackPrices, _ccAddress);
-      order.setOwner(_customer);
-      orders[ID] = order;
+    function addOrder(address order) {
+      orders[numOrders++] = order;
     }
 
     function getOrder(uint ID) constant returns (address order) {
