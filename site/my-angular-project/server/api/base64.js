@@ -61,7 +61,7 @@ this.decode = function( s ) {
   return x.join( "" );
 }
 
-this._getbyte = function ( s, i ) {
+var _getbyte = function ( s, i ) {
   var x = s.charCodeAt( i );
 
   if ( x > 255 ) {

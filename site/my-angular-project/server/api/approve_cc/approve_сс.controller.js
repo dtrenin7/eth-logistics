@@ -44,7 +44,7 @@ exports.index = async function(req, res) {
     var keywords = [  ["sender", "string"],
                       ["password", "string"],
                       ["receiver", "string"],
-                      ["cc", "number"]];
+                      ["cc", "string"]];
    for(var i = 0; i < keywords.length; i++) {
      if(typeof(input[keywords[i][0]]) != keywords[i][1]) {
        throw "Wrong input data: type of '" + keywords[i][0] +
@@ -58,13 +58,13 @@ exports.index = async function(req, res) {
    var cc = await contract.at(settings.cargoCoinAddress);
 
     await makePromise2(web3.personal.unlockAccount, [input.sender, input.password]);
-    var microCC = toMicroCC(input.cc);
-    var transactionHash = await makePromise2(cc.approve, [input.receiver, microCC, {from:input.sender, to:settings.cargoCoinAddress, gasLimit:210000, gasPrice:20000000000}]);
+    //var microCC = toMicroCC(input.cc);
+    var transactionHash = await makePromise2(cc.approve, [input.receiver, input.cc, {from:input.sender, to:settings.cargoCoinAddress, gasLimit:210000, gasPrice:20000000000}]);
 
     res.json({
       status: 'OK',
       tx: transactionHash,
-      approved: microCC
+      approved: input.cc
     });
   }
   catch(e) {

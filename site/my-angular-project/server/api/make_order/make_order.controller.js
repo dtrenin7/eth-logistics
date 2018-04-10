@@ -18,7 +18,8 @@ var Settings = require('../settings');
 var settings = new Settings();
 var Base64 = require('../base64');
 var base64 = new Base64();
-
+var dirty = require('dirty')('my.db');
+var forge = require('node-forge');
 //var web3provider = typeof(web3) !== 'undefined' ? web3.currentProvider : new Web3.providers.HttpProvider(settings.web3provider);
 var web3provider = new Web3.providers.HttpProvider(settings.web3provider);
 var web3 = new Web3(web3provider);
@@ -42,6 +43,7 @@ var hashFnv32a = function(str, asString, seed) {
 var getHash = function(value) {
   //var hash = $scope.web3.sha3(value);
   var hash = hashFnv32a(value, false);
+  dirty.set(hash, value);
   return hash;
 };
 
@@ -66,7 +68,10 @@ exports.index = async function(req, res) {
   }
 
   try {
-    var jsonData = base64.decode(data);
+//    var jsonData = base64.decode(data);
+    //var jsonData = forge.util.decode64(data);
+    var decodedBytes = forge.util.decode64(data);
+    var jsonData = forge.util.decodeUtf8(decodedBytes);
     var input = JSON.parse(jsonData);
 
     checkArguments(input, [["customer", "object"], ["trips", "object"]]);
@@ -132,10 +137,13 @@ exports.index = async function(req, res) {
           {from:input.customer.account, gas:3000000, gasPrice:"20000000000", data: bin});
 
 //    web3.personal.lockAccount(input.customer.account);
-
+//    var vvv = decodeURI(dirty.get(trackHashes[2]));
+    var vvv = dirty.get(trackHashes[2]);
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.json({
       status: 'OK',
       tx: contract.transactionHash
+      //,value: vvv
     });
   }
   catch(e) {
